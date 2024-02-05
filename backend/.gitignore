@@ -1,0 +1,18 @@
+### env ###
+.docker.env
+.env
+
+### Django ###
+staticroot/
+mediaroot/
+__pycache__
+.pytest_cache
+*.pyc
+*.pyo
+.log
+
+# Script for debugging purposes.
+root/scripts/testing.py
+
+# File to trigger restart of uwsgi server in production environment.
+reload
