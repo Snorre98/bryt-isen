@@ -1,13 +1,10 @@
-import './App.css'
-import Button from 'react-bootstrap/Button'
-//import 'bootstrap/dlst/css/bootstrap.mln.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import NavbarComp from "./NavbarComp.tsx";
 
 function App() {
 
   return (
-    <>
-      <Button>Hei beste gruppa</Button>
-    </>
+    <NavbarComp></NavbarComp>
   )
 }
 
