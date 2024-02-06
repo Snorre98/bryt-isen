@@ -25,8 +25,8 @@ cd backend
 # Step 5 - Install pipenv
 pip install pipenv || pip3 install pipenv
 
-# Step 6 - Use pipenv to install Django without entering the shell
-pipenv install django
+# Step 6 - Use pipenv to install dependencies from pipfile
+pipenv install
 
 # Optional: Start the backend development server
 # Uncomment the next line if you want the script to also start the backend server.
