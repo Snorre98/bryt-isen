@@ -19,6 +19,14 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PIPENV_VENV_IN_PROJECT=1
 
+##################################
+#             Alias              #
+################################## 
+RUN echo 'alias la="ls -la"' >> ~/.bashrc
+# Useful alias shortcuts for django.
+RUN echo 'alias migrate="pipenv run python /app/manage.py migrate"' >> ~/.bashrc
+RUN echo 'alias makemigrations="pipenv run python /app/manage.py makemigrations"' >> ~/.bashrc
+#RUN echo 'alias pipeline="pipenv run /app/run-pipeline.sh"' >> ~/.bashrc
 
 # Make directories.
 RUN mkdir /app
@@ -36,5 +44,5 @@ RUN python -m pipenv install --dev --deploy
 COPY . /app
 
 # Start.
-#ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["pipenv", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -4,7 +4,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile # Assuming the Dockerfile is located in ./backend
+      dockerfile: Dockerfile.backend # Assuming the Dockerfile is located in ./backend
     image: backend
     volumes:
       - ./backend:/app # This mounts your backend directory to /app in the container
