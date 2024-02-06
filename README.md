@@ -25,7 +25,7 @@ Bryt-Isen ønsker å leve opp til denne visjonen ved å la brukere finne ulike b
         - [Steg 4 - naviger til backend 📁](#steg-4---naviger-til-backend-)
         - [Steg 5 - installer pipenv 🐍📦](#steg-5---installer-pipenv-)
         - [Steg 6 - åpne pipenv shell 🐢](#steg-6---åpne-pipenv-shell-)
-        - [Steg 7 - installer Django 🎸](#steg-7---installer-django-)
+        - [Steg 7 - installer backend avhengigheter 📦 ➡️ 🦮🖽🎸](#steg-7---installer-backend-avhengigheter--️-)
           - [Kjør backend server 🎸](#kjør-backend-server-)
   - [Kjør utviklingsmiljøet i Docker 🫷 anbefales 🫸](#kjør-utviklingsmiljøet-i-docker--anbefales-)
 
@@ -138,13 +138,13 @@ For å installer og pakke ut Python-pakker må man åpne et virtuelt shell. Bruk
 pipenv shell
 ```
 
-##### Steg 7 - installer Django 🎸
+##### Steg 7 - installer backend avhengigheter 📦 ➡️ 🦮🖽🎸
 
-Installer Django med:
+Installer backendavhengigheter, inkludert Django:
 
 ``` bash
 # 👀fra backend/
-pipenv install django
+pipenv install
 ```
 
 ###### Kjør backend server 🎸
