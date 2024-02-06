@@ -68,6 +68,8 @@ Bryt-Isen ønsker å leve opp til denne visjonen ved å la brukere finne ulike b
 
 ⚠️ Alle `kommandoer` kjøres i terminalen.
 
+
+
 ##### Steg 1 - klon 🐑
 
 Klon prosjektet fra GitLab til en passende lokasjon på din datamaskin.
@@ -75,6 +77,12 @@ Klon prosjektet fra GitLab til en passende lokasjon på din datamaskin.
 ```
 git clone <prosjekt-URL>
 ```
+
+*Har laget et setup script. Litt usikker på hvor bra det funker, men i windows skal man kunne høyreklikke på `windows-setup.ps1 ` filen og velge å kjøre med powershell. Dette er ment å automatisk sette opp prosjektet. Igjen, det kreves at man har Node.js og Python satt opp riktig. For macOS kan du kjøre `macos-setup.sh` filen ved å skrive `./macos-setup.sh` i terminalen fra **bryt-isen** mappen.*
+
+Hvis du ikke får startet [frontend](#kjør-frontend-server) og [backend](#kjør-backend-server-) serveren virket det ikke. Da burde du slette hele **bryt-isen** mappen, klone den på nytt og fortsette oppsettet manuelt. Altås steg 2 - 7.
+
+💡Hvis det virket anbefales det å sjekke ut hvordan du kan bruke Docker videre: [bruke Docker for å kjøre utviklingsmiljøet virtuelt](#kjør-utviklingsmiljøet-i-docker--anbefales-)
 
 ##### Steg 2 - naviger til frontend 📁
 
@@ -91,7 +99,7 @@ Pakk ut frontend delen av prosjektet med node package manager (npm).
 npm install
 ```
 
-Dette installere alle avhengigheter som trengs i et utviklingsmiljø for å utvikle og kjøre frontend delen av prosjektet. `npm install` må kjøres fra mappen hvor *package.json* ligger. 
+Dette installere alle avhengigheter som trengs i et utviklingsmiljø for å utvikle og kjøre frontend delen av prosjektet. `npm install` må kjøres fra mappen hvor *package.json* ligger.
 
 ###### Kjør frontend server🚀
 
@@ -159,7 +167,7 @@ Trykk `Ctrl + C` i terminalen for å stoppe serveren.
 
 Docker🐋 er et verktøy for å kjøre (blant annet) utviklingsmiljøer virtuelt, sørge for at utviklingsmiljø variabler er konstant på forskjellige datamaskiner og for å strømmlinjeforme utviklingsprosessen.
 
-⚠️ *etter å ha gjort steg 1 - 7 en gang*
+⚠️ *etter å ha gjort steg 1 - 7 en gang, eller brukt setup-script*
 
 **For å komme i gang med Docker: [last ned Docker Desktop her.](https://www.docker.com/products/docker-desktop/)**
 Når ferdig nedlasted og installert, åpne Docker Desktop programmet. I Windows er det mulig man må sette opp Docker med Windows Subsystem for Linux. [For hjelp med dette, sjekk ut denne fremgangsmåten](https://www.digitalocean.com/community/tutorials/how-to-develop-a-docker-application-on-windows-using-wsl-visual-studio-code-and-docker-desktop), frem til (men ekskludert) den førte terminal kommandoen som blir nevnt.
