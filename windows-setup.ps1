@@ -1,39 +1,52 @@
-#Can be run on macOS if you install powershell for mac
+# chatGPT
 
+# Initial user prompt to proceed with setup
 $userInput = Read-Host "This is a draft-setup script. Do you want to proceed with the setup? (Y/N)"
 if ($userInput -ne 'Y' -and $userInput -ne 'y') {
     Write-Output "Setup cancelled by the user."
     exit
 }
 
-# Step 2 - Navigate to the frontend
-Set-Location frontend
+# Ask if the user wants to install frontend dependencies
+$userInput = Read-Host "Do you want to install frontend dependencies? (Y/N)"
+if ($userInput -eq 'Y' -or $userInput -eq 'y') {
+    # Navigate to the frontend
+    Set-Location frontend
+    # Install frontend dependencies
+    npm install
+    Write-Output "Frontend dependencies installed."
+}
 
-# Step 3 - Install frontend dependencies
-npm install
+# Ask if the user wants to start the frontend server
+$userInput = Read-Host "Do you want to open the frontend server in a separate terminal? (Y/N)"
+if ($userInput -eq 'Y' -or $userInput -eq 'y') {
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd frontend; npm run dev"
+    Write-Output "Frontend server starting in a new terminal..."
+}
 
-# Optional: Start the frontend development server
-# Start-Process npm run dev
-# Uncomment the above line if you want the script to also start the frontend server.
-# You would then manually stop it with Ctrl + C.
 
-# Step 4 - Navigate to the backend
-Set-Location ..
+# Ask if the user wants to install backend dependencies
+$userInput = Read-Host "Do you want to install backend dependencies? (Y/N)"
+if ($userInput -eq 'Y' -or $userInput -eq 'y') {
+    # Navigate to the backend
+    Set-Location backend
+    # Install pipenv
+    pip install pipenv -or pip3 install pipenv
+    # Use pipenv to install dependencies from pipfile
+    pipenv install
+    Write-Output "Backend dependencies installed."
+}
 
-Set-Location backend
+# Ask if the user wants to start the backend server
+$userInput = Read-Host "Do you want to open the backend server in a separate terminal? (Y/N)"
+if ($userInput -eq 'Y' -or $userInput -eq 'y') {
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd backend; pipenv run python manage.py runserver"
+    Write-Output "Backend server starting in a new terminal..."
+}
 
-# Step 5 - Install pipenv
-pip install pipenv -or pip3 install pipenv
-
-# Step 6 - Use pipenv to install dependencies from pipfile
-pipenv install
-
-# Optional: Start the backend development server
-# pipenv run python manage.py runserver
-# Uncomment the above line if you want the script to also start the backend server.
-# You would then manually stop it with Ctrl + C.
-
+# Final message
 Write-Output "Setup complete! Your React-Django project is ready for development."
+
 # Prevent the PowerShell window from closing automatically
 Write-Host "Press any key to continue..."
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

@@ -1,40 +1,56 @@
 #!/bin/bash
-
-# Ask the user if they want to proceed
+# chatGPT
+# Initial user prompt to proceed with setup
 read -p "This is a draft-setup script. Do you want to proceed with the setup? (Y/N) " userInput
-if [[ $userInput != "Y" ]] && [[ $userInput != "y" ]]; then
+if [[ $userInput != "Y" && $userInput != "y" ]]; then
     echo "Setup cancelled by the user."
-    exit 0
+    exit
 fi
 
-# Step 2 - Navigate to the frontend
-cd frontend
+# Ask if the user wants to install frontend dependencies
+read -p "Do you want to install frontend dependencies? (Y/N) " userInput
+if [[ $userInput == "Y" || $userInput == "y" ]]; then
+    # Navigate to the frontend
+    cd frontend
+    # Install frontend dependencies
+    npm install
+    echo "Frontend dependencies installed."
+    cd .. # Go back to the root directory
+fi
 
-# Step 3 - Install frontend dependencies
-npm install
+# Ask if the user wants to start the frontend server
+read -p "Do you want to open the frontend server in a separate terminal? (Y/N) " userInput
+if [[ $userInput == "Y" || $userInput == "y" ]]; then
+    osascript -e 'tell app "Terminal"
+        do script "cd '\"$(PWD)/frontend\"'; npm run dev"
+    end tell'
+    echo "Frontend server starting in a new terminal..."
+fi
 
-# Optional: Start the frontend development server
-# Uncomment the next line if you want the script to also start the frontend server.
-# npm run dev &
+# Ask if the user wants to install backend dependencies
+read -p "Do you want to install backend dependencies? (Y/N) " userInput
+if [[ $userInput == "Y" || $userInput == "y" ]]; then
+    # Navigate to the backend
+    cd backend
+    # Install pipenv
+    pip install pipenv || pip3 install pipenv
+    # Use pipenv to install dependencies from pipfile
+    pipenv install
+    echo "Backend dependencies installed."
+    cd .. # Go back to the root directory
+fi
 
-# Step 4 - Navigate to the backend
-cd ..
+# Ask if the user wants to start the backend server
+read -p "Do you want to open the backend server in a separate terminal? (Y/N) " userInput
+if [[ $userInput == "Y" || $userInput == "y" ]]; then
+    osascript -e 'tell app "Terminal"
+        do script "cd '\"$(PWD)/backend\"'; pipenv run python manage.py runserver"
+    end tell'
+    echo "Backend server starting in a new terminal..."
+fi
 
-cd backend
-
-# Step 5 - Install pipenv
-pip install pipenv || pip3 install pipenv
-
-# Step 6 - Use pipenv to install dependencies from pipfile
-pipenv install
-
-# Optional: Start the backend development server
-# Uncomment the next line if you want the script to also start the backend server.
-#pipenv run python manage.py runserver &
-
+# Final message
 echo "Setup complete! Your React-Django project is ready for development."
 
-# Prevent the terminal from closing automatically (not needed if running from Terminal)
-echo "Press any key to continue..."
-read -n 1 -s
-
+# Keep the terminal open
+read -n 1 -s -r -p "Press any key to continue..."
