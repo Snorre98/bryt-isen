@@ -70,7 +70,7 @@ Bryt-Isen ønsker å leve opp til denne visjonen ved å la brukere finne ulike b
 
 
 
-##### Steg 1 - klon 🐑
+##### Steg 1 - klon
 
 Klon prosjektet fra GitLab til en passende lokasjon på din datamaskin.
 
