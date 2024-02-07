@@ -30,7 +30,7 @@ pipenv install
 
 # Optional: Start the backend development server
 # Uncomment the next line if you want the script to also start the backend server.
-# pipenv run python manage.py runserver &
+#pipenv run python manage.py runserver &
 
 echo "Setup complete! Your React-Django project is ready for development."
 
