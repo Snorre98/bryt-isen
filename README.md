@@ -18,16 +18,16 @@ Bryt-Isen ønsker å leve opp til denne visjonen ved å la brukere finne ulike b
     - [Frontend ⌨️](#frontend-️)
     - [Virtuelt samkjørt miljø 🔮](#virtuelt-samkjørt-miljø-)
   - [Sett opp utviklingsmiljø](#sett-opp-utviklingsmiljø)
-    - [Steg 1 - klon 🐑](#steg-1---klon-)
-    - [Steg 2 - naviger til frontend 📁](#steg-2---naviger-til-frontend-)
-    - [Steg 3 - installer frontend avhengigheter 📦 ➡️ ⌨️⚛️](#steg-3---installer-frontend-avhengigheter--️-️️)
+    - [Steg 1: klon](#steg-1-klon)
+    - [Steg 2: naviger til frontend 📁](#steg-2-naviger-til-frontend-)
+    - [Steg 3: installer frontend avhengigheter 📦 ➡️ ⌨️⚛️](#steg-3-installer-frontend-avhengigheter--️-️️)
       - [Kjør frontend server🚀](#kjør-frontend-server)
-    - [Steg 4 - naviger til backend 📁](#steg-4---naviger-til-backend-)
-    - [Steg 5 - installer pipenv 🐍📦](#steg-5---installer-pipenv-)
-    - [Steg 6 - åpne pipenv shell 🐢](#steg-6---åpne-pipenv-shell-)
-    - [Steg 7 - installer backend avhengigheter 📦 ➡️ 🦮🖽🎸](#steg-7---installer-backend-avhengigheter--️-)
+    - [Steg 4: naviger til backend 📁](#steg-4-naviger-til-backend-)
+    - [Steg 5: installer pipenv 🐍📦](#steg-5-installer-pipenv-)
+    - [Steg 6: åpne pipenv shell 🐢](#steg-6-åpne-pipenv-shell-)
+    - [Steg 7: installer backend avhengigheter 📦 ➡️ 🦮🖽🎸](#steg-7-installer-backend-avhengigheter--️-)
       - [Kjør backend server 🎸](#kjør-backend-server-)
-  - [Kjør utviklingsmiljøet i Docker 🫷 anbefales 🫸](#kjør-utviklingsmiljøet-i-docker--anbefales-)
+  - [Kjør utviklingsmiljøet i Docker](#kjør-utviklingsmiljøet-i-docker)
 
 
 **[Sjekk ut detaljert dokumentasjon.](./docs/content.md)**
@@ -70,7 +70,7 @@ Bryt-Isen ønsker å leve opp til denne visjonen ved å la brukere finne ulike b
 
 
 
-##### Steg 1 - klon
+##### Steg 1: klon
 
 Klon prosjektet fra GitLab til en passende lokasjon på din datamaskin.
 
@@ -84,13 +84,13 @@ Hvis du ikke får startet [frontend](#kjør-frontend-server) og [backend](#kjør
 
 💡Hvis det virket anbefales det å sjekke ut hvordan du kan bruke Docker videre: [bruke Docker for å kjøre utviklingsmiljøet virtuelt](#kjør-utviklingsmiljøet-i-docker--anbefales-)
 
-##### Steg 2 - naviger til frontend 📁
+##### Steg 2: naviger til frontend 📁
 
 Gå til **bryt-isen** repoet du klonet. F.eks. med `cd bryt-isen`
 
 Deretter til frontend med: `cd frontend`
 
-##### Steg 3 - installer frontend avhengigheter 📦 ➡️ ⌨️⚛️
+##### Steg 3: installer frontend avhengigheter 📦 ➡️ ⌨️⚛️
 
 Pakk ut frontend delen av prosjektet med node package manager (npm).
 
@@ -112,12 +112,12 @@ npm run dev
 
 💡Trykk `Ctrl + C` i terminalen for å stoppe serveren.
 
-##### Steg 4 - naviger til backend 📁
+##### Steg 4: naviger til backend 📁
 
 Gå ytters i **bryt-isen** repoet du klonet.
 Hvis du er i frontend, bruk `cd ..` for å beveg deg et lag opp i mappestrukturen i terminalen.
 
-##### Steg 5 - installer pipenv 🐍📦
+##### Steg 5: installer pipenv 🐍📦
 
 Installer Python pakke-administratoren pipenv med :
 
@@ -129,7 +129,7 @@ pip install pipenv
 *`pip` er Pythons pakke installatør.* 
 💡 *Her kan det hende noen må bruke `pip3`*
 
-##### Steg 6 - åpne pipenv shell 🐢
+##### Steg 6: åpne pipenv shell 🐢
 
 For å installer og pakke ut Python-pakker må man åpne et virtuelt shell. Bruk:
 
@@ -138,7 +138,7 @@ For å installer og pakke ut Python-pakker må man åpne et virtuelt shell. Bruk
 pipenv shell
 ```
 
-##### Steg 7 - installer backend avhengigheter 📦 ➡️ 🦮🖽🎸
+##### Steg 7: installer backend avhengigheter 📦 ➡️ 🦮🖽🎸
 
 Installer backendavhengigheter, inkludert Django:
 
@@ -163,7 +163,7 @@ Trykk `Ctrl + C` i terminalen for å stoppe serveren.
 
 💡*pipenv shell må kjøre for at man skal kunne bruke Django kommandoer*.
 
-## Kjør utviklingsmiljøet i Docker 🫷 anbefales 🫸
+## Kjør utviklingsmiljøet i Docker
 
 Docker🐋 er et verktøy for å kjøre (blant annet) utviklingsmiljøer virtuelt, sørge for at utviklingsmiljø variabler er konstant på forskjellige datamaskiner og for å strømmlinjeforme utviklingsprosessen.
 
