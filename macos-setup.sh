@@ -1,7 +1,7 @@
 #!/bin/bash
 # chatGPT
 # Initial user prompt to proceed with setup
-read -p "This is a draft-setup script. Do you want to proceed with the setup? (Y/N) " userInput
+read -p "This is a draft-setup script, it might not work. Do you want to proceed with the setup? (Y/N) " userInput
 if [[ $userInput != "Y" && $userInput != "y" ]]; then
     echo "Setup cancelled by the user."
     exit

@@ -1,7 +1,7 @@
 # chatGPT
 
 # Initial user prompt to proceed with setup
-$userInput = Read-Host "This is a draft-setup script. Do you want to proceed with the setup? (Y/N)"
+$userInput = Read-Host "This is a draft-setup script, it might not work. Do you want to proceed with the setup? (Y/N)"
 if ($userInput -ne 'Y' -and $userInput -ne 'y') {
     Write-Output "Setup cancelled by the user."
     exit
