@@ -18,7 +18,7 @@ Bryt-Isen ønsker å leve opp til denne visjonen ved å la brukere finne ulike b
     - [Frontend ⌨️](#frontend-️)
     - [Virtuelt samkjørt miljø 🔮](#virtuelt-samkjørt-miljø-)
   - [Sett opp utviklingsmiljø](#sett-opp-utviklingsmiljø)
-    - [Steg 1: klon](#steg-1-klon)
+    - [Steg 1: klon🐑](#steg-1-klon)
     - [Steg 2: naviger til frontend 📁](#steg-2-naviger-til-frontend-)
     - [Steg 3: installer frontend avhengigheter 📦 ➡️ ⌨️⚛️](#steg-3-installer-frontend-avhengigheter--️-️️)
       - [Kjør frontend server🚀](#kjør-frontend-server)
@@ -27,7 +27,7 @@ Bryt-Isen ønsker å leve opp til denne visjonen ved å la brukere finne ulike b
     - [Steg 6: åpne pipenv shell 🐢](#steg-6-åpne-pipenv-shell-)
     - [Steg 7: installer backend avhengigheter 📦 ➡️ 🦮🖽🎸](#steg-7-installer-backend-avhengigheter--️-)
       - [Kjør backend server 🎸](#kjør-backend-server-)
-  - [Kjør utviklingsmiljøet i Docker](#kjør-utviklingsmiljøet-i-docker)
+  - [Kjør utviklingsmiljøet i Docker 🫷 anbefales 🫸](#kjør-utviklingsmiljøet-i-docker)
 
 
 **[Sjekk ut detaljert dokumentasjon.](./docs/content.md)**
@@ -70,7 +70,7 @@ Bryt-Isen ønsker å leve opp til denne visjonen ved å la brukere finne ulike b
 
 
 
-##### Steg 1: klon
+##### Steg 1: klon🐑
 
 Klon prosjektet fra GitLab til en passende lokasjon på din datamaskin.
 
