@@ -1,5 +1,7 @@
 import { Container, Nav, Navbar } from 'react-bootstrap'
 
+
+
 function NavbarComp() {
    
    return(
@@ -10,7 +12,7 @@ function NavbarComp() {
          <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
                <Nav.Link href="#home">Hjem</Nav.Link>
-               <Nav.Link href="#link">Opprett aktivitet</Nav.Link>
+               <Nav.Link>Opprett aktivitet</Nav.Link>
             </Nav>
          </Navbar.Collapse>
          </Container>
