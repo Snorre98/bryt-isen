@@ -1,7 +1,11 @@
-from django.shortcuts import render
+from __future__ import annotations
+
 from rest_framework import viewsets
-from .serializers import ActivitySerializer
+
+from django.shortcuts import render
+
 from .models import Activity
+from .serializers import ActivitySerializer
 
 # Create your views here.
 
