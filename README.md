@@ -90,7 +90,7 @@ Gå til **bryt-isen** repoet du klonet. F.eks. med `cd bryt-isen`
 
 Deretter til frontend med: `cd frontend`
 
-##### Steg 3: installer frontend avhengigheter 📦 ➡️ ⌨️⚛️
+##### Steg 3: installer frontend avhengigheter📦
 
 Pakk ut frontend delen av prosjektet med node package manager (npm).
 
@@ -117,7 +117,7 @@ npm run dev
 Gå ytters i **bryt-isen** repoet du klonet.
 Hvis du er i frontend, bruk `cd ..` for å beveg deg et lag opp i mappestrukturen i terminalen.
 
-##### Steg 5: installer pipenv 🐍📦
+##### Steg 5: installer pipenv📦
 
 Installer Python pakke-administratoren pipenv med :
 
@@ -138,7 +138,7 @@ For å installer og pakke ut Python-pakker må man åpne et virtuelt shell. Bruk
 pipenv shell
 ```
 
-##### Steg 7: installer backend avhengigheter 📦 ➡️ 🦮🖽🎸
+##### Steg 7: installer backend avhengigheter📦
 
 Installer backendavhengigheter, inkludert Django:
 
@@ -150,6 +150,7 @@ pipenv install
 ###### Kjør backend server 🎸
 
 *For å sjekke at steg 7 var suksessfult/for å åpne en lokal backend server:*
+⚠️*pipenv shell må kjøre for at man skal kunne bruke Django kommandoer*.
 
 ``` bash
 # 👀fra backend/
@@ -161,7 +162,7 @@ Trykk `Ctrl + C` i terminalen for å stoppe serveren.
 
 💡*Filen `manage.py` brukes i Python for å kjøre Django kommandoer*.
 
-💡*pipenv shell må kjøre for at man skal kunne bruke Django kommandoer*.
+
 
 ## Kjør utviklingsmiljøet i Docker
 
