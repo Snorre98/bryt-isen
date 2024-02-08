@@ -1,21 +1,25 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'react-bootstrap';
-import img from '../assets/chess-drinking.jpg'
 //import { Col, Container, Row } from 'react-bootstrap';
 
+type DetailsProps = {
+  title: string;
+  img: string;
+  description: string;
+  rules: string;
+};
 
-function ActivityDetails() {
+function ActivityDetails({title, img, description, rules}: DetailsProps) {
   return (
     <div>
-      <h1>Aktivitet</h1>
-      <img src={img} alt="Image" />
-
+      <h1>{title}</h1>
       <br></br>
+      <img src={img} alt="Image" />
       <h5>Beskrivelse</h5>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <p>{description}</p>
       <br></br>
       <h5>Regler</h5>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <p>{rules}</p>
       <br></br>
       <Button variant="primary">Tilbake</Button>
     </div>
