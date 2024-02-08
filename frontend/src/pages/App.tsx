@@ -1,8 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Container, Row } from 'react-bootstrap';
-import CardComp from "./CardComp";
-import FooterComp from "./FooterComp";
-import NavbarComp from "./NavbarComp";
+import CardComp from "../components/CardComp";
+import FooterComp from "../components/FooterComp";
+import NavbarComp from "../components/NavbarComp";
 
 function App() {
 
