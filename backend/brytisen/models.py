@@ -8,7 +8,7 @@ from django.conf import settings
 
 class Activity(models.Model):
     """This is a (data)model, it can be views as an object."""
-
+    # TODO: id
     name = models.CharField(
         max_length=120)  # Aktivitet navn: f.eks. "Topptur"
 
@@ -33,11 +33,14 @@ class Activity(models.Model):
         (TOPPTUR, 'Topptur'),
     ]
 
+    # TODO: multiple choice form
+    # TODO: find out how Django forms work, and how to implement this.
+
     activity_type = models.CharField(
         max_length=120,
         choices=TYPE_CHOICES,
         default=UNDEFINED,
-   )
+   ) # TEMPORARY: this is now drop-down, will become multiple choice form
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,
                               on_delete = models.CASCADE,
