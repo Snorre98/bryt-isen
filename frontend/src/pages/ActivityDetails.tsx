@@ -26,9 +26,9 @@ function ActivityDetails({title, img, description, rules}: DetailsProps) {
           <Modal.Header closeButton>
             <Modal.Title>{title}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Beskrivelse</Modal.Body>
+          <Modal.Body><p style={{fontSize: '20px', fontWeight: 'bold'}}>Beskrivelse</p></Modal.Body>
           <Modal.Body>{description}</Modal.Body>
-          <Modal.Body>Regler</Modal.Body>
+          <Modal.Body><p style={{fontSize: '20px', fontWeight: 'bold'}}>Regler</p></Modal.Body>
           <Modal.Body>{rules}</Modal.Body>
           <img src={img} alt="Image" />
             <Button variant="secondary" onClick={handleClose}>

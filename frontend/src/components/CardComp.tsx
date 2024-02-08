@@ -1,20 +1,26 @@
 import { Button, Card } from 'react-bootstrap'
-import img from '../assets/chess-drinking.jpg'
 import ActivityDetails from '~/pages/ActivityDetails'
 
-function CardComp() {
+type DetailsCardProps = {
+  title: string;
+  img: string;
+  description: string;
+  rules: string;
+};
+
+function CardComp({title, img, description, rules}: DetailsCardProps) {
    return(
       <Card style={{ width: '18rem' }}>
       <Card.Img variant="top" src={img} />
       <Card.Body>
-        <Card.Title>Drikkelek</Card.Title>
+        <Card.Title>{title}</Card.Title>
         <Card.Text>
-          Beskrivelse av denne drikkeleken.
+          {description}
         </Card.Text>
-        <ActivityDetails title={'testTittel'} img={img} description={''} rules={''} />
+        <ActivityDetails title={title} img={img} description={description} rules={rules} />
       </Card.Body>
     </Card>
    )
-}
+};
 
 export default CardComp
