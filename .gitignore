@@ -24,7 +24,6 @@ venv
 ### VisualStudioCode ###
 # ignore everything unless explicitly added ('!' prefixed)
 .vscode/**/*
-!.vscode/settings.emil.json
 !.vscode/extensions.json
 !.vscode/extensions.recommended.json
 !.vscode/launch.json

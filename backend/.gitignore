@@ -1,5 +1,7 @@
 ### env ###
-.docker.env
+#There are noe security consernes putting the .env.docker 
+#in versioncontroll for now
+#.docker.env
 .env
 
 ### Django ###

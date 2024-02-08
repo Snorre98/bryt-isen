@@ -1,11 +1,11 @@
 version: '3.9'
-## chatGPT help
+# ## chatGPT help
 services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile # Assuming the Dockerfile is located in ./backend
-    image: bryt-isen-backend
+      dockerfile: Dockerfile.backend # Assuming the Dockerfile is located in ./backend
+    image: backend
     volumes:
       - ./backend:/app # This mounts your backend directory to /app in the container
       - /app/.venv # This volume syntax seems incorrect; if you want to persist the virtualenv, consider using a named volume
@@ -16,12 +16,11 @@ services:
     ports:
       - '8000:8000'
       - '5678:5678'
-
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.frontend
-    image: bryt-isen-frontend
+    image: frontend
     volumes:
       - ./frontend/src:/app/src
     env_file:
