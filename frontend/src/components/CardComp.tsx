@@ -1,5 +1,5 @@
 import { Button, Card } from 'react-bootstrap'
-import img from './assets/chess-drinking.jpg'
+import img from '../assets/chess-drinking.jpg'
 
 function CardComp() {
    return(
