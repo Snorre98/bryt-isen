@@ -1,0 +1,14 @@
+html, body {
+   height: 100%;
+   margin: 0;
+}
+
+.mainDiv {
+   display: flex;
+   flex-direction: column;
+   width: 300px;
+   height: 100%;
+}
+.contentDiv{
+   flex-grow: 1
+}

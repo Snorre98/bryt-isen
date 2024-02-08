@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "charliermarsh.ruff",
+    "ms-python.python",
+    "batisteo.vscode-django",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-python.vscode-pylance",
+    "editorconfig.editorconfig",
+    "visualstudioexptteam.vscodeintellicode",
+    "stylelint.vscode-stylelint",
+    "rvest.vs-code-prettier-eslint",
+    "visualstudioexptteam.vscodeintellicode"
+  ]
+}

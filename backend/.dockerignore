@@ -1,0 +1,10 @@
+**/__pycache__
+**/.pytest_cache
+**/*.log
+**/venv
+**/.venv
+.env
+**/.history
+*.sqlite3
+Dockerfile
+.dockerignore
