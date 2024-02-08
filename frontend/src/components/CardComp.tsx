@@ -1,5 +1,6 @@
 import { Button, Card } from 'react-bootstrap'
 import img from '../assets/chess-drinking.jpg'
+import ActivityDetails from '~/pages/ActivityDetails'
 
 function CardComp() {
    return(
@@ -10,7 +11,7 @@ function CardComp() {
         <Card.Text>
           Beskrivelse av denne drikkeleken.
         </Card.Text>
-        <Button variant="primary">Beskrivelse</Button>
+        <ActivityDetails title={'testTittel'} img={img} description={''} rules={''} />
       </Card.Body>
     </Card>
    )

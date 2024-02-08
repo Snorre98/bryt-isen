@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button } from 'react-bootstrap';
-//import { Col, Container, Row } from 'react-bootstrap';
+import { useState } from 'react';
+import { Button, Modal } from 'react-bootstrap';
 
 type DetailsProps = {
   title: string;
@@ -10,22 +10,34 @@ type DetailsProps = {
 };
 
 function ActivityDetails({title, img, description, rules}: DetailsProps) {
+
+  const [show, setShow] = useState(false);
+  
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
   return (
-    <div>
-      <h1>{title}</h1>
-      <br></br>
-      <img src={img} alt="Image" />
-      <h5>Beskrivelse</h5>
-      <p>{description}</p>
-      <br></br>
-      <h5>Regler</h5>
-      <p>{rules}</p>
-      <br></br>
-      <Button variant="primary">Tilbake</Button>
-    </div>
+      <>
+        <Button variant="primary" onClick={handleShow}>
+          Beskrivelse
+        </Button>
+  
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>{title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Beskrivelse</Modal.Body>
+          <Modal.Body>{description}</Modal.Body>
+          <Modal.Body>Regler</Modal.Body>
+          <Modal.Body>{rules}</Modal.Body>
+          <img src={img} alt="Image" />
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+        </Modal>
+      </>
   );
 
 }
-
 
 export default ActivityDetails;
