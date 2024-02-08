@@ -1,39 +1,33 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, Col, Container, Row } from 'react-bootstrap';
-import CardComp from "../components/CardComp";
-import FooterComp from "../components/FooterComp";
-import NavbarComp from "../components/NavbarComp";
 
-import ReactDOM from "react-dom/client";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  Route,
+  BrowserRouter as Router,
+  Routes
+} from "react-router-dom";
 
-import { LinkContainer } from 'react-router-bootstrap';
-
-
-//import Login from "./pages/NoPage";
+import { Container } from 'react-bootstrap';
+import FooterComp from '~/components/FooterComp';
+import NavbarComp from '~/components/NavbarComp';
+import Home from '../pages/Home';
+import Login from '../pages/Login';
+import Signup from '../pages/Signup';
 
 function App() {
 
   return (
     <>
+      <Router>  
       <Container fluid>
-         
-        <NavbarComp></NavbarComp>
-        <Container className='mt-4'>
-          <Row className="justify-content-md-center">
-            <Col>
-              <CardComp></CardComp>
-            </Col>
-            <Col>
-              <CardComp></CardComp>
-            </Col>
-            <Col>
-              <CardComp></CardComp>
-            </Col>
-          </Row>
+          <NavbarComp></NavbarComp>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />    
+          </Routes>
+          <FooterComp></FooterComp>
         </Container>
-        <FooterComp></FooterComp>
-      </Container>
+      </Router>  
     </>
   )
 }
