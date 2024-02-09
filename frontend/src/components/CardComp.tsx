@@ -1,5 +1,5 @@
-import { Button, Card } from 'react-bootstrap'
-import ActivityDetails from '~/pages/ActivityDetails'
+import { Card } from 'react-bootstrap';
+import ActivityDetails from '~/pages/ActivityDetails';
 
 type DetailsCardProps = {
   title: string;
@@ -24,3 +24,4 @@ function CardComp({title, img, description, rules}: DetailsCardProps) {
 };
 
 export default CardComp
+
