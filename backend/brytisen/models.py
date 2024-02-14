@@ -49,6 +49,7 @@ class Activity(models.Model):
                               )
     isReported = models.BooleanField(null = True)
     
+    thumbnail = models.FileField(upload_to='thumbnails/', null=True, blank=True)    
 
 
 # TODO: add review class
