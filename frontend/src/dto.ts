@@ -23,9 +23,9 @@ export type UserDto = {
   username: string;
   first_name: string;
   last_name: string;
+  is_active: boolean;
   is_superuser: boolean;
-  date_joined: Date;
-  last_login: Date;
+  groups: GroupDto[];
   permissions?: string[];
   object_permissions?: ObjectPermissionDto[];
 };
@@ -33,4 +33,9 @@ export type UserDto = {
 export type ObjectPermissionDto = {
   obj_pk: number;
   permission: string;
+};
+
+export type GroupDto = {
+  id: number;
+  name: string;
 };

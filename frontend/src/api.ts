@@ -47,7 +47,22 @@ export async function getActivities(): Promise<ActivityDto[]> {
  * Get CSRF-token for auth, tied to future loged in user
  */
 export async function getCsrfToken(): Promise<string> {
-  const url = BACKEND_DOMAIN + ROUTES.backend.rest_api;
+  const url = BACKEND_DOMAIN + ROUTES.backend.rest_csrf;
   const response = await axios.get(url, { withCredentials: true });
   return response.data;
+}
+
+export async function registerUser(
+  username: string,
+  first_name: string,
+  last_name: string,
+  password: string,
+): Promise<number> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.register_user;
+  // const data = { username, given_name, surname, password };
+  const data = { username, first_name, last_name, password };
+  const response = await axios.post(url, data, { withCredentials: true });
+  const new_token = response.data;
+  axios.defaults.headers.common['X-CSRFToken'] = new_token;
+  return response.status;
 }
