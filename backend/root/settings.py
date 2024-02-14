@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -131,6 +132,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # normally get due to CORS rules. In the CORS_ORIGIN_WHITELIST code, you whitelisted
 # localhost:3000 because you want the frontend (which will be served on that port) of
 # the application to interact with the API.
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
+
+
+### These allow for localhost api requests
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
 ]
+CORS_ALLOW_CREDENTIALS = True
+
+
+### localhost allowed to recive csrf toke
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
+CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
+
+
+## dev allow any permissions: (requires REST_FRAMEWORK definition)
+
+# Bypass authentication for testing. Only when ENV==DEVELOPMENT.
+# BYPASS_AUTHENTICATION = os.environ.get('BYPASS_AUTHENTICATION') == 'yes'
+# if BYPASS_AUTHENTICATION:
+#    # We know REST_FRAMEWORK and other variables are available from star import.
+#    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ['rest_framework.permissions.AllowAny']
