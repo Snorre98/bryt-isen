@@ -42,3 +42,12 @@ export async function getActivities(): Promise<ActivityDto[]> {
   const response = await axios.get<ActivityDto[]>(url, { withCredentials: true });
   return response.data;
 }
+
+/**
+ * Get CSRF-token for auth, tied to future loged in user
+ */
+export async function getCsrfToken(): Promise<string> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.rest_api;
+  const response = await axios.get(url, { withCredentials: true });
+  return response.data;
+}

@@ -20,10 +20,11 @@ from rest_framework import routers
 from brytisen import views
 
 router = routers.DefaultRouter()
-# TODO:
-router.register(r'activities', views.ActivityView, 'Activity')
+router.register(r'activities', views.ActivityView, 'activities')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('rest_framework/', include('rest_framework.urls')),
+    path('csrf/', views.CsrfView.as_view(), name='csrf'),
 ]
