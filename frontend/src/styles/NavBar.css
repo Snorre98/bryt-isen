@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap');
+
+.footer {
+  background-color: #0089A8;
+}
+
+.text-center {
+  color: white;
+  font-family: 'Baloo Bhaijaan 2';
+  font-size: 1.2em;
+  text-shadow: black 1px 1px 1px;
+}
+
+.navbarContainer{
+  background-color: #0089A8;
+  height: 13vh;
+  padding: 5px 15px 5px 15px;
+}
+
+.navbarContainer .nav-link{
+  color: white;
+  font-family: 'Baloo Bhaijaan 2';
+  font-weight: 800;
+  font-size: 1.2em;
+  text-shadow: black 1px 1px 1px;
+}
+
+.navbarContainer .nav-link:hover{
+  color: #57D6F3;
+}
+
+
+#logo {
+  height: 13vh;
+}
+
+.navbar {
+  background-color: #0089A8;
+}

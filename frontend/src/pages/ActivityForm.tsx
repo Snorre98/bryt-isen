@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Dropdown, Form, Stack } from 'react-bootstrap';
-import '../ActivityForm.css';
+import '../styles/ActivityForm.css';
 
 function ActivityForm() {
   const [selectedCategory, setSelectedCategory] = useState('Velg kategori');

@@ -15,19 +15,17 @@ function App() {
   return (
     <>
       <Router>
-        <Container fluid>
-          <NavbarComp></NavbarComp>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/activityForm" element={<ActivityForm />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+        <NavbarComp></NavbarComp>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/activityForm" element={<ActivityForm />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
-            {/* following are routes used for testing */}
-            <Route path="/testapi" element={<ApiTestPage />} />
-          </Routes>
-          <FooterComp></FooterComp>
-        </Container>
+          {/* following are routes used for testing */}
+          <Route path="/testapi" element={<ApiTestPage />} />
+        </Routes>
+        <FooterComp></FooterComp>
       </Router>
     </>
   );
