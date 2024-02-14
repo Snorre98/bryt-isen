@@ -12,6 +12,7 @@ __pycache__
 *.pyc
 *.pyo
 .log
+db.sqlite3
 
 # Script for debugging purposes.
 root/scripts/testing.py
