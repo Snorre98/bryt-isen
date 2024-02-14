@@ -10,11 +10,11 @@ export const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN; //env. variab
  */
 
 export const ActivityType = {
-  UNDEFINED: 'UNDEFINED',
-  TRENING: 'TRENING',
-  FYLLA: 'FYLLA',
-  VERV: 'VERV',
-  TOPPTUR: 'TOPPTUR',
+  UNDEFINED: 'Udefinert',
+  TRENING: 'Trening',
+  FYLLA: 'Fylla',
+  VERV: 'Verv',
+  TOPPTUR: 'Topptur',
 } as const;
 
 export type ActivityType = (typeof ActivityType)[keyof typeof ActivityType];
