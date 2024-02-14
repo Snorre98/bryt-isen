@@ -141,8 +141,8 @@ export const reverse: Reverse = ({ pattern, urlParams = {}, queryParams = {} }) 
 
       // Find expected params.
       const tokens = parse(pattern)
-        .filter((token: unknown) => typeof token === 'object')
-        .map((token: { name: unknown }) => {
+        .filter((token) => typeof token === 'object')
+        .map((token) => {
           token = token as Key; // We have filtered on objects, we know this is a Key.
           return token.name;
         });

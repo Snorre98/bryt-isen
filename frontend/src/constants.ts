@@ -3,7 +3,7 @@
  *
  */
 export const XCSRFTOKEN = 'X-CSRFToken';
-export const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN;
+export const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN; //env. variable in docker env
 
 /**
  * Activity types, used in dto

@@ -28,6 +28,6 @@ export const ROUTES_BACKEND = {
    */
 
   //TODO: check backend api routes
-  activity_list: 'api/activities',
-  activity_detail: 'api/activity/:pk/',
+  activity_list: '/api/activities/',
+  activity_detail: '/api/activity/:pk/',
 };

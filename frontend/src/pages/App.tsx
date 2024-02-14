@@ -9,6 +9,7 @@ import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import ActivityForm from './ActivityForm';
+import { ApiTestPage } from './ApiTestPage';
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
             <Route path="/activityForm" element={<ActivityForm />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+
+            {/* following are routes used for testing */}
+            <Route path="/testapi" element={<ApiTestPage />} />
           </Routes>
           <FooterComp></FooterComp>
         </Container>
