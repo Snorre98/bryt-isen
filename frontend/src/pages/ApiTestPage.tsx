@@ -37,7 +37,7 @@ export function ApiTestPage() {
         <button
           onClick={() => {
             // Retrieve the value of the input field
-            const activityId = document.getElementById('activityPK').value;
+            const activityId = document.getElementById('activityPK')!.value;
             getActivity(activityId).then(console.log).catch(console.error);
           }}
         >
@@ -53,21 +53,19 @@ export function ApiTestPage() {
             <p>Rules: {activity.activity_rules}</p>
             <p>Type: {activity.activity_type}</p>
             <button
-              onClick={() => {
-                // Correctly structured object for updating the activity
-                const updatedActivity = { isReported: true };
+            onClick={() => {
+              // Correctly structured object for updating the activity
+              const updatedActivity = { isReported: true };
 
-                putActivity(activity.id, updatedActivity)
-                  .then(console.log)
-                  .catch(
-                    alert(
-                      'Fungerer ikke ennå! Å redigere data krever tillatelser ved bruk av CSRF-tokens, noe vi ikke har satt opp ennå.',
-                    ),
-                  );
-              }}
-            >
-              Rapporter
-            </button>
+              putActivity(activity.id, updatedActivity)
+                .then(console.log)
+                .catch(() => {
+                  alert('Fungerer ikke ennå! Å redigere data krever tillatelser ved bruk av CSRF-tokens, noe vi ikke har satt opp ennå.');
+                });
+            }}
+          >
+            Rapporter
+          </button>
           </div>
         ))
       ) : (
