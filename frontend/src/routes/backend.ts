@@ -18,16 +18,16 @@ export const ROUTES_BACKEND = {
    */
   rest_framework__login: '/rest_framework/login/',
   rest_framework__logout: '/rest_framework/logout/',
+  rest_csrf: '/csrf/',
+  rest_api: '/api/',
 
   /**
    * Normal routes
    * These can be found at localhost:8000/api after you have created
    * model, view, serializer.
    *
-   * in the (example) activity_detail, 'detail' just means that the route goes to a specific object
+   * in the f.ex. activity_detail, 'detail' just means that the route goes to a specific object
    */
-
-  //TODO: check backend api routes
   activity_list: '/api/activities/',
-  activity_detail: '/api/activity/:pk/',
+  activity_detail: '/api/activities/:pk/',
 };
