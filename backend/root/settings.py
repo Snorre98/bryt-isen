@@ -28,7 +28,26 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
 
+
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+
+DATE_INPUT_FORMATS = [
+    '%d-%m-%Y',
+    '%d.%m.%Y',
+    '%d/%m/%Y',
+]
+
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 24 * 60 * 60 * 7
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'corsheaders',
     'rest_framework',
     'brytisen',
@@ -74,7 +94,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'root.wsgi.application'
 
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -127,7 +149,22 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+# INSTALLED_APPS += [
+#     'rest_framework',
+# ]
+REST_FRAMEWORK = {
+    # https://simpleisbetterthancomplex.com/tutorial/2018/11/22/how-to-implement-token-authentication-using-django-rest-framework.html
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.DjangoObjectPermissions',
+        'root.custom_classes.permission_classes.SuperUserPermission',
+        # 'root.custom_classes.permission_classes.CustomDjangoObjectPermissions',
+    ],
+}
 # django-cors-headers is a Python library that will prevent the errors that you would
 # normally get due to CORS rules. In the CORS_ORIGIN_WHITELIST code, you whitelisted
 # localhost:3000 because you want the frontend (which will be served on that port) of
@@ -146,6 +183,15 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
+### Default authentication schemes set globaly
+### https://www.django-rest-framework.org/api-guide/authentication/
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.BasicAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#     ]
+# }
+
 
 ## dev allow any permissions: (requires REST_FRAMEWORK definition)
 
@@ -154,3 +200,9 @@ CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 # if BYPASS_AUTHENTICATION:
 #    # We know REST_FRAMEWORK and other variables are available from star import.
 #    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ['rest_framework.permissions.AllowAny']
+INSTALLED_APPS += [
+    'guardian',
+]
+AUTHENTICATION_BACKENDS += [
+    'guardian.backends.ObjectPermissionBackend',
+]

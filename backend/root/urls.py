@@ -27,4 +27,9 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('rest_framework/', include('rest_framework.urls')),
     path('csrf/', views.CsrfView.as_view(), name='csrf'),
+    path('register/', views.RegisterView.as_view(), name='register'),
+    path('login/', views.LoginView.as_view(), name='log-in'),
+    path('logout/', views.LogoutView.as_view(), name='log-out'),
+    path('user/', views.UserView.as_view(), name='user'),
+    path('users/', views.AllUsersView.as_view(), name='users'),
 ]
