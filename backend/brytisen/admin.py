@@ -1,12 +1,17 @@
+from __future__ import annotations
+
 from django.contrib import admin
 
-from .models import Activity
+from .models import User, Activity
 
 
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('name', 'details', 'activity_type')
 
-# Register your models here.
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'first_name', 'last_name')
 
 
 admin.site.register(Activity, ActivityAdmin)
+admin.site.register(User, UserAdmin)
