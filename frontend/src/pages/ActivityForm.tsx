@@ -55,6 +55,46 @@ function ActivityForm() {
       setImageUrl(URL.createObjectURL(file));
     }
   };
+  
+
+  const submitForm = () => {
+    const formdata = new FormData();
+    const api = 'http://127.0.0.1:8000/api/';
+
+    if (imageFile) {
+      formdata.append('thumbnail', imageFile);
+    }
+    formdata.append('name', name);
+    formdata.append('activity_type', selectedCategory.toUpperCase());
+    formdata.append('details', description);
+    console.log(formdata)
+    const axiosconfig = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+
+    console.log(formdata)
+    axios.post(api + 'activities/', formdata, axiosconfig)
+      .then(response => {
+        console.log(response);
+        alert('Aktiviteten ble lastet opp!');
+        // Reset form...
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+
+  useEffect(() => {
+    // Cleanup the object URL
+    return () => {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+      }
+    };
+  }, [imageUrl]);
 
   const submitForm = () => {
     const formdata = new FormData();
@@ -148,11 +188,11 @@ function ActivityForm() {
                   <Dropdown.Toggle id="dropdown-basic">{selectedCategory}</Dropdown.Toggle>
 
                   <Dropdown.Menu>
-                    {Object.entries(ActivityType).map(([key, value]) => (
-                      <Dropdown.Item key={key} onClick={() => setSelectedCategory(value)}>
-                        {value}
-                      </Dropdown.Item>
-                    ))}
+                  {Object.entries(ActivityType).map(([key, value]) => (
+                    <Dropdown.Item key={key} onClick={() => setSelectedCategory(value)}>
+                      {value}
+                    </Dropdown.Item>
+                  ))}
                   </Dropdown.Menu>
                 </Dropdown>
               </Form.Group>
@@ -175,13 +215,7 @@ function ActivityForm() {
             </div>
           </div>
         </div>
-        <Button
-          onClick={() => {
-            submitForm();
-          }}
-          variant="primary"
-          size="lg"
-        >
+        <Button onClick={() => {submitForm()}} variant="primary" size="lg">
           Opprett aktivitet
         </Button>{' '}
       </div>
