@@ -16,8 +16,15 @@ export type ActivityDto = {
 };
 
 /**
- * User data-transfer-object, used to transer a user object
+ * Data transfer object used to transfer registration data to backend
  */
+export type RegisterUserDto = {
+  username: string;
+  first_name: string;
+  last_name: string;
+  password: string;
+};
+
 export type UserDto = {
   id: number;
   username: string;

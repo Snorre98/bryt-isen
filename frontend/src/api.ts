@@ -6,7 +6,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from 'axios';
-import { ActivityDto } from './dto';
+import { ActivityDto, RegisterUserDto } from './dto';
 import { BACKEND_DOMAIN } from './constants';
 import { ROUTES } from './routes';
 import { reverse } from './named-urls';
@@ -52,15 +52,8 @@ export async function getCsrfToken(): Promise<string> {
   return response.data;
 }
 
-export async function registerUser(
-  username: string,
-  first_name: string,
-  last_name: string,
-  password: string,
-): Promise<number> {
+export async function registerUser(data: RegisterUserDto): Promise<number> {
   const url = BACKEND_DOMAIN + ROUTES.backend.register_user;
-  // const data = { username, given_name, surname, password };
-  const data = { username, first_name, last_name, password };
   const response = await axios.post(url, data, { withCredentials: true });
   const new_token = response.data;
   axios.defaults.headers.common['X-CSRFToken'] = new_token;

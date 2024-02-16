@@ -1,23 +1,8 @@
 import axios from 'axios';
-import { useState } from 'react';
+//import { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
-import { getCsrfToken, registerUser } from '~/api';
+import { getCsrfToken } from '~/api';
 export function ApiTestPage() {
-  const [username, setUsername] = useState('');
-  const [givenName, setGivenName] = useState('');
-  const [surname, setSurname] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleRegisterClick = async () => {
-    try {
-      const status = await registerUser(username, givenName, surname, password);
-      console.log('Registration successful with status:', status);
-      // Handle success (e.g., show a message, redirect, etc.)
-    } catch (error) {
-      console.error('Registration failed:', error);
-      // Handle error (e.g., show error message)
-    }
-  };
   return (
     <Container>
       <Row className="mb-3">
@@ -26,9 +11,9 @@ export function ApiTestPage() {
             onClick={() => {
               getCsrfToken()
                 .then((token) => {
-                  // Update axios globally with new token.
-                  console.log(token);
+                  alert('Got token');
                   axios.defaults.headers.common['X-CSRFToken'] = token;
+                  alert('Got token');
                 })
                 .catch(console.error);
             }}
@@ -36,20 +21,7 @@ export function ApiTestPage() {
             getCsrf
           </button>
         </Col>
-        <Col>
-          <button
-            onClick={() => {
-              registerUser('Ravine7379', 'snorre', 'givenName', '856gVboWKwa%**')
-                .then((token) => {
-                  // Update axios globally with new token.
-                  axios.defaults.headers.common['X-CSRFToken'] = token;
-                })
-                .catch(console.error);
-            }}
-          >
-            registerUser
-          </button>
-        </Col>
+        <Col></Col>
         <Col>
           <Button variant="success">login</Button>
         </Col>

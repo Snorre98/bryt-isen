@@ -7,7 +7,7 @@ import FooterComp from '~/components/FooterComp';
 import NavbarComp from '~/components/NavbarComp';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
-import Signup from '../pages/Signup';
+import Signup from './SignupPage';
 import ActivityForm from './ActivityForm';
 import { ApiTestPage } from './ApiTestPage';
 
