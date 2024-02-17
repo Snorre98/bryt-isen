@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { RegisterUserDto } from '~/dto';
-import { getCsrfToken, registerUser } from '~/api';
-import axios from 'axios';
+import { registerUser } from '~/api';
 
 export function RegiserUserForm() {
   const [username, setUsername] = useState('');
@@ -14,11 +13,7 @@ export function RegiserUserForm() {
   const handleRegistration = (event) => {
     event.preventDefault();
     const userData: RegisterUserDto = { username, first_name, last_name, password };
-    getCsrfToken()
-      .then((token) => {
-        axios.defaults.headers.common['X-CSRFToken'] = token;
-        return registerUser(userData);
-      })
+    registerUser(userData)
       .then(() => {
         setRegistrationStatus('success');
       })
