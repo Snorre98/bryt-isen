@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import itertools
 
 from guardian.models import UserObjectPermission
@@ -10,6 +11,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 
 from .models import User, Activity
+
+logger = logging.getLogger(__name__)
 
 
 class ActivitySerializer(serializers.ModelSerializer):
@@ -33,7 +36,6 @@ class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(label='Username', write_only=True)
     password = serializers.CharField(
         label='Password',
-        ## Showing
         style={'input_type': 'password'},
         trim_whitespace=False,
         write_only=True,
@@ -45,26 +47,28 @@ class LoginSerializer(serializers.Serializer):
         JSON can be parsed as a dict in Python    
     """
 
-    def validate(self, responseAttributes: dict) -> dict:
-        username = responseAttributes.get('username')
-        password = responseAttributes.get('password')
-
+    def validate(self, attrs: dict) -> dict:
+        username = attrs.get('username')
+        password = attrs.get('password')
+        logger.debug(f'USERNAME!: {username}')
         if username and password:
-            user = authenticate(request=self.context.get('request'), username=username, password=password)  # Django auth magic
+            user = authenticate(request=self.context.get('request'), username=username, password=password)
+            # logger.debug(f'Authenticating user: {username}')
+            # logger.debug(f'THIS IS USER: {user}')
             if not user:
-                msg = 'user not registered.'
-                raise serializers.ValidationError(msg, code='autorization')
-            else:
-                msg = 'Both username and password are required.'
+                logger.error(f'Authentication failed for user: {username}')
+                msg = f'user with username "{username}" not registered.'
                 raise serializers.ValidationError(msg, code='authorization')
-            responseAttributes['user'] = user
-            return responseAttributes
+        else:
+            msg = 'Both username and password are required.'
+            raise serializers.ValidationError(msg, code='authorization')
+
+        attrs['user'] = user
+        return attrs
 
 
 class RegisterSerializer(serializers.Serializer):
-    """
-    Serializer for user registration.
-    """
+    """Serializer for user registration."""
 
     username = serializers.CharField(label='Username', write_only=True)
     first_name = serializers.CharField(label='First Name', write_only=True)
@@ -76,29 +80,38 @@ class RegisterSerializer(serializers.Serializer):
         write_only=True,
     )
 
-    def validate(self, data):
+    def validate(self, attrs: dict) -> dict:  # noqa: ANN201
         """Validates and creates a new user."""
 
-        username = data.get('username')
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
-        password = data.get('password')
+        username = attrs.get('username')
+        first_name = attrs.get('first_name')
+        last_name = attrs.get('last_name')
+        password = attrs.get('password')
 
-        if not (username and password):
-            raise serializers.ValidationError('Username and password are required.')
+        if username and password:
+            user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, password=password)
+            user = authenticate(request=self.context.get('request'), username=username, password=password)
+        else:
+            msg = 'Both "username" and "password" are required.'
+            raise serializers.ValidationError(msg, code='authorization')
+        # We have a valid user, put it in the serializer's validated_data.
+        # It will be used in the view.
+        attrs['user'] = user
+        return attrs
+        # if not (username and password):
+        #     raise serializers.ValidationError('Username and password are required.')
 
-        # Attempt to create a new user
-        try:
-            user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, password=password)
-        except Exception as e:
-            raise serializers.ValidationError(f'Error creating user: {str(e)}')
+        # # Attempt to create a new user
+        # try:
+        #     user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, password=password)
+        # except Exception as e:
+        #     raise serializers.ValidationError(f'Error creating user: {str(e)}')  # noqa: B904
 
-        data['user'] = user
-        return data
+        # data['user'] = user
+        # return data
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # TODO: Create get_permissions, get_object_permissions
     permissions = serializers.SerializerMethodField(method_name='get_permissions', read_only=True)
     object_permissions = serializers.SerializerMethodField(method_name='get_object_permissions', read_only=True)
 
@@ -111,7 +124,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def _permission_to_str(permission: Permission) -> str:
-        return f'{permission.content_type.app_label}.{permission.codename}'  # Django permissions magic
+        return f'{permission.content_type.app_label}.{permission.codename}'
 
     def _obj_permission_to_obj(self, obj_perm: UserObjectPermission) -> dict[str, str]:
         perm_obj = {
@@ -121,7 +134,7 @@ class UserSerializer(serializers.ModelSerializer):
         return perm_obj  # more Django (guardian) permissions magic
 
     def get_object_permissions(self, user: User) -> list[dict[str, str]]:
-        user_object_perms_qs = UserObjectPermission.object.filter(user=user)  #  findes appropriat perms
+        user_object_perms_qs = UserObjectPermission.objects.filter(user=user)  #  findes appropriat perms
 
         perm_objs = []
         for obj_perm in itertools.chain(user_object_perms_qs):
