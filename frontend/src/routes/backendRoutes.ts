@@ -36,6 +36,7 @@ export const ROUTES_BACKEND = {
    * User registration, login, logout
    */
   register_user: '/register/',
-  login_user: '/login/',
-  logout_user: '/logout/',
+  login_brytisen_user: '/login/',
+  logout_brytisen_user: '/logout/',
+  brytisen_user: '/user/',
 };
