@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Dropdown, Form, Stack } from 'react-bootstrap';
 import '../ActivityForm.css';
+import axios from 'axios'
+import { rule } from 'postcss';
+import { postActivity } from '~/api';
+import { ActivityType } from '~/constants';
+
 
 function ActivityForm() {
   const [selectedCategory, setSelectedCategory] = useState('Velg kategori');
@@ -8,28 +13,26 @@ function ActivityForm() {
   const [description, setDescription] = useState('');
   const [minPersons, setMinPersons] = useState('');
   const [maxPersons, setMaxPersons] = useState('');
-  const [image, setImage] = useState<string | null>(null);
+  //const [image, setImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>('');
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
-
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value);
   };
-
   const handleMinPersonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     let numericValue = parseInt(value, 10);
     setMinPersons((numericValue || '').toString());
   };
-
   const handleMaxPersonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     let numericValue = parseInt(value, 10);
     setMaxPersons((numericValue || '').toString());
   };
-
   const validateMinPersons = () => {
     let minVal = parseInt(minPersons, 10);
     if (isNaN(minVal) || minVal < 0) {
@@ -38,7 +41,6 @@ function ActivityForm() {
       setMinPersons(maxPersons);
     }
   };
-
   const validateMaxPersons = () => {
     let maxVal = parseInt(maxPersons, 10);
     if (isNaN(maxVal) || maxVal > 99) {
@@ -47,12 +49,53 @@ function ActivityForm() {
       setMaxPersons(minPersons);
     }
   };
-
   const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setImage(URL.createObjectURL(e.target.files[0]));
+      const file = e.target.files[0];
+      setImageFile(file);
+      setImageUrl(URL.createObjectURL(file));
     }
   };
+  
+
+  const submitForm = () => {
+    const formdata = new FormData();
+    const api = 'http://127.0.0.1:8000/api/';
+
+    if (imageFile) {
+      formdata.append('thumbnail', imageFile);
+    }
+    formdata.append('name', name);
+    formdata.append('activity_type', selectedCategory.toUpperCase());
+    formdata.append('details', description);
+    console.log(formdata)
+    const axiosconfig = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+
+    console.log(formdata)
+    axios.post(api + 'activities/', formdata, axiosconfig)
+      .then(response => {
+        console.log(response);
+        alert('Aktiviteten ble lastet opp!');
+        // Reset form...
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+
+  useEffect(() => {
+    // Cleanup the object URL
+    return () => {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+      }
+    };
+  }, [imageUrl]);
 
   return (
     <>
@@ -107,9 +150,11 @@ function ActivityForm() {
                   <Dropdown.Toggle id="dropdown-basic">{selectedCategory}</Dropdown.Toggle>
 
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => setSelectedCategory('Drikkelek')}>Drikkelek</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedCategory('Sommer')}>Sommer</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedCategory('Vinter')}>Vinter</Dropdown.Item>
+                  {Object.entries(ActivityType).map(([key, value]) => (
+                    <Dropdown.Item key={key} onClick={() => setSelectedCategory(value)}>
+                      {value}
+                    </Dropdown.Item>
+                  ))}
                   </Dropdown.Menu>
                 </Dropdown>
               </Form.Group>
@@ -121,7 +166,7 @@ function ActivityForm() {
           </div>
           <div className="previewContainer">
             <h2>{name}</h2>
-            <img className="previewImage" src={image || ''} />
+            <img className="previewImage" src={imageUrl} alt="Forhåndsvisning" />
             {minPersons && maxPersons && (
               <p>
                 Deltagere: {minPersons} - {maxPersons}
@@ -132,7 +177,7 @@ function ActivityForm() {
             </div>
           </div>
         </div>
-        <Button variant="primary" size="lg">
+        <Button onClick={() => {submitForm()}} variant="primary" size="lg">
           Opprett aktivitet
         </Button>{' '}
       </div>

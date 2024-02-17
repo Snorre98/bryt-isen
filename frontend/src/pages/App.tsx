@@ -26,7 +26,7 @@ function App() {
             {/* following are routes used for testing */}
             <Route path="/testapi" element={<ApiTestPage />} />
           </Routes>
-          <FooterComp></FooterComp>
+          {/* <FooterComp></FooterComp> */}
         </Container>
       </Router>
     </>

@@ -41,6 +41,8 @@ class Activity(models.Model):
         default=UNDEFINED,
     )  # TEMPORARY: this is now drop-down, will become multiple choice form
 
+    thumbnail = models.FileField(upload_to='thumbnails/', null=True, blank=True)
+
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

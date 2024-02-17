@@ -224,7 +224,6 @@ CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 #    # We know REST_FRAMEWORK and other variables are available from star import.
 #    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ['rest_framework.permissions.AllowAny']
 
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -241,3 +240,9 @@ LOGGING = {
         },
     },
 }
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'
+
+CORS_ORIGIN_ALLOW_ALL = True
