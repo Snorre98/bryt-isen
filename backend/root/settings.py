@@ -13,10 +13,17 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+import environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+IS_DOCKER = os.environ.get('IS_DOCKER') == 'yes'
 
+# Load '.env'.
+environ.Env.read_env(env_file='../.env', overwrite=False)
+
+AUTH_USER_MODEL = 'brytisen.User'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -25,6 +32,7 @@ SECRET_KEY = 'django-insecure-kl(nd9k)8iw9&(rs@)uu_6%b9ls62)u1mgki(bc8rpl(tbr2$5
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ENV = 'development'
 
 ALLOWED_HOSTS = []
 
@@ -60,18 +68,29 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     'rest_framework',
+    'guardian',
     'brytisen',
 ]
 
+# MIDDLEWARE = [
+#     'django.middleware.security.SecurityMiddleware',
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#     'corsheaders.middleware.CorsMiddleware',
+# ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'root.urls'
@@ -96,7 +115,23 @@ WSGI_APPLICATION = 'root.wsgi.application'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
 ]
+# INSTALLED_APPS += [
+#     'guardian',
+# ]
+# AUTHENTICATION_BACKENDS += []
+
+REST_FRAMEWORK = {
+    # https://simpleisbetterthancomplex.com/tutorial/2018/11/22/how-to-implement-token-authentication-using-django-rest-framework.html
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.SessionAuthentication',),
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.DjangoObjectPermissions',
+        'root.custom_classes.permission_classes.SuperUserPermission',
+        # 'root.custom_classes.permission_classes.CustomDjangoObjectPermissions',
+    ],
+}
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -152,19 +187,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # INSTALLED_APPS += [
 #     'rest_framework',
 # ]
-REST_FRAMEWORK = {
-    # https://simpleisbetterthancomplex.com/tutorial/2018/11/22/how-to-implement-token-authentication-using-django-rest-framework.html
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.IsAuthenticated',
-        # 'rest_framework.permissions.DjangoObjectPermissions',
-        'root.custom_classes.permission_classes.SuperUserPermission',
-        # 'root.custom_classes.permission_classes.CustomDjangoObjectPermissions',
-    ],
-}
+
 # django-cors-headers is a Python library that will prevent the errors that you would
 # normally get due to CORS rules. In the CORS_ORIGIN_WHITELIST code, you whitelisted
 # localhost:3000 because you want the frontend (which will be served on that port) of
@@ -200,9 +223,21 @@ CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 # if BYPASS_AUTHENTICATION:
 #    # We know REST_FRAMEWORK and other variables are available from star import.
 #    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ['rest_framework.permissions.AllowAny']
-INSTALLED_APPS += [
-    'guardian',
-]
-AUTHENTICATION_BACKENDS += [
-    'guardian.backends.ObjectPermissionBackend',
-]
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {  # This means all loggers.
+            'handlers': ['console'],
+            'level': 'DEBUG',  # You can set the level to INFO to reduce the volume of logged messages.
+            'propagate': True,
+        },
+    },
+}
