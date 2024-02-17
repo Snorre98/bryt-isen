@@ -6,11 +6,12 @@ name = "pypi"
 [packages]
 django = "*"
 django-extensions = "*"
+django-environ = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
-ruff = "*"
 django-guardian = "*"
 pillow = "*"
+ruff = "*"
 
 [dev-packages]
 
