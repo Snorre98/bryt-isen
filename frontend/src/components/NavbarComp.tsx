@@ -29,17 +29,22 @@ function NavbarComp() {
   const logedInUser = (
     <>
       <Nav>
-        <h4 style={{ margin: '1rem', color: 'blue' }}>{user?.username}</h4>
+        <h4 style={{ margin: '1rem', color: '#ffc107', fontWeight: 'bolder' }}>{user?.username}</h4>
       </Nav>
-      <Button variant="primary" onClick={handleLogout}>
+      <Button variant="primary" className="btn btn-warning" onClick={handleLogout}>
         Logg ut
       </Button>
     </>
   );
 
-  const logIn = (
+  const logIn = !user && (
     <Nav.Link as={Link} to="/login">
-      {user === undefined ? 'Logg inn' : 'Bytt bruker'}
+      Logg inn
+    </Nav.Link>
+  );
+  const newUser = !user && (
+    <Nav.Link as={Link} to="/signup">
+      Ny bruker
     </Nav.Link>
   );
   return (
@@ -61,9 +66,7 @@ function NavbarComp() {
         </Nav>
         <Nav>
           {logIn}
-          <Nav.Link as={Link} to="/signup">
-            Ny bruker
-          </Nav.Link>
+          {newUser}
         </Nav>
         {user && logedInUser}
       </Navbar.Collapse>
