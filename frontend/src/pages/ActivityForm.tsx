@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Dropdown, Form, Stack } from 'react-bootstrap';
-import '../ActivityForm.css';
-import axios from 'axios'
+import '../styles/ActivityForm.css';
+import axios from 'axios';
 import { rule } from 'postcss';
 import { postActivity } from '~/api';
 import { ActivityType } from '~/constants';
-
 
 function ActivityForm() {
   const [selectedCategory, setSelectedCategory] = useState('Velg kategori');
@@ -56,7 +55,15 @@ function ActivityForm() {
       setImageUrl(URL.createObjectURL(file));
     }
   };
-  
+
+  useEffect(() => {
+    // Cleanup the object URL
+    return () => {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+      }
+    };
+  }, [imageUrl]);
 
   const submitForm = () => {
     const formdata = new FormData();
@@ -68,25 +75,25 @@ function ActivityForm() {
     formdata.append('name', name);
     formdata.append('activity_type', selectedCategory.toUpperCase());
     formdata.append('details', description);
-    console.log(formdata)
+    console.log(formdata);
     const axiosconfig = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     };
 
-    console.log(formdata)
-    axios.post(api + 'activities/', formdata, axiosconfig)
-      .then(response => {
+    console.log(formdata);
+    axios
+      .post(api + 'activities/', formdata, axiosconfig)
+      .then((response) => {
         console.log(response);
         alert('Aktiviteten ble lastet opp!');
         // Reset form...
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   };
-
 
   useEffect(() => {
     // Cleanup the object URL
@@ -150,11 +157,11 @@ function ActivityForm() {
                   <Dropdown.Toggle id="dropdown-basic">{selectedCategory}</Dropdown.Toggle>
 
                   <Dropdown.Menu>
-                  {Object.entries(ActivityType).map(([key, value]) => (
-                    <Dropdown.Item key={key} onClick={() => setSelectedCategory(value)}>
-                      {value}
-                    </Dropdown.Item>
-                  ))}
+                    {Object.entries(ActivityType).map(([key, value]) => (
+                      <Dropdown.Item key={key} onClick={() => setSelectedCategory(value)}>
+                        {value}
+                      </Dropdown.Item>
+                    ))}
                   </Dropdown.Menu>
                 </Dropdown>
               </Form.Group>
@@ -177,7 +184,13 @@ function ActivityForm() {
             </div>
           </div>
         </div>
-        <Button onClick={() => {submitForm()}} variant="primary" size="lg">
+        <Button
+          onClick={() => {
+            submitForm();
+          }}
+          variant="primary"
+          size="lg"
+        >
           Opprett aktivitet
         </Button>{' '}
       </div>

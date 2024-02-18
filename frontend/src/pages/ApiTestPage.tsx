@@ -36,14 +36,9 @@ export function ApiTestPage() {
         <input type="number" defaultValue={1} id="activityPK" />
         <button
           onClick={() => {
-            const element = document.getElementById('activityPK');
-
-            if (element !== null) {
-              const activityId = (element as HTMLInputElement).value;
-              getActivity(activityId).then(console.log).catch(console.error);
-            } else {
-              console.error('Element with ID activityPK not found.');
-            }
+            // Retrieve the value of the input field
+            const activityId = document.getElementById('activityPK')!.value;
+            getActivity(activityId).then(console.log).catch(console.error);
           }}
         >
           Trykk - sjekk console{' '}
@@ -59,18 +54,16 @@ export function ApiTestPage() {
             <p>Type: {activity.activity_type}</p>
             <button
               onClick={() => {
+                // Correctly structured object for updating the activity
                 const updatedActivity = { isReported: true };
-                if (typeof activity.id !== 'undefined') {
-                  putActivity(activity.id, updatedActivity)
-                    .then(console.log)
-                    .catch(() => {
-                      alert(
-                        'Fungerer ikke ennå! Å redigere data krever tillatelser ved bruk av CSRF-tokens, noe vi ikke har satt opp ennå.',
-                      );
-                    });
-                } else {
-                  console.error('Activity ID is undefined.');
-                }
+
+                putActivity(activity.id, updatedActivity)
+                  .then(console.log)
+                  .catch(() => {
+                    alert(
+                      'Fungerer ikke ennå! Å redigere data krever tillatelser ved bruk av CSRF-tokens, noe vi ikke har satt opp ennå.',
+                    );
+                  });
               }}
             >
               Rapporter
