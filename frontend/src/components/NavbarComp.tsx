@@ -43,7 +43,6 @@ function NavbarComp() {
     </Nav.Link>
   );
   return (
-    // <Container>
     <Navbar className="navbarContainer" expand="lg">
       <Navbar.Brand as={Link} to="/">
         <img id="logo" src={navImage} alt="" />
@@ -69,7 +68,6 @@ function NavbarComp() {
         {user && logedInUser}
       </Navbar.Collapse>
     </Navbar>
-    // </Container>
   );
 }
 
