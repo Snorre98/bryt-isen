@@ -1,4 +1,4 @@
-import { Button, Container, Nav, Navbar } from 'react-bootstrap';
+import { Button, Nav, Navbar } from 'react-bootstrap';
 
 //import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -44,29 +44,27 @@ function NavbarComp() {
   );
   return (
     <Navbar className="navbarContainer" expand="lg">
-    <Navbar.Brand as={Link} to="/">
-      <img id="logo" src={navImage} alt="" />
-    </Navbar.Brand>
-    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <Navbar.Collapse id="basic-navbar-nav">
-      <Nav className="me-auto">
-        <Nav.Link as={Link} to="/">
-              Hjem
-            </Nav.Link>
-            <Nav.Link as={Link} to="/activityForm">
-              Opprett aktivitet
-            </Nav.Link>
-          </Nav>
-          <Nav>
-            {logIn}
-            <Nav.Link as={Link} to="/signup">
-              Ny bruker
-            </Nav.Link>
-          </Nav>
-          {user && logedInUser}
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+      <Navbar.Brand as={Link} to="/">
+        <img id="logo" src={navImage} alt="" />
+      </Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="me-auto">
+          <Nav.Link as={Link} to="/">
+            Hjem
+          </Nav.Link>
+          <Nav.Link as={Link} to="/activityForm">
+            Opprett aktivitet
+          </Nav.Link>
+        </Nav>
+        <Nav>
+          {logIn}
+          <Nav.Link as={Link} to="/signup">
+            Ny bruker
+          </Nav.Link>
+        </Nav>
+        {user && logedInUser}
+      </Navbar.Collapse>
     </Navbar>
   );
 }
