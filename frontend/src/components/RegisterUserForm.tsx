@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { RegisterUserDto } from '~/dto';
 import { registerUser } from '~/api';
+import { AlertComponent } from './AlertComponent';
 
 export function RegiserUserForm() {
   const [username, setUsername] = useState('');
@@ -22,7 +23,7 @@ export function RegiserUserForm() {
         setRegistrationStatus('error');
       });
   };
-  //const responseFeedback = <h1>User was registered</h1>;
+
   return (
     <>
       <Form onSubmit={handleRegistration}>
@@ -77,8 +78,10 @@ export function RegiserUserForm() {
           Registrer
         </Button>
       </Form>
-      {registrationStatus === 'success' && <Alert variant="success">Bruker opprettet!</Alert>}
-      {registrationStatus === 'error' && <Alert variant="danger">Noe gikk feil, bruker ikke opprettet.</Alert>}
+      {registrationStatus === 'success' && <AlertComponent variant="success" text="Bruker opprettet!" />}
+      {registrationStatus === 'error' && (
+        <AlertComponent variant="danger" text="Noe gikk feil, bruker ikke opprettet." />
+      )}
     </>
   );
 }

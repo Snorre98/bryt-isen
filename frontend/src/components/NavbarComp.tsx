@@ -50,9 +50,11 @@ function NavbarComp() {
             <Nav.Link as={Link} to="/">
               Hjem
             </Nav.Link>
-            <Nav.Link as={Link} to="/activityForm">
-              Opprett aktivitet
-            </Nav.Link>
+            {user && (
+              <Nav.Link as={Link} to="/activityForm">
+                Opprett aktivitet
+              </Nav.Link>
+            )}
           </Nav>
           <Nav>
             {logIn}
