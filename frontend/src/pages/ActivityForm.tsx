@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Alert, Button, Dropdown, Form } from 'react-bootstrap';
-import '../ActivityForm.css';
+import '../styles/ActivityForm.css';
 import { postActivity } from '~/api';
 import { ActivityType } from '~/constants';
 import { ActivityDto } from '~/dto';
@@ -62,6 +62,15 @@ function ActivityForm() {
         throw new Error(error);
       });
   };
+
+  useEffect(() => {
+    // Cleanup the object URL
+    return () => {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+      }
+    };
+  }, [imageUrl]);
 
   return (
     <>
