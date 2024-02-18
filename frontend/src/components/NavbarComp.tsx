@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import { logout } from '~/api';
 import { useEffect } from 'react';
+import navImage from '../assets/bryt-isen-logo-blue-notext.png';
+import '../styles/NavBar.css';
 
 function NavbarComp() {
   const { user, setUser } = useAuthContext();
@@ -41,13 +43,14 @@ function NavbarComp() {
     </Nav.Link>
   );
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
-      <Container fluid>
-        <Navbar.Brand href="#home">🧊⛏️Bryt Isen</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">
+    <Navbar className="navbarContainer" expand="lg">
+    <Navbar.Brand as={Link} to="/">
+      <img id="logo" src={navImage} alt="" />
+    </Navbar.Brand>
+    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+    <Navbar.Collapse id="basic-navbar-nav">
+      <Nav className="me-auto">
+        <Nav.Link as={Link} to="/">
               Hjem
             </Nav.Link>
             <Nav.Link as={Link} to="/activityForm">
@@ -63,6 +66,7 @@ function NavbarComp() {
           {user && logedInUser}
         </Navbar.Collapse>
       </Container>
+    </Navbar>
     </Navbar>
   );
 }

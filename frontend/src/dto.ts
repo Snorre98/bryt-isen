@@ -13,6 +13,7 @@ export type ActivityDto = {
   activity_type: ActivityType;
   owner_id?: number;
   isReported: boolean;
+  thumbnail?: string;
 };
 
 /**
