@@ -5,8 +5,12 @@ name = "pypi"
 
 [packages]
 django = "*"
+django-extensions = "*"
+django-environ = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
+django-guardian = "*"
+pillow = "*"
 ruff = "*"
 
 [dev-packages]

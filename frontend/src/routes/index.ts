@@ -1,4 +1,4 @@
-import { ROUTES_BACKEND } from './backend';
+import { ROUTES_BACKEND } from './backendRoutes';
 
 export const ROUTES = {
   backend: ROUTES_BACKEND,

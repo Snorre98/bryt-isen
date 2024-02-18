@@ -30,4 +30,13 @@ export const ROUTES_BACKEND = {
    */
   activity_list: '/api/activities/',
   activity_detail: '/api/activities/:pk/',
+
+  /**
+   *
+   * User registration, login, logout
+   */
+  register_user: '/register/',
+  login_brytisen_user: '/login/',
+  logout_brytisen_user: '/logout/',
+  brytisen_user: '/user/',
 };

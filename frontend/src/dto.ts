@@ -17,16 +17,23 @@ export type ActivityDto = {
 };
 
 /**
- * User data-transfer-object, used to transer a user object
+ * Data transfer object used to transfer registration data to backend
  */
+export type RegisterUserDto = {
+  username: string;
+  first_name: string;
+  last_name: string;
+  password: string;
+};
+
 export type UserDto = {
   id: number;
   username: string;
   first_name: string;
   last_name: string;
+  is_active: boolean;
   is_superuser: boolean;
-  date_joined: Date;
-  last_login: Date;
+  groups: GroupDto[];
   permissions?: string[];
   object_permissions?: ObjectPermissionDto[];
 };
@@ -34,4 +41,9 @@ export type UserDto = {
 export type ObjectPermissionDto = {
   obj_pk: number;
   permission: string;
+};
+
+export type GroupDto = {
+  id: number;
+  name: string;
 };

@@ -6,7 +6,7 @@ import { Container } from 'react-bootstrap';
 import FooterComp from '~/components/FooterComp';
 import NavbarComp from '~/components/NavbarComp';
 import Login from '../pages/Login';
-import Signup from '../pages/Signup';
+import Signup from './SignupPage';
 import ActivityForm from './ActivityForm';
 import { ApiTestPage } from './ApiTestPage';
 import Home from './Home';

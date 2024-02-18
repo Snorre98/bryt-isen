@@ -13,10 +13,17 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+import environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+IS_DOCKER = os.environ.get('IS_DOCKER') == 'yes'
 
+# Load '.env'.
+environ.Env.read_env(env_file='../.env', overwrite=False)
+
+AUTH_USER_MODEL = 'brytisen.User'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -25,10 +32,30 @@ SECRET_KEY = 'django-insecure-kl(nd9k)8iw9&(rs@)uu_6%b9ls62)u1mgki(bc8rpl(tbr2$5
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ENV = 'development'
 
 ALLOWED_HOSTS = []
 
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
 
+
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+
+DATE_INPUT_FORMATS = [
+    '%d-%m-%Y',
+    '%d.%m.%Y',
+    '%d/%m/%Y',
+]
+
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 24 * 60 * 60 * 7
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,20 +65,32 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'corsheaders',
     'rest_framework',
-    'brytisen'
+    'guardian',
+    'brytisen',
 ]
 
+# MIDDLEWARE = [
+#     'django.middleware.security.SecurityMiddleware',
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#     'corsheaders.middleware.CorsMiddleware',
+# ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'root.urls'
@@ -74,7 +113,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'root.wsgi.application'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+]
+# INSTALLED_APPS += [
+#     'guardian',
+# ]
+# AUTHENTICATION_BACKENDS += []
 
+REST_FRAMEWORK = {
+    # https://simpleisbetterthancomplex.com/tutorial/2018/11/22/how-to-implement-token-authentication-using-django-rest-framework.html
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.SessionAuthentication',),
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.DjangoObjectPermissions',
+        'root.custom_classes.permission_classes.SuperUserPermission',
+        # 'root.custom_classes.permission_classes.CustomDjangoObjectPermissions',
+    ],
+}
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -127,6 +184,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# INSTALLED_APPS += [
+#     'rest_framework',
+# ]
 
 # django-cors-headers is a Python library that will prevent the errors that you would
 # normally get due to CORS rules. In the CORS_ORIGIN_WHITELIST code, you whitelisted
@@ -146,6 +206,15 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
+### Default authentication schemes set globaly
+### https://www.django-rest-framework.org/api-guide/authentication/
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.BasicAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#     ]
+# }
+
 
 ## dev allow any permissions: (requires REST_FRAMEWORK definition)
 
@@ -154,6 +223,23 @@ CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 # if BYPASS_AUTHENTICATION:
 #    # We know REST_FRAMEWORK and other variables are available from star import.
 #    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ['rest_framework.permissions.AllowAny']
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {  # This means all loggers.
+            'handlers': ['console'],
+            'level': 'DEBUG',  # You can set the level to INFO to reduce the volume of logged messages.
+            'propagate': True,
+        },
+    },
+}
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

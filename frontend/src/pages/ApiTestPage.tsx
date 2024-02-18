@@ -1,22 +1,8 @@
-//import { useNavigate } from 'react-router';
-//import { error } from 'console';
-import { ActivityDto } from '../dto';
-import { useEffect, useState } from 'react';
-import { getActivities, getActivity, getCsrfToken, putActivity } from '~/api';
+import axios from 'axios';
+//import { useState } from 'react';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import { getCsrfToken } from '~/api';
 export function ApiTestPage() {
-  //const navigate = useNavigate();
-  const [activities, setActivities] = useState<ActivityDto[]>([]);
-
-  useEffect(() => {
-    getActivities()
-      .then((data) => {
-        setActivities(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
   return (
     <div>
       <div>

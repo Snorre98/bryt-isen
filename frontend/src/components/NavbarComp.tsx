@@ -1,11 +1,47 @@
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Button, Nav, Navbar } from 'react-bootstrap';
 
-import React from 'react';
+//import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuthContext } from '~/contextProviders/AuthContextProvider';
+import { logout } from '~/api';
+import { useEffect } from 'react';
 import navImage from '../assets/bryt-isen-logo-blue-notext.png';
 import '../styles/NavBar.css';
 
 function NavbarComp() {
+  const { user, setUser } = useAuthContext();
+
+  useEffect(() => {
+    setUser(user);
+  }, [user, setUser]);
+
+  const HTTP_200_OK: number = 200;
+
+  const handleLogout = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    logout()
+      .then((response) => {
+        response.status === HTTP_200_OK && setUser(undefined);
+      })
+      .catch(console.error);
+  };
+
+  const logedInUser = (
+    <>
+      <Nav>
+        <h4 style={{ margin: '1rem', color: 'blue' }}>{user?.username}</h4>
+      </Nav>
+      <Button variant="primary" onClick={handleLogout}>
+        Logg ut
+      </Button>
+    </>
+  );
+
+  const logIn = (
+    <Nav.Link as={Link} to="/login">
+      {user === undefined ? 'Logg inn' : 'Bytt bruker'}
+    </Nav.Link>
+  );
   return (
     <Navbar className="navbarContainer" expand="lg">
       <Navbar.Brand as={Link} to="/">
@@ -22,13 +58,12 @@ function NavbarComp() {
           </Nav.Link>
         </Nav>
         <Nav>
-          <Nav.Link as={Link} to="/login">
-            Logg inn
-          </Nav.Link>
+          {logIn}
           <Nav.Link as={Link} to="/signup">
             Ny bruker
           </Nav.Link>
         </Nav>
+        {user && logedInUser}
       </Navbar.Collapse>
     </Navbar>
   );
