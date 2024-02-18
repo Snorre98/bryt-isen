@@ -1,27 +1,36 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import img2 from '../assets/Metrobuss_Trondheim-190805.jpg';
-import img from '../assets/chess-drinking.jpg';
-import img1 from '../assets/download.jpeg';
-import CardComp from "../components/CardComp";
+import { getActivities } from '~/api';
+import CardComp from '~/components/CardComp';
+import { ActivityDto } from '../dto';
 
+export function Home() {
 
-function Home() {
+  const [activities, setActivities] = useState<ActivityDto[]>([]);
+
+  useEffect(() => {
+    getActivities()
+      .then((data) => {
+        setActivities(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   return (
-<Container className='mt-4'>
-          <Row className="justify-content-md-center">
+    <Container className='mt-4'>
+      <Row className="justify-content-md-center">
+        {activities.length > 0 ? (
+          activities.map((activity) => (
             <Col>
-              <CardComp title={'Thunderstruck'} img={img1} description={'ACDC sang'} rules={''}></CardComp>
+              <CardComp title={activity.name} img={activity.thumbnail} description={activity.details} rules={activity.activity_rules}></CardComp>
             </Col>
-            <Col>
-              <CardComp title={'Bussruten'} img={img2} description={'Kortspill med bussrute'} rules={''}></CardComp>
-            </Col>
-            <Col>
-              <CardComp title={'Lambo'} img={img} description={'Fadderperioden i Trondheim'} rules={''}></CardComp>
-            </Col>
-          </Row>
-        </Container>
-
+          ))
+        ) : (
+          <p>No activities found.</p>
+        )}
+      </Row>
+    </Container>
 
   );
 }

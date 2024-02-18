@@ -5,11 +5,11 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import FooterComp from '~/components/FooterComp';
 import NavbarComp from '~/components/NavbarComp';
-import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import ActivityForm from './ActivityForm';
 import { ApiTestPage } from './ApiTestPage';
+import Home from './Home';
 
 function App() {
   return (
