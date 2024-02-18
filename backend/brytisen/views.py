@@ -36,9 +36,9 @@ class ActivityView(viewsets.ModelViewSet):
     Can be accessed by anyone from localhost:3000
     """
 
+    permission_classes = permission_classes = [IsAuthenticated]
     serializer_class = ActivitySerializer
     queryset = Activity.objects.all()
-    # TODO: add post/put functionality
 
 
 @method_decorator(ensure_csrf_cookie, 'dispatch')

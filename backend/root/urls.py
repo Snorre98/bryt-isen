@@ -20,12 +20,12 @@ from __future__ import annotations
 
 from rest_framework import routers
 
+from django.conf import settings
 from django.urls import path, include
 from django.contrib import admin
+from django.conf.urls.static import static
 
 from brytisen import views
-from django.conf import settings
-from django.conf.urls.static import static
 
 router = routers.DefaultRouter()
 router.register(r'activities', views.ActivityView, 'activities')
@@ -40,4 +40,5 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view(), name='log-out'),
     path('user/', views.UserView.as_view(), name='user'),
     path('users/', views.AllUsersView.as_view(), name='users'),
+    path('', include(router.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
