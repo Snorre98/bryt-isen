@@ -2,13 +2,13 @@ import { Container, Nav, Navbar } from 'react-bootstrap';
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/NavBar.css';
 import navImage from '../assets/bryt-isen-logo-blue-notext.png';
+import '../styles/NavBar.css';
 
 function NavbarComp() {
   return (
     <Navbar className="navbarContainer" expand="lg">
-      <Navbar.Brand href="/">
+      <Navbar.Brand as={Link} to="/">
         <img id="logo" src={navImage} alt="" />
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
