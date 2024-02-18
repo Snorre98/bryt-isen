@@ -13,7 +13,7 @@ __pycache__
 *.pyo
 .log
 db.sqlite3
-media/thumbnails/
+media/
 
 # Script for debugging purposes.
 root/scripts/testing.py
