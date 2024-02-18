@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Alert, Button, Dropdown, Form } from 'react-bootstrap';
+import { Alert, Button, Dropdown, Form, Toast, ToastContainer } from 'react-bootstrap';
 import '../styles/ActivityForm.css';
 import { postActivity } from '~/api';
 import { ActivityType } from '~/constants';
 import { ActivityDto } from '~/dto';
+import { CustomToast } from '~/components/CustomToast';
 
 function ActivityForm() {
   const [activityTitle, setActivityTitle] = useState('');
@@ -12,14 +13,14 @@ function ActivityForm() {
   const [activityType, setActivityType] = useState<ActivityType | string>('');
   const [activityImageFile, setActivityImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
-  const [submitStatus, setSubmitStatus] = useState('');
 
-  // Use useEffect to update imageUrl whenever imageFile changes
+  const [submitStatus, setSubmitStatus] = useState('');
+  const [showToast, setShowToast] = useState(false);
+
   useEffect(() => {
     if (activityImageFile) {
       const fileUrl = URL.createObjectURL(activityImageFile);
       setImageUrl(fileUrl);
-      // Cleanup function to revoke the object URL to avoid memory leaks
       return () => URL.revokeObjectURL(fileUrl);
     }
   }, [activityImageFile]);
@@ -48,6 +49,7 @@ function ActivityForm() {
       .then((response) => {
         if (response.status === 201) {
           setSubmitStatus('success');
+          setShowToast(true);
 
           setActivityTitle('');
           setActivityDetails('');
@@ -58,7 +60,8 @@ function ActivityForm() {
         }
       })
       .catch((error) => {
-        setSubmitStatus('error');
+        setSubmitStatus('warning');
+        setShowToast(true);
         throw new Error(error);
       });
   };
@@ -181,25 +184,22 @@ function ActivityForm() {
                   style={activityType ? { backgroundColor: '#95FFAB' } : {}}
                 />
               </Form.Group>
-              <Form.Group controlId="formFile" className="mb-3">
-                <h6 style={{ margin: '0.2em' }}>Valgt bilde:</h6>
-                <img
-                  src={imageUrl}
-                  style={({ height: '100px', width: 'auto' }, activityImageFile ? { border: '2px solid green' } : {})}
-                />
-              </Form.Group>
             </Form>
           </div>
-          {submitStatus === 'success' && (
-            <Alert variant="success" style={{ position: 'fixed', top: '100px', right: '50px' }}>
-              Aktivitet lagt ut!
-            </Alert>
-          )}
-          {submitStatus === 'error' && (
-            <Alert variant="danger" style={{ position: 'fixed', top: '100px', right: '50px' }}>
-              Aktivitet ble ikke lagt ut!
-            </Alert>
-          )}
+          <div className="imgPreviewContainer" style={activityImageFile ? { backgroundColor: '#95FFAB' } : {}}>
+            <h6 style={{ margin: '0.2em' }}>Valgt bilde</h6>
+            <div className="imagePreviewWrapper">
+              <img src={imageUrl} className="imgPreview" />
+            </div>
+          </div>
+          <CustomToast
+            toastTitle="Opprett aktivitet"
+            successMessage="Aktivitet ble opprettet!"
+            errorMessage="Kunne ikke opprete aktivitet"
+            variant={submitStatus}
+            toastState={showToast}
+            setToastState={setShowToast}
+          />
         </div>
       </div>
     </>
