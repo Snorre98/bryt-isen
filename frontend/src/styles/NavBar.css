@@ -37,3 +37,25 @@
 .navbar {
   background-color: #0089A8;
 }
+
+.userChip {
+  display: inline-block;
+  padding: 0 25px;
+  height: 50px;
+  font-size: 16px;
+  line-height: 50px;
+  border-radius: 25px;
+  background-color: #026981;
+  color: white;
+  margin: 0.5rem;
+  font-weight: bold;
+}
+
+.userChipIcon{
+  float: left;
+  margin: 0 10px 0 -25px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  //background-color: red;
+}
