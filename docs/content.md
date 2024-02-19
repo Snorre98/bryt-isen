@@ -1,4 +1,5 @@
 # Innholdsfortegnelse for dokumentasjon
 
-- [Teknologistakken](teknologistakken.md)
-- [Teknologikrav](teknologikrav.md)
+- [Django-x-React](./teori/Django-x-React.md)
+- [Teknologistakken](./teori/teknologistakken.md)
+- [Teknologikrav](./teori/teknologikrav.md)
