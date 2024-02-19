@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Alert, Button, Dropdown, Form, Toast, ToastContainer } from 'react-bootstrap';
+import { Button, Dropdown, Form } from 'react-bootstrap';
 import '../styles/ActivityForm.css';
 import { postActivity } from '~/api';
 import { ActivityType } from '~/constants';
@@ -194,11 +194,10 @@ function ActivityForm() {
           </div>
           <CustomToast
             toastTitle="Opprett aktivitet"
-            successMessage="Aktivitet ble opprettet!"
-            errorMessage="Kunne ikke opprete aktivitet"
             variant={submitStatus}
             toastState={showToast}
             setToastState={setShowToast}
+            toastMessage="MELDING"
           />
         </div>
       </div>

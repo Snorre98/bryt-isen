@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { getActivities } from '~/api';
 import CardComp from '~/components/CardComp';
 import { ActivityDto } from '../dto';
 
+import '../styles/Home.css';
 export function Home() {
-
   const [activities, setActivities] = useState<ActivityDto[]>([]);
 
   useEffect(() => {
@@ -18,20 +18,22 @@ export function Home() {
       });
   }, []);
   return (
-    <Container className='mt-4'>
-      <Row className="justify-content-md-center">
+    <Container className="mt-4" style={{ display: 'felx', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="activityCardWrapper">
         {activities.length > 0 ? (
           activities.map((activity) => (
-            <Col>
-              <CardComp title={activity.name} img={activity.thumbnail} description={activity.details} rules={activity.activity_rules}></CardComp>
-            </Col>
+            <CardComp
+              title={activity.title}
+              img={activity.activity_image}
+              description={activity.details}
+              rules={activity.activity_rules}
+            ></CardComp>
           ))
         ) : (
           <p>No activities found.</p>
         )}
-      </Row>
+      </div>
     </Container>
-
   );
 }
 
