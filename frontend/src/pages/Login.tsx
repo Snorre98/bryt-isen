@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Alert, Button, Container, Form } from 'react-bootstrap';
+import { Button, Container, Form } from 'react-bootstrap';
 import { loginUser, getUser } from '~/api';
+import { CustomToast } from '~/components/CustomToast';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 
-function Login() {
+export function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loginFailed, setLoginFailed] = useState('');
+  const [loginStatus, setloginStatus] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
   const { user, setUser } = useAuthContext();
 
   useEffect(() => {
@@ -15,23 +18,47 @@ function Login() {
     }
   }, [user, setUser]);
 
+  const LOGGED_IN_MESSAGE: string = 'Allerede logget inn!';
+  const SUCCESS_MESSAGE: string = 'Logget inn som ' + user?.username;
+  const ERROR_MESSAGE: string = 'Kunne ikke logge inn!';
+
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
+
+    if (user) {
+      setToastMessage(LOGGED_IN_MESSAGE);
+      setloginStatus('info');
+      setShowToast(true);
+      return;
+    }
     loginUser(username, password)
       .then((status) => {
         if (status === 202) {
-          getUser().then((user) => {
-            setUser(user);
-            setLoginFailed('success');
-          });
+          getUser()
+            .then((user) => {
+              setUser(user);
+              setloginStatus('success');
+              setToastMessage(SUCCESS_MESSAGE);
+              setShowToast(true);
+            })
+            .catch((error) => {
+              console.log(error);
+              setloginStatus('warning');
+              setToastMessage(ERROR_MESSAGE);
+              setShowToast(true);
+            });
+        } else {
+          setloginStatus('warning');
+          setToastMessage(ERROR_MESSAGE);
+          setShowToast(true);
         }
       })
-      .catch((error: object) => {
-        setLoginFailed('error');
-        console.log(error);
+      .catch(() => {
+        setloginStatus('warning');
+        setToastMessage(ERROR_MESSAGE);
+        setShowToast(true);
       });
   };
-
   return (
     <Container className="mt-5">
       <Form onSubmit={handleSubmit}>
@@ -59,10 +86,13 @@ function Login() {
           Logg inn
         </Button>
       </Form>
-      {loginFailed === 'success' && <Alert variant="success">Bruker logget inn!</Alert>}
-      {loginFailed === 'error' && <Alert variant="danger">Noe gikk feil, bruker ikke logget inn</Alert>}
+      <CustomToast
+        toastTitle="Innlogging"
+        toastMessage={toastMessage}
+        variant={loginStatus}
+        setToastState={setShowToast}
+        toastState={showToast}
+      />
     </Container>
   );
 }
-
-export default Login;

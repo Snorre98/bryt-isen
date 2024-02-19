@@ -6,7 +6,7 @@ from .models import User, Activity
 
 
 class ActivityAdmin(admin.ModelAdmin):
-    list_display = ('name', 'details', 'activity_type')
+    list_display = ('title', 'details', 'activity_type')
 
 
 class UserAdmin(admin.ModelAdmin):

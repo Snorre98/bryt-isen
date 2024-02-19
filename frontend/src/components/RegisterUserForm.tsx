@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { RegisterUserDto } from '~/dto';
-import { registerUser } from '~/api';
+import { getUser, registerUser } from '~/api';
+import { AlertComponent } from './AlertComponent';
+import { CustomToast } from './CustomToast';
+import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 
 export function RegiserUserForm() {
   const [username, setUsername] = useState('');
@@ -9,20 +12,49 @@ export function RegiserUserForm() {
   const [last_name, setLastname] = useState('');
   const [password, setPassword] = useState('');
   const [registrationStatus, setRegistrationStatus] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const { user, setUser } = useAuthContext();
+
+  const SUCCESS_MESSAGE: string = 'Bruker registrert';
+  const ERROR_MESSAGE: string = 'Kunne ikke registrere bruker';
+  const LOGG_OUT: string = 'Logg ut for å registrer bruker';
+  const USER_EXCISTS: string = 'Username is taken!';
 
   const handleRegistration = (event) => {
     event.preventDefault();
+    if (user) {
+      setRegistrationStatus('info');
+      setToastMessage(LOGG_OUT);
+      setShowToast(true);
+      return;
+    }
+
     const userData: RegisterUserDto = { username, first_name, last_name, password };
     registerUser(userData)
-      .then(() => {
-        setRegistrationStatus('success');
+      .then((response) => {
+        if (response.status === 202) {
+          setRegistrationStatus('success');
+          setToastMessage(SUCCESS_MESSAGE);
+          setShowToast(true);
+          getUser().then((user) => {
+            setUser(user);
+          });
+        } else if (response.status === 400) {
+          //TODO make this work
+          setRegistrationStatus('info');
+          setToastMessage(USER_EXCISTS);
+          setShowToast(true);
+        }
       })
       .catch((error) => {
+        setRegistrationStatus('warning');
+        setToastMessage(ERROR_MESSAGE);
+        setShowToast(true);
         console.log(error);
-        setRegistrationStatus('error');
       });
   };
-  //const responseFeedback = <h1>User was registered</h1>;
+
   return (
     <>
       <Form onSubmit={handleRegistration}>
@@ -77,8 +109,13 @@ export function RegiserUserForm() {
           Registrer
         </Button>
       </Form>
-      {registrationStatus === 'success' && <Alert variant="success">Bruker opprettet!</Alert>}
-      {registrationStatus === 'error' && <Alert variant="danger">Noe gikk feil, bruker ikke opprettet.</Alert>}
+      <CustomToast
+        toastTitle="Registrer bruker"
+        toastMessage={toastMessage}
+        variant={registrationStatus}
+        setToastState={setShowToast}
+        toastState={showToast}
+      />
     </>
   );
 }

@@ -5,51 +5,64 @@ from django.conf import settings
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import AbstractUser
 
+from .utils.unique_file_upload import unique_file_upload
+
 # Create your models here.
 
 
 class Activity(models.Model):
-    """This is a (data)model, it can be views as an object."""
+    """
+    Model for the activity object
+    * title
+    * details
+    * activity_rules
+    * activity_type
+    * image_file
+    * owner
+    * isReported
+    """
 
-    # TODO: id
-    name = models.CharField(max_length=120)  # Aktivitet navn: f.eks. "Topptur"
+    title = models.CharField(max_length=40, null=True, blank=True)  # Aktivitet navn: f.eks. "Topptur"
 
     details = models.TextField()  # Utdypende beskrivelse av aktivitet
 
-    activity_rules = models.TextField(default='Default rules apply.')
+    activity_rules = models.TextField(default='Default rules apply.', null=True, blank=True)
 
-    # TODO: consider adding image field
+    # TODO: Find a bette way for activity_type
+    # UNDEFINED = 'UNDEFINED'
+    # TRENING = 'TRENING'
+    # FYLLA = 'FYLLA'
+    # VERV = 'VERV'
+    # TOPPTUR = 'TOPPTUR'
 
-    UNDEFINED = 'UNDEFINED'
-    TRENING = 'TRENING'
-    FYLLA = 'FYLLA'
-    VERV = 'VERV'
-    TOPPTUR = 'TOPPTUR'
-
-    TYPE_CHOICES = [
-        # TODO: make serius
-        (UNDEFINED, 'Undefined'),
-        (TRENING, 'Trening'),
-        (FYLLA, 'Fylla'),
-        (VERV, 'Verv'),
-        (TOPPTUR, 'Topptur'),
-    ]
+    # TYPE_CHOICES = [
+    #
+    #     (UNDEFINED, 'Undefined'),
+    #     (TRENING, 'Trening'),
+    #     (FYLLA, 'Fylla'),
+    #     (VERV, 'Verv'),
+    #     (TOPPTUR, 'Topptur'),
+    # ]
 
     activity_type = models.CharField(
         max_length=120,
-        choices=TYPE_CHOICES,
-        default=UNDEFINED,
+        null=True,
+        blank=True,
+        # choices=TYPE_CHOICES,
+        # default='undefined',
     )  # TEMPORARY: this is now drop-down, will become multiple choice form
 
-    thumbnail = models.FileField(upload_to='thumbnails/', null=True, blank=True)
+    activity_image = models.ImageField(upload_to=unique_file_upload, null=True, blank=True)
 
+    # TODO: establish activity - user (owner) realtion
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='activites',
-        null=True,  #  Temporarily allow null
+        null=True,
+        blank=True,
     )
-    isReported = models.BooleanField(null=True)
+    isReported = models.BooleanField(null=True, blank=True)
 
 
 #

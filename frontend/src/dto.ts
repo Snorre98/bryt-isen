@@ -7,13 +7,13 @@ import { ActivityType } from './constants';
  */
 export type ActivityDto = {
   id?: number | string;
-  name: string;
+  title: string;
   details: string;
   activity_rules: string;
-  activity_type: ActivityType;
-  owner_id?: number;
-  isReported: boolean;
-  thumbnail?: string;
+  activity_type: ActivityType | string;
+  activity_image: File | null;
+  owner?: number;
+  isReported?: boolean;
 };
 
 /**

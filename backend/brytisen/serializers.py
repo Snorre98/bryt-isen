@@ -3,6 +3,8 @@ from __future__ import annotations
 import logging
 import itertools
 
+from django.forms import ImageField
+
 from guardian.models import UserObjectPermission
 
 from rest_framework import serializers
@@ -37,9 +39,27 @@ class ActivitySerializer(serializers.ModelSerializer):
     fields in the activity model.
     """
 
+    # file = serializers.ImageField(write_only=True, required=True)
+
     class Meta:
         model = Activity
         fields = '__all__'
+
+    def create(self, validated_data: dict) -> Activity:
+        title = validated_data.get('title')
+        details = validated_data.get('details')
+        activity_rules = validated_data.get('activity_rules')
+        activity_type = validated_data.get('activity_type')
+        activity_image = validated_data.get('activity_image')
+        if title and details and activity_rules and activity_type and activity_image:
+            # Handle the image file if included in the request
+            activity_image = validated_data.pop('activity_image', None)
+            activity = Activity.objects.create(**validated_data)
+            if activity_image:
+                activity.activity_image = activity_image
+                activity.save()
+
+            return activity
 
 
 ##
