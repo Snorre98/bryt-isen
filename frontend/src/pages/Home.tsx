@@ -27,6 +27,7 @@ export function Home() {
               img={activity.activity_image}
               description={activity.details}
               rules={activity.activity_rules}
+              activity_type={activity.activity_type}
             ></CardComp>
           ))
         ) : (

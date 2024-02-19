@@ -103,7 +103,7 @@ function NavbarComp() {
           {newUser}
         </Nav>
         {user && userChip}
-        {logOut}
+        {user && logOut}
       </Navbar.Collapse>
     </Navbar>
   );
