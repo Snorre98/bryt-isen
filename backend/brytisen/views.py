@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly
+from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
 
 from django.contrib.auth import login, logout
 from django.middleware.csrf import get_token
@@ -36,9 +36,9 @@ class ActivityView(viewsets.ModelViewSet):
     Can be accessed by anyone from localhost:3000
     """
 
-    permission_classes = permission_classes = [IsAuthenticated]
-    serializer_class = ActivitySerializer
     queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 @method_decorator(ensure_csrf_cookie, 'dispatch')
