@@ -1,0 +1,19 @@
+
+.pageWrapper {
+
+
+  /* height:100vh;
+  width: 100vw; */
+  height: 100%;
+
+  /* padding-top:120px;
+  padding-bottom:120px; */
+
+  padding-top: 50px;
+  min-height: calc(100vh - 110px - 80px);
+
+  /*limit max content size for large screens*/
+  max-width: 1280px;
+  margin:auto;
+
+}

@@ -37,25 +37,52 @@ export default function CardComp({ title, img, description, rules, activity_type
         <Button variant="primary" onClick={handleShow}>
           Se mer
         </Button>
-
-        <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden' }}>
-          <Modal.Header closeButton>
-            <Modal.Title>
-              <h2>{title}</h2>
-            </Modal.Title>
-          </Modal.Header>
-
-          <h4 style={{ fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h4>
+      </Card.Body>
+      <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh' }}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <h2>{title}</h2>
+          </Modal.Title>
+        </Modal.Header>
+        <div style={{ padding: '1rem' }}>
+          <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
           <p style={{ margin: '1rem' }}>{description}</p>
 
-          <h4 style={{ fontWeight: '600', margin: '0.5rem' }}>Regler</h4>
+          <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Regler</h5>
           <p style={{ margin: '1rem' }}>{rules}</p>
 
           <h6 style={{ fontWeight: '600', margin: '0.5rem' }}>Kategori</h6>
           <p style={{ margin: '1rem' }}>{activity_type}</p>
-
-          <img src={img} alt="Image" style={{ border: '1px solid #e4e4e4', width: '95%', alignSelf: 'center' }} />
-          {user && (
+          <div
+            style={{
+              height: '20%',
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src={img}
+              alt="Image"
+              style={{
+                border: '1px solid #e4e4e4',
+                // alignSelf: 'center',
+                height: '10%',
+                width: '80%',
+                objectFit: 'contain',
+                justifySelf: 'center',
+                borderRadius: '0.375rem',
+              }}
+            />
+          </div>
+          {/* <Button variant="info" onClick={handleClose} style={{ width: '100%' }}>
+            Close
+          </Button> */}
+        </div>
+        {/*//TODO: ADD EDIT BUTTON*/}
+        {/* {user && (
             <Button
               variant="outline-warning"
               onClick={() => {
@@ -64,12 +91,8 @@ export default function CardComp({ title, img, description, rules, activity_type
             >
               Edit
             </Button>
-          )}
-          <Button variant="info" onClick={handleClose} style={{ borderRadius: '0' }}>
-            Close
-          </Button>
-        </Modal>
-      </Card.Body>
+          )} */}
+      </Modal>
     </Card>
   );
 }

@@ -12,9 +12,13 @@
 }
 
 .navbarContainer{
+  position: fixed;
+  top:0;
+  width: 100%;
   background-color: #0089A8;
-  height: 13vh;
+  height: 60px;
   padding: 5px 15px 5px 15px;
+  z-index: 999;
 }
 
 .navbarContainer .nav-link{
@@ -29,9 +33,8 @@
   color: #57D6F3;
 }
 
-
 #logo {
-  height: 13vh;
+  height: 50px;
 }
 
 .navbar {
@@ -57,5 +60,4 @@
   height: 50px;
   width: 50px;
   border-radius: 50%;
-  //background-color: red;
 }
