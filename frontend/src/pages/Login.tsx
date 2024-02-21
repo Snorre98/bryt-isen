@@ -20,7 +20,7 @@ export function Login() {
   }, [user, setUser]);
 
   const LOGGED_IN_MESSAGE: string = 'Allerede logget inn!';
-  const SUCCESS_MESSAGE: string = 'Logget inn som ' + user?.username;
+  const SUCCESS_MESSAGE: string = 'Logget inn som ';
   const ERROR_MESSAGE: string = 'Kunne ikke logge inn!';
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
@@ -39,7 +39,7 @@ export function Login() {
             .then((user) => {
               setUser(user);
               setloginStatus('success');
-              setToastMessage(SUCCESS_MESSAGE);
+              setToastMessage(SUCCESS_MESSAGE + user.username);
               setShowToast(true);
             })
             .catch((error) => {
