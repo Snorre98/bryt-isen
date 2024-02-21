@@ -6,7 +6,7 @@ export function BrytisenOutlet() {
   return (
     <>
       <NavbarComp />
-      <div className="brytisenOutlet">
+      <div style={{ flex: '1', paddingTop: '50px', paddingBottom: '50px' }}>
         <Outlet />
       </div>
       <FooterComp />

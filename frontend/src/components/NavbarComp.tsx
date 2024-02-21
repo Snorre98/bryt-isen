@@ -29,7 +29,7 @@ function NavbarComp() {
     logout()
       .then((response) => {
         response.status === HTTP_200_OK && setUser(undefined);
-        window.location.reload();
+        // window.location.reload();
       })
       .catch(console.error);
   };

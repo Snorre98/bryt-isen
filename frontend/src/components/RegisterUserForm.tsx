@@ -101,9 +101,9 @@ export function RegiserUserForm() {
               setPassword(inputValue);
             }}
           />
-          <Form.Text>
+          {/* <Form.Text>
             <h3> ⚠️ Ikke registerer med brukernavn og passord du bruker eller ville brukt andre plasser ⚠️</h3>
-          </Form.Text>
+          </Form.Text> */}
         </Form.Group>
         <Button variant="primary" type="submit">
           Registrer
