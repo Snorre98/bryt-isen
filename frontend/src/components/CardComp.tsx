@@ -90,7 +90,7 @@ export default function CardComp({ title, img, description, rules, activity_type
       </Modal>
       {/* Review Form Modal */}
       <Modal show={showReviewForm} onHide={() => setShowReviewForm(false)}>
-        <ReviewForm />
+        <ReviewForm activity_title={title}  />
       </Modal>
     </Card>
   );
