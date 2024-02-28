@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { Button, Card, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ActivityDto } from '../dto';
+import { putActivity } from '~/api';
 
 export type DetailsCardProps = {
-  key: string;
+  id: number;
   title: string;
   img: string;
   description: string;
@@ -12,13 +14,33 @@ export type DetailsCardProps = {
   activity_type: string;
 };
 
-export default function CardComp({ title, img, description, rules, activity_type }: DetailsCardProps) {
+export default function CardComp({ id, title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const { user, setUser } = useAuthContext();
+
+  const reportActivity = (event: any) => {
+    console.log(id)
+    
+
+    const data: Partial<ActivityDto> = {
+      isReported : true
+    };
+
+    putActivity(id,data)
+      .then((response) => {
+        if (response.status === 201) {
+          console.log("Rapportert")
+        }
+      })
+      .catch((error:any) => {
+        console.log(error)
+        throw new Error(error);
+      });
+  }
 
   useEffect(() => {
     if (user) {
@@ -43,7 +65,7 @@ export default function CardComp({ title, img, description, rules, activity_type
         <Modal.Header closeButton>
           <Modal.Title>
             <h2>{title}</h2>
-            <button type="button" className="btn btn-outline-secondary btn-sm">Rapporter</button>
+            <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">Rapporter</button>
           </Modal.Title>
         </Modal.Header>
         <div style={{ padding: '1rem' }}>
