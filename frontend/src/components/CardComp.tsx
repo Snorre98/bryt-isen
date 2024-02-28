@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export type DetailsCardProps = {
   key: string;
@@ -42,6 +43,7 @@ export default function CardComp({ title, img, description, rules, activity_type
         <Modal.Header closeButton>
           <Modal.Title>
             <h2>{title}</h2>
+            <button type="button" className="btn btn-outline-secondary btn-sm">Rapporter</button>
           </Modal.Title>
         </Modal.Header>
         <div style={{ padding: '1rem' }}>
