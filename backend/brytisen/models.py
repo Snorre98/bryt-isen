@@ -56,13 +56,23 @@ class Activity(models.Model):
 
     # TODO: establish activity - user (owner) realtion
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        'brytisen.User',
         on_delete=models.CASCADE,
         related_name='activites',
         null=True,
         blank=True,
     )
+    
     isReported = models.BooleanField(null=True, blank=True)
+    # highlighted = models.TextField()
+
+    def save(self, *args, **kwargs) -> None:
+        # Check if the owner is not set and the user is authenticated
+        if not self.owner and settings.AUTH_USER_MODEL:
+            user = getattr(self, 'user', None)
+            if user and user.is_authenticated:
+                self.owner = user
+        super().save(*args, **kwargs)
 
 
 #
