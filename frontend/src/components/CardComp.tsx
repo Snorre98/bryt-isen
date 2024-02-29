@@ -4,6 +4,7 @@ import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ActivityDto } from '../dto';
 import { putActivity } from '~/api';
+import { CustomToast } from '~/components/CustomToast';
 
 export type DetailsCardProps = {
   id: number;
@@ -22,6 +23,8 @@ export default function CardComp({ id, title, img, description, rules, activity_
 
   const { user, setUser } = useAuthContext();
 
+  const [showToast, setShowToast] = useState(false);
+
   const reportActivity = (event: any) => {
     console.log(id)
     
@@ -32,8 +35,9 @@ export default function CardComp({ id, title, img, description, rules, activity_
 
     putActivity(id,data)
       .then((response) => {
-        if (response.status === 201) {
+        if (response.status === 200) {
           console.log("Rapportert")
+          setShowToast(true)
         }
       })
       .catch((error:any) => {
@@ -49,6 +53,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
   }, [user, setUser]);
 
   return (
+    <>
     <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4' }}>
       <Card.Img variant="top" src={img} style={{ objectFit: 'cover', height: '10rem' }} />
       <Card.Body>
@@ -117,6 +122,15 @@ export default function CardComp({ id, title, img, description, rules, activity_
             </Button>
           )} */}
       </Modal>
+      <CustomToast
+      toastTitle="Rapportert"
+      toastMessage="Aktiviteten ble rapportert"
+      variant="warning"
+      setToastState={setShowToast}
+      toastState={showToast}
+      />
     </Card>
+    </>
+    
   );
 }
