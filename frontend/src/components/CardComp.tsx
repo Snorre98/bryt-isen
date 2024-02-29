@@ -4,7 +4,7 @@ import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ActivityDto } from '../dto';
 import { putActivity } from '~/api';
-import { CustomToast } from '~/components/CustomToast';
+import { CustomToast } from '~/components/CustomToast';;
 
 export type DetailsCardProps = {
   id: number;
