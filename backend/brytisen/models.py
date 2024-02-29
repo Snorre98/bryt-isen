@@ -54,9 +54,9 @@ class Activity(models.Model):
 
     activity_image = models.ImageField(upload_to=unique_file_upload, null=True, blank=True)
 
-    # TODO: establish activity - user (owner) realtion
+
     owner = models.ForeignKey(
-        'brytisen.User',
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='activites',
         null=True,
@@ -64,15 +64,6 @@ class Activity(models.Model):
     )
     
     isReported = models.BooleanField(null=True, blank=True)
-    # highlighted = models.TextField()
-
-    def save(self, *args, **kwargs) -> None:
-        # Check if the owner is not set and the user is authenticated
-        if not self.owner and settings.AUTH_USER_MODEL:
-            user = getattr(self, 'user', None)
-            if user and user.is_authenticated:
-                self.owner = user
-        super().save(*args, **kwargs)
 
 
 #

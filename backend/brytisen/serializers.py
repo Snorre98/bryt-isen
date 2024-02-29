@@ -41,15 +41,18 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     # file = serializers.ImageField(write_only=True, required=True)
 
+    owner = serializers.ReadOnlyField(source='owner.username') 
+
     class Meta:
         model = Activity
         fields = '__all__'
-    owner = serializers.ReadOnlyField(source='owner.username')  
+   
 
     def create(self, validated_data: dict) -> Activity:
+        validated_data['owner'] = self.context['request'].user
         title = validated_data.get('title')
         details = validated_data.get('details')
-        activity_rules = validated_data.get('activity_rules')
+        activity_rules = validated_data.get('activity_rules') 
         activity_type = validated_data.get('activity_type')
         activity_image = validated_data.get('activity_image')
         if title and details and activity_rules and activity_type and activity_image:
