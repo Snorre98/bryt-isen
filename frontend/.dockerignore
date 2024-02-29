@@ -1,8 +1,0 @@
-node_modules
-.env.*.local
-# Removed yarn specific ignores
-.git
-Dockerfile*
-.dockerignore
-# Add npm specific ignore if any
-package-lock.json
