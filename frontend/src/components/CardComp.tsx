@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
+import ReviewForm from './ReviewForm';
 
 export type DetailsCardProps = {
   key: string;
@@ -13,17 +14,18 @@ export type DetailsCardProps = {
 
 export default function CardComp({ title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const { user, setUser } = useAuthContext();
+  const { user } = useAuthContext();
 
-  useEffect(() => {
-    if (user) {
-      setUser(user);
-    }
-  }, [user, setUser]);
+  // Function to handle opening review form modal
+  const handleReviewFormOpen = () => {
+    setShow(false); // Close details modal if open
+    setShowReviewForm(true); // Open review form modal
+  };
 
   return (
     <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4' }}>
@@ -68,7 +70,6 @@ export default function CardComp({ title, img, description, rules, activity_type
               alt="Image"
               style={{
                 border: '1px solid #e4e4e4',
-                // alignSelf: 'center',
                 height: '10%',
                 width: '80%',
                 objectFit: 'contain',
@@ -77,21 +78,19 @@ export default function CardComp({ title, img, description, rules, activity_type
               }}
             />
           </div>
-          {/* <Button variant="info" onClick={handleClose} style={{ width: '100%' }}>
-            Close
-          </Button> */}
         </div>
-        {/*//TODO: ADD EDIT BUTTON*/}
         {/* {user && (
-            <Button
-              variant="outline-warning"
-              onClick={() => {
-                alert('Dette virker ikke enda!');
-              }}
-            >
-              Edit
-            </Button>
-          )} */}
+          <Button variant="outline-warning" onClick={() => alert('Dette virker ikke enda!')}>
+            Edit
+          </Button>
+        )} */}
+        {user && (
+          <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button> // Button to open review form
+        )}
+      </Modal>
+      {/* Review Form Modal */}
+      <Modal show={showReviewForm} onHide={() => setShowReviewForm(false)}>
+        <ReviewForm activity_title={title}  />
       </Modal>
     </Card>
   );
