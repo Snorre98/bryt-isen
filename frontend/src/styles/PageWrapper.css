@@ -1,0 +1,23 @@
+.pageWrapper {
+
+  padding-top: 50px;
+  padding-bottom: 50px;
+  min-height: calc(100vh - 190px); /* Adjust 190px as needed */
+
+  /* Limit max content size for large screens */
+  max-width: 1280px;
+  margin: auto;
+  height: auto; /* Let it grow as needed, but not strictly necessary with min-height set */
+}
+
+/*.pageWrapper {
+  height: 100%;
+
+  padding-top: 50px;
+  padding-bottom: 50px;
+  min-height: calc(100vh - 110px - 80px);
+
+  /*limit max content size for large screens
+  max-width: 1280px;
+  margin:auto;
+}*/

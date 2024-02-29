@@ -1,0 +1,34 @@
+version: '3.9'
+# ## chatGPT help
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend # Assuming the Dockerfile is located in ./backend
+    image: backend
+    volumes:
+      - ./backend:/app # This mounts your backend directory to /app in the container
+      - /app/.venv # This volume syntax seems incorrect; if you want to persist the virtualenv, consider using a named volume
+    env_file:
+      - ./backend/.docker.env
+    environment:
+      - IS_DOCKER=yes
+    ports:
+      - '8000:8000'
+      - '5678:5678'
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    image: frontend
+    volumes:
+      - ./frontend/src:/app/src
+    env_file:
+      - ./frontend/.env.docker
+    environment:
+      - IS_DOCKER=yes
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - "3000:3000"
+    command: npm run start:docker -- --host 0.0.0.0 --port 3000
+
