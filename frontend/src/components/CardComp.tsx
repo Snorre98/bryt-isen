@@ -71,6 +71,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
             <h2>{title}</h2>{user && (
             <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">Rapporter</button>
           )}
+          <button type="button" onClick={reportActivity} className="btn btn-danger btn-sm m-2">Slett aktiviter</button>
           </Modal.Title>
         </Modal.Header>
         <div style={{ padding: '1rem' }}>
