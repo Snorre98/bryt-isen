@@ -27,7 +27,6 @@ export default function CardComp({ id, title, img, description, rules, activity_
 
   const reportActivity = (event: any) => {
     console.log(id)
-    
 
     const data: Partial<ActivityDto> = {
       isReported : true
@@ -69,8 +68,9 @@ export default function CardComp({ id, title, img, description, rules, activity_
       <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh' }}>
         <Modal.Header closeButton>
           <Modal.Title>
-            <h2>{title}</h2>
+            <h2>{title}</h2>{user && (
             <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">Rapporter</button>
+          )}
           </Modal.Title>
         </Modal.Header>
         <div style={{ padding: '1rem' }}>
