@@ -60,7 +60,6 @@ export async function putActivity(id: string | number, data: Partial<ActivityDto
 export async function getActivities(): Promise<ActivityDto[]> {
   const url = BACKEND_DOMAIN + ROUTES.backend.activity_list;
   const response = await axios.get<ActivityDto[]>(url, { withCredentials: true });
-  console.log(response.data)
   return response.data;
 }
 
