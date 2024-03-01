@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap');
+
+.filterContainer {
+  top: 0;
+  left: 0;
+  margin: 0.5rem;
+  position: fixed;
+  background-color: rgb(252, 206, 98);
+  width: fit-content;
+  height: fit-content;
+  padding: 1rem;
+  font-family: 'Baloo Bhaijaan 2';
+}
+
+.labelText {
+  color: white;
+  text-shadow: black 1px 1px 1px;
+  font-size: medium;
+  font-weight: bold;
+  margin: 0;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+.filterItemLabel {
+  height: 50px;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0089a8;
+  margin: 0.5rem;
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+  border-radius: 0.75rem;
+}
+
+.filterItemLabelChecked {
+  height: 50px;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #00738d;
+  margin: 0.5rem;
+  box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.504);
+  border-radius: 0.75rem;
+}
+
+.filterItemLabelChecked:hover{
+  background-color: #1f98b4;
+  cursor: pointer;
+}
+
+.filterItemLabel:hover {
+  background-color: #1f98b4;
+  cursor: pointer;
+}
+
+

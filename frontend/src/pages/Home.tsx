@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { getActivities } from '~/api';
 import CardComp from '~/components/CardComp';
 import { ActivityDto } from '../dto';
-
 import '../styles/Home.css';
 import { PageWrapper } from '~/components/PageWrapper';
+import FilterComponent from '~/components/FilterComponent/FilterComponent';
+
 export function Home() {
   const [activities, setActivities] = useState<ActivityDto[]>([]);
 
@@ -19,6 +20,7 @@ export function Home() {
   }, []);
   return (
     <PageWrapper>
+      <FilterComponent />
       <div
         style={{
           display: 'flex',
