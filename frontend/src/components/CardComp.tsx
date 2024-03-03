@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
+import ReviewComp from './ReviewComp';
 
 export type DetailsCardProps = {
   key: string;
@@ -76,7 +77,9 @@ export default function CardComp({ title, img, description, rules, activity_type
                 borderRadius: '0.375rem',
               }}
             />
+            <ReviewComp username={'roar'} rating={5} review_description={'dette var gøy altså!!'} />
           </div>
+
           {/* <Button variant="info" onClick={handleClose} style={{ width: '100%' }}>
             Close
           </Button> */}
