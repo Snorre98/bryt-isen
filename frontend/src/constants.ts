@@ -19,6 +19,7 @@ export const ActivityType = {
 
 export type ActivityType = (typeof ActivityType)[keyof typeof ActivityType];
 
+export const FILTER_OPTIONS: Set<string> = new Set<string>(Object.values(ActivityType));
 /**
  *
  */

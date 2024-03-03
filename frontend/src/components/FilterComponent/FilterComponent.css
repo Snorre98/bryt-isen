@@ -20,6 +20,7 @@
 .filterControll{
   padding: 0 1rem 0 1rem;
   border-right: 2px solid #fcce62;
+  font-size: 1.5rem;
 }
 
 .filterItemContainer{

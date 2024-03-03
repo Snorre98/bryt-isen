@@ -1,39 +1,40 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { ActivityType } from '~/constants';
+import { FILTER_OPTIONS } from '~/constants';
 import './FilterComponent.css';
 import { Icon } from '@iconify/react';
+import { useGlobalContext } from '~/contextProviders/GlobalContextProvider';
 
 type FilterComponentProp = {
   showFilter: boolean;
 };
-function FilterComponent({ showFilter = true }: FilterComponentProp) {
-  const filterOptions: Set<string> = new Set<string>(Object.values(ActivityType));
-  const [filterValues, setFilterValues] = useState<Set<string>>(new Set<string>(filterOptions));
+function FilterComponent({ showFilter }: FilterComponentProp) {
   const [filterControllValue, setFilterControllValue] = useState<string | null>('showAll');
   const filterItemContainerRef = useRef<HTMLDivElement>(null);
+  const { activityFilter, setActivityFilter } = useGlobalContext();
 
-  useEffect(() => {}, [filterValues, filterControllValue]);
+  // useEffect(() => {
+  // }, [activityFilter, filterControllValue]);
 
   const handleFilterControll = (value: string) => {
     if (value === 'showAll') {
       setFilterControllValue(value);
-      setFilterValues(filterOptions);
+      setActivityFilter(FILTER_OPTIONS);
     } else if (value === 'showNone') {
       setFilterControllValue(value);
-      setFilterValues(new Set<string>());
+      setActivityFilter(new Set<string>());
     }
   };
 
   const handleFilterChange = (filterOption: string) => {
     setFilterControllValue(null);
-    const updatedFilterValues = new Set(filterValues);
+    const updatedFilterValues = new Set(activityFilter);
     if (updatedFilterValues.has(filterOption)) {
       updatedFilterValues.delete(filterOption);
     } else {
       updatedFilterValues.add(filterOption);
     }
-    setFilterValues(updatedFilterValues);
+    setActivityFilter(updatedFilterValues);
   };
 
   const scrollLeft = () => {
@@ -58,8 +59,8 @@ function FilterComponent({ showFilter = true }: FilterComponentProp) {
           reverse
           type="radio"
           name="filterControllGroup"
-          disabled={filterValues.size === filterOptions.size}
-          checked={filterControllValue === 'showAll'}
+          disabled={activityFilter.size === FILTER_OPTIONS.size}
+          checked={filterControllValue === 'showAll' || activityFilter.size === FILTER_OPTIONS.size}
           onChangeCapture={() => handleFilterControll('showAll')}
         />
         <Form.Check
@@ -67,8 +68,8 @@ function FilterComponent({ showFilter = true }: FilterComponentProp) {
           reverse
           type="radio"
           name="filterControllGroup"
-          checked={filterControllValue === 'showNone'}
-          disabled={filterValues.size <= 0}
+          checked={filterControllValue === 'showNone' || activityFilter.size <= 0}
+          disabled={activityFilter.size <= 0}
           onChangeCapture={() => handleFilterControll('showNone')}
         />
       </Form>
@@ -77,10 +78,10 @@ function FilterComponent({ showFilter = true }: FilterComponentProp) {
 
   const filterItem = (
     <>
-      {Array.from(filterOptions).map((filterOption) => (
+      {Array.from(FILTER_OPTIONS).map((filterOption) => (
         <div className="filterItem" key={filterOption}>
           <label
-            className={filterValues.has(filterOption) ? 'filterItemLabelChecked' : 'filterItemLabel'}
+            className={activityFilter.has(filterOption) ? 'filterItemLabelChecked' : 'filterItemLabel'}
             key={filterOption}
           >
             <p className="labelText">{filterOption}</p>
@@ -88,7 +89,7 @@ function FilterComponent({ showFilter = true }: FilterComponentProp) {
               style={{ display: 'none' }}
               type="checkbox"
               value={filterOption}
-              checked={filterValues.has(filterOption)}
+              checked={activityFilter.has(filterOption)}
               onChangeCapture={() => {
                 handleFilterChange(filterOption);
               }}
