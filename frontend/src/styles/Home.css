@@ -4,5 +4,18 @@
   gap: 2rem;
   height: 100%;
   width: 100%;
-  /* background-color: red; */
+}
+
+.toggleFilterBtn{
+  position: fixed;
+  bottom: 3.5rem;
+  right: 3rem;
+  z-index: 999;
+  padding: 0.25rem;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }

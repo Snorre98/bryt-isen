@@ -1,6 +1,4 @@
 import { Button, Nav, Navbar } from 'react-bootstrap';
-
-//import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import { logout } from '~/api';
@@ -92,6 +90,7 @@ function NavbarComp() {
           <Nav.Link as={Link} to="/">
             Hjem
           </Nav.Link>
+
           {user && (
             <Nav.Link as={Link} to="/activityForm">
               Opprett aktivitet

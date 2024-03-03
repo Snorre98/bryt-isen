@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { ActivityType } from '~/constants';
 import './FilterComponent.css';
+import { Icon } from '@iconify/react';
 
 type FilterComponentProp = {
   showFilter: boolean;
@@ -10,18 +11,9 @@ function FilterComponent({ showFilter = true }: FilterComponentProp) {
   const filterOptions: Set<string> = new Set<string>(Object.values(ActivityType));
   const [filterValues, setFilterValues] = useState<Set<string>>(new Set<string>(filterOptions));
   const [filterControllValue, setFilterControllValue] = useState<string | null>('showAll');
-  // const [showFilter, setShowFilter] = useState(true);
+  const filterItemContainerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    //TODO: fjern disse
-    console.log(filterValues);
-    console.log(filterControllValue);
-  }, [filterValues, filterControllValue]);
-
-  // const handleShowFilter = () => {
-  //   setShowFilter(!showFilter);
-  //   console.log(showFilter);
-  // };
+  useEffect(() => {}, [filterValues, filterControllValue]);
 
   const handleFilterControll = (value: string) => {
     if (value === 'showAll') {
@@ -44,11 +36,26 @@ function FilterComponent({ showFilter = true }: FilterComponentProp) {
     setFilterValues(updatedFilterValues);
   };
 
+  const scrollLeft = () => {
+    const filterItemContainer = filterItemContainerRef.current;
+    if (filterItemContainer) {
+      filterItemContainer.scrollBy({ left: -200, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    const filterItemContainer = filterItemContainerRef.current;
+    if (filterItemContainer) {
+      filterItemContainer.scrollBy({ left: 200, behavior: 'smooth' });
+    }
+  };
+
   const filterControl = (
     <div className="filterControll">
       <Form>
         <Form.Check
           label="Vis alle"
+          reverse
           type="radio"
           name="filterControllGroup"
           disabled={filterValues.size === filterOptions.size}
@@ -57,6 +64,7 @@ function FilterComponent({ showFilter = true }: FilterComponentProp) {
         />
         <Form.Check
           label="Vis ingen"
+          reverse
           type="radio"
           name="filterControllGroup"
           checked={filterControllValue === 'showNone'}
@@ -75,7 +83,6 @@ function FilterComponent({ showFilter = true }: FilterComponentProp) {
             className={filterValues.has(filterOption) ? 'filterItemLabelChecked' : 'filterItemLabel'}
             key={filterOption}
           >
-            {' '}
             <p className="labelText">{filterOption}</p>
             <input
               style={{ display: 'none' }}
@@ -94,12 +101,31 @@ function FilterComponent({ showFilter = true }: FilterComponentProp) {
 
   return (
     <>
-      {/* <button onClick={handleShowFilter}>{showFilter ? 'Gjem filter' : 'Vis filter'}</button> */}
-      <div className="filterContainer" style={showFilter ? { display: 'flex' } : { display: 'none' }}>
+      <div className="filterContainer" style={showFilter ? { display: 'grid' } : { display: 'none' }}>
         {filterControl}
-        {filterItem}
-        {filterItem}
-        {filterItem}
+        <div className="scrollLeft">
+          <Icon
+            icon="ph:arrow-line-left-bold"
+            width="32"
+            height="32"
+            color="#0089a8"
+            className="scrollIcon"
+            onMouseDown={scrollLeft}
+          />
+        </div>
+        <div className="filterItemContainer" ref={filterItemContainerRef}>
+          {filterItem}
+        </div>
+        <div className="scrollRight">
+          <Icon
+            icon="ph:arrow-line-right-bold"
+            width="32"
+            height="32"
+            color="#0089a8"
+            className="scrollIcon"
+            onMouseDown={scrollRight}
+          />
+        </div>
       </div>
     </>
   );

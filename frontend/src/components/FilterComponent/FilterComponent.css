@@ -3,21 +3,53 @@
 .filterContainer {
   top: 0;
   left: 0;
-  /* width: 100vw; */
+  position: fixed;
   height: fit-content;
-  /* width: fit-content; */
-  overflow: auto;
-  max-width: 100%;
-  position: relative;
-  background-color: rgb(252, 206, 98);
+  width: 100%;
   padding: 1rem;
+  margin-top: 3.5rem;
+  z-index: 666;
+  grid-template-columns: auto auto auto auto;
+  gap: 1rem;
+  background-color: rgba(252, 206, 98, 0.5);
+  backdrop-filter: blur(1.5rem);
   font-family: 'Baloo Bhaijaan 2';
-  z-index: 999;
-  flex-direction: row;
-  /* align-items: center; */
-  justify-content: center;
-  margin: 1rem;
+  box-shadow: 0 0 1rem black;
 }
+
+.filterControll{
+  padding: 0 1rem 0 1rem;
+  border-right: 2px solid #fcce62;
+}
+
+.filterItemContainer{
+  display: flex;
+  width:100%;
+  flex-direction: row;
+  overflow-x: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.filterItemContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollLeft{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.scrollRight{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scrollIcon:hover {
+  cursor: pointer;
+}
+
 
 .labelText {
   color: white;
@@ -36,7 +68,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0089a84e;
+  background-color: #0089a893;
   margin: 1rem;
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
   border-radius: 0.25rem;
@@ -55,12 +87,12 @@
 }
 
 .filterItemLabelChecked:hover{
-  background-color: #1f98b4;
+  background-color: rgba(0, 137, 168, 0.349);
   cursor: pointer;
 }
 
 .filterItemLabel:hover {
-  background-color: #1f98b4;
+  background-color: rgba(0, 137, 168, 0.932);
   cursor: pointer;
 }
 

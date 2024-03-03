@@ -4,10 +4,12 @@ import CardComp from '~/components/CardComp';
 import { ActivityDto } from '../dto';
 import '../styles/Home.css';
 import { PageWrapper } from '~/components/PageWrapper';
+import { Icon } from '@iconify/react';
 import FilterComponent from '~/components/FilterComponent/FilterComponent';
 
 export function Home() {
   const [activities, setActivities] = useState<ActivityDto[]>([]);
+  const [showFilter, setShowFilter] = useState(false);
 
   useEffect(() => {
     getActivities()
@@ -20,16 +22,21 @@ export function Home() {
   }, []);
   return (
     <PageWrapper>
-      <FilterComponent showFilter={true} />
+      <FilterComponent showFilter={showFilter} />
+      <div
+        className="toggleFilterBtn"
+        style={showFilter ? { backgroundColor: '#fcce62' } : { backgroundColor: '#fcce62b7' }}
+        onClick={() => setShowFilter(!showFilter)}
+      >
+        Filter
+        <Icon icon="ic:baseline-filter-list" width="32" height="32" style={{ color: 'black' }} />
+      </div>
       <div
         style={{
-          // display: 'grid',
           height: '100%',
           width: '100%',
-          // gridTemplateColumns: 'auto auto',
           alignItems: 'center',
           justifyContent: 'center',
-          // grid-template-columns:"1fr 1fr",
         }}
       >
         <div className="activityCardWrapper">
