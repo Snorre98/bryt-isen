@@ -23,6 +23,7 @@
     "react-router-dom": "^6.22.0"
   },
   "devDependencies": {
+    "@iconify/react": "^4.1.1",
     "@types/node": "^20.11.16",
     "@types/react": "^18.2.43",
     "@types/react-bootstrap": "^0.32.35",
