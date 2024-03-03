@@ -5,12 +5,16 @@ type ReviewFormProps = {
   activity_title: string;
 };
 
-export default function ReviewForm() {
+export default function ReviewForm({ activity_title }: ReviewFormProps) {
   return (
-    <div>
-      <h2>Review</h2>
+    <>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          <h2>Vurdering av: {activity_title}</h2>
+        </Modal.Title>
+      </Modal.Header>
       <Form.Control as="textarea" rows={3} />
-      <p>Rating: stars</p>
+      <p>Rating: antall stjerner</p>
       <Form>
         <div className="mb-3">
           {[1, 2, 3, 4, 5].map((value) => (
@@ -25,8 +29,7 @@ export default function ReviewForm() {
           ))}
         </div>
       </Form>
-      <Button variant="primary">Primary </Button>
-      {'Send inn'}
-    </div>
+      <Button variant="primary">Send inn</Button>
+    </>
   );
 }
