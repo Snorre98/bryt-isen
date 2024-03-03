@@ -1,18 +1,27 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { ActivityType } from '~/constants';
 import './FilterComponent.css';
 
-function FilterComponent() {
+type FilterComponentProp = {
+  showFilter: boolean;
+};
+function FilterComponent({ showFilter = true }: FilterComponentProp) {
   const filterOptions: Set<string> = new Set<string>(Object.values(ActivityType));
   const [filterValues, setFilterValues] = useState<Set<string>>(new Set<string>(filterOptions));
   const [filterControllValue, setFilterControllValue] = useState<string | null>('showAll');
+  // const [showFilter, setShowFilter] = useState(true);
 
   useEffect(() => {
     //TODO: fjern disse
     console.log(filterValues);
     console.log(filterControllValue);
   }, [filterValues, filterControllValue]);
+
+  // const handleShowFilter = () => {
+  //   setShowFilter(!showFilter);
+  //   console.log(showFilter);
+  // };
 
   const handleFilterControll = (value: string) => {
     if (value === 'showAll') {
@@ -85,9 +94,11 @@ function FilterComponent() {
 
   return (
     <>
-      <div className="filterContainer">
-        <h1>Filter</h1>
+      {/* <button onClick={handleShowFilter}>{showFilter ? 'Gjem filter' : 'Vis filter'}</button> */}
+      <div className="filterContainer" style={showFilter ? { display: 'flex' } : { display: 'none' }}>
         {filterControl}
+        {filterItem}
+        {filterItem}
         {filterItem}
       </div>
     </>

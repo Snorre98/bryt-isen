@@ -20,14 +20,16 @@ export function Home() {
   }, []);
   return (
     <PageWrapper>
-      <FilterComponent />
+      <FilterComponent showFilter={true} />
       <div
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          // display: 'grid',
           height: '100%',
           width: '100%',
+          // gridTemplateColumns: 'auto auto',
+          alignItems: 'center',
+          justifyContent: 'center',
+          // grid-template-columns:"1fr 1fr",
         }}
       >
         <div className="activityCardWrapper">
