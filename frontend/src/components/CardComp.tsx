@@ -42,13 +42,16 @@ export default function CardComp({ title, img, description, rules, activity_type
           Se mer
         </Button>
       </Card.Body>
-      <Modal show={show} onHide={handleClose} style={{ overflow: 'auto', height: '95vh' }}>
+      <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh' }}>
         <Modal.Header closeButton>
           <Modal.Title>
             <h2>{title}</h2>
+            {user && (
+              <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button> // Button to open review form
+            )}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ maxHeight: 'calc(95vh - 200px)', overflow: 'auto' }}>
           <div style={{ padding: '1rem' }}>
             <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
             <p style={{ margin: '1rem' }}>{description}</p>
@@ -97,9 +100,6 @@ export default function CardComp({ title, img, description, rules, activity_type
             Edit
           </Button>
         )} */}
-        {user && (
-          <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button> // Button to open review form
-        )}
       </Modal>
       {/* Review Form Modal */}
       <Modal show={showReviewForm} onHide={() => setShowReviewForm(false)}>
