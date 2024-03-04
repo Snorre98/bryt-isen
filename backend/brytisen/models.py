@@ -24,7 +24,7 @@ class Activity(models.Model):
 
     title = models.CharField(max_length=40, null=True, blank=True)  # Aktivitet navn: f.eks. "Topptur"
 
-    details = models.TextField()  # Utdypende beskrivelse av aktivitet
+    details = models.TextField(null=True, blank=True)  # Utdypende beskrivelse av aktivitet
 
     activity_rules = models.TextField(default='Default rules apply.', null=True, blank=True)
 
@@ -54,7 +54,7 @@ class Activity(models.Model):
 
     activity_image = models.ImageField(upload_to=unique_file_upload, null=True, blank=True)
 
-    # TODO: establish activity - user (owner) realtion
+
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -62,6 +62,7 @@ class Activity(models.Model):
         null=True,
         blank=True,
     )
+    
     isReported = models.BooleanField(null=True, blank=True)
 
 

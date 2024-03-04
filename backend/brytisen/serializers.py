@@ -41,14 +41,18 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     # file = serializers.ImageField(write_only=True, required=True)
 
+    owner = serializers.ReadOnlyField(source='owner.username') 
+
     class Meta:
         model = Activity
         fields = '__all__'
+   
 
     def create(self, validated_data: dict) -> Activity:
+        validated_data['owner'] = self.context['request'].user
         title = validated_data.get('title')
         details = validated_data.get('details')
-        activity_rules = validated_data.get('activity_rules')
+        activity_rules = validated_data.get('activity_rules') 
         activity_type = validated_data.get('activity_type')
         activity_image = validated_data.get('activity_image')
         if title and details and activity_rules and activity_type and activity_image:
@@ -58,8 +62,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             if activity_image:
                 activity.activity_image = activity_image
                 activity.save()
-
-            return activity
+        return activity
 
 
 ##
@@ -170,6 +173,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ['password', 'user_permissions']  # avoids exposing sensitive information to the API by excluding fields from serialization
+        #fields = ['id', 'username', 'activities', 'owner', "object_permissions"]
+        
 
     # the methode mentioned above
     # returns user permissions, provided in the user object as a list of strings

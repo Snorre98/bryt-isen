@@ -1,0 +1,30 @@
+.container {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.profileImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+
+.ratingContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.reviewText {
+  font-size: 16px;
+  line-height: 1.5;
+}
