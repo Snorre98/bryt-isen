@@ -8,6 +8,7 @@ import { CustomToast } from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
 import profileImg from '../assets/download.jpeg';
+import { Link } from 'react-router-dom';
 
 export type DetailsCardProps = {
   id: number;
@@ -21,6 +22,7 @@ export type DetailsCardProps = {
 export default function CardComp({ id, title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
+  const [editMode, setEditMode] = useState(false); // New state for edit mode
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -55,6 +57,13 @@ export default function CardComp({ id, title, img, description, rules, activity_
     setShowReviewForm(true); // Open review form modal
   };
 
+  const handleEdit = () => {
+    setShow(false);
+    setEditMode(true);
+    handleClose(); // Close the modal when entering edit mode, you can adjust this based on your design.
+  };
+
+
   return (
     <>
       <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
@@ -76,6 +85,13 @@ export default function CardComp({ id, title, img, description, rules, activity_
               {user && (
                 <>
                   <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button>
+                  <br />
+                  {user && (
+                <Link as={Link} to="/activityForm">
+                    <Button>Endre aktivitet</Button> {/* Add the edit button */}
+                </Link>
+              )}
+  
                   <br />
                   <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">
                     Rapporter
@@ -117,6 +133,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
                   }}
                 />
               </div>
+
             </div>
             <ReviewComp
               username={'roar'}
