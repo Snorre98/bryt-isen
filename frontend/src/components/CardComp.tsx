@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
+import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
+import profileImg from '../assets/download.jpeg';
 
 export type DetailsCardProps = {
   key: string;
@@ -44,53 +46,64 @@ export default function CardComp({ title, img, description, rules, activity_type
         <Modal.Header closeButton>
           <Modal.Title>
             <h2>{title}</h2>
+            {user && (
+              <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button> // Button to open review form
+            )}
           </Modal.Title>
         </Modal.Header>
-        <div style={{ padding: '1rem' }}>
-          <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
-          <p style={{ margin: '1rem' }}>{description}</p>
+        <Modal.Body style={{ maxHeight: 'calc(95vh - 200px)', overflow: 'auto' }}>
+          <div style={{ padding: '1rem' }}>
+            <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
+            <p style={{ margin: '1rem' }}>{description}</p>
 
-          <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Regler</h5>
-          <p style={{ margin: '1rem' }}>{rules}</p>
+            <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Regler</h5>
+            <p style={{ margin: '1rem' }}>{rules}</p>
 
-          <h6 style={{ fontWeight: '600', margin: '0.5rem' }}>Kategori</h6>
-          <p style={{ margin: '1rem' }}>{activity_type}</p>
-          <div
-            style={{
-              height: '20%',
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              overflow: 'hidden',
-            }}
-          >
-            <img
-              src={img}
-              alt="Image"
+            <h6 style={{ fontWeight: '600', margin: '0.5rem' }}>Kategori</h6>
+            <p style={{ margin: '1rem' }}>{activity_type}</p>
+            <div
               style={{
-                border: '1px solid #e4e4e4',
-                height: '10%',
-                width: '80%',
-                objectFit: 'contain',
-                justifySelf: 'center',
-                borderRadius: '0.375rem',
+                height: '20%',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
               }}
-            />
+            >
+              <img
+                src={img}
+                alt="Image"
+                style={{
+                  border: '1px solid #e4e4e4',
+                  height: '10%',
+                  width: '80%',
+                  objectFit: 'contain',
+                  justifySelf: 'center',
+                  borderRadius: '0.375rem',
+                }}
+              />
+            </div>
           </div>
-        </div>
+          <ReviewComp
+            username={'roar'}
+            rating={5}
+            review_description={
+              'dette var gøyiuwedfi uguwv  e fuy wgefuywefgwueyf guwyegfuy wegfuywgf uywegfu wehfuiwe wefbdwe de altså!!'
+            }
+            img={profileImg}
+          />
+          <ReviewComp username={'knut'} rating={3} review_description={'dette var kjedelig!'} img={profileImg} />
+        </Modal.Body>
         {/* {user && (
           <Button variant="outline-warning" onClick={() => alert('Dette virker ikke enda!')}>
             Edit
           </Button>
         )} */}
-        {user && (
-          <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button> // Button to open review form
-        )}
       </Modal>
       {/* Review Form Modal */}
       <Modal show={showReviewForm} onHide={() => setShowReviewForm(false)}>
-        <ReviewForm activity_title={title}  />
+        <ReviewForm activity_title={title} />
       </Modal>
     </Card>
   );
