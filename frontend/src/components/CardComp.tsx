@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Modal } from 'react-bootstrap';
+import { Button, Card, Form, InputGroup, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ActivityDto } from '../dto';
@@ -8,6 +8,7 @@ import { CustomToast } from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
 import profileImg from '../assets/download.jpeg';
+
 
 export type DetailsCardProps = {
   id: number;
@@ -21,6 +22,7 @@ export type DetailsCardProps = {
 export default function CardComp({ id, title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
+  const [visTimer, setVisTimer] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -55,6 +57,16 @@ export default function CardComp({ id, title, img, description, rules, activity_
     setShowReviewForm(true); // Open review form modal
   };
 
+  const handleVisTimer = () => {
+    setVisTimer(true);
+  }
+
+  
+
+  const handleStartTimer = () => {
+    
+  }
+
   return (
     <>
       <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
@@ -77,6 +89,31 @@ export default function CardComp({ id, title, img, description, rules, activity_
                 <>
                   <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button>
                   <br />
+                  {!visTimer ? <Button onClick={handleVisTimer}>Timer</Button> : null}
+                  {visTimer && <>
+                    <InputGroup className="mt-2">
+                      <InputGroup.Text id="basic-addon1">Timer</InputGroup.Text>
+                      <Form.Control
+                        placeholder=""
+                        aria-label="Timer"
+                        aria-describedby="basic-addon1"
+                      />
+                      <InputGroup.Text id="basic-addon2">Minutter</InputGroup.Text>
+                      <Form.Control
+                        placeholder=""
+                        aria-label="Minutter"
+                        aria-describedby="basic-addon2"
+                      />
+                      <InputGroup.Text id="basic-addon3">Sekunder</InputGroup.Text>
+                      <Form.Control
+                        placeholder=""
+                        aria-label="Sekunder"
+                        aria-describedby="basic-addon3"
+                      />
+                    </InputGroup>
+                    <button type="button" onClick={handleStartTimer} className="btn btn-danger btn-sm"> Start Timer</button>
+                  </>}
+                  <br /> 
                   <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">
                     Rapporter
                   </button>
