@@ -28,7 +28,7 @@ export default function CardComp({ title, img, description, rules, activity_type
   };
 
   return (
-    <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4' }}>
+    <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
       <Card.Img variant="top" src={img} style={{ objectFit: 'cover', height: '10rem' }} />
       <Card.Body>
         <Card.Title>
@@ -79,18 +79,13 @@ export default function CardComp({ title, img, description, rules, activity_type
             />
           </div>
         </div>
-        {/* {user && (
-          <Button variant="outline-warning" onClick={() => alert('Dette virker ikke enda!')}>
-            Edit
-          </Button>
-        )} */}
         {user && (
           <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button> // Button to open review form
         )}
       </Modal>
       {/* Review Form Modal */}
       <Modal show={showReviewForm} onHide={() => setShowReviewForm(false)}>
-        <ReviewForm activity_title={title}  />
+        <ReviewForm activity_title={title} />
       </Modal>
     </Card>
   );

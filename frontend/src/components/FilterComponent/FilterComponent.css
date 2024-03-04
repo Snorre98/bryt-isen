@@ -69,10 +69,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
   background-color: #0089a893;
   margin: 1rem;
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
   border-radius: 0.25rem;
+  cursor: pointer;
 }
 
 .filterItemLabelChecked {
@@ -81,13 +83,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  text-align: center;
   background-color: #0089a8;
   margin: 1rem;
   box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.504);
   border-radius: 0.25rem;
+  cursor: pointer;
 }
 
-.filterItemLabelChecked:hover{
+/* .filterItemLabelChecked:hover{
   background-color: rgba(0, 137, 168, 0.349);
   cursor: pointer;
 }
@@ -95,6 +100,6 @@
 .filterItemLabel:hover {
   background-color: rgba(0, 137, 168, 0.932);
   cursor: pointer;
-}
+} */
 
 

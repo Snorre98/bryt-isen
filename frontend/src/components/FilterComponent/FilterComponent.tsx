@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { FILTER_OPTIONS } from '~/constants';
 import './FilterComponent.css';
 import { Icon } from '@iconify/react';
 import { useGlobalContext } from '~/contextProviders/GlobalContextProvider';
+import { Button } from 'react-bootstrap';
 
 type FilterComponentProp = {
   showFilter: boolean;
@@ -11,19 +12,28 @@ type FilterComponentProp = {
 function FilterComponent({ showFilter }: FilterComponentProp) {
   const [filterControllValue, setFilterControllValue] = useState<string | null>('showAll');
   const filterItemContainerRef = useRef<HTMLDivElement>(null);
-  const { activityFilter, setActivityFilter } = useGlobalContext();
+  const { activityFilter, setActivityFilter, setIsFilterOn } = useGlobalContext();
 
-  // useEffect(() => {
-  // }, [activityFilter, filterControllValue]);
+  useEffect(() => {
+    console.log(activityFilter);
+  }, [activityFilter, filterControllValue]);
 
-  const handleFilterControll = (value: string) => {
-    if (value === 'showAll') {
-      setFilterControllValue(value);
-      setActivityFilter(FILTER_OPTIONS);
-    } else if (value === 'showNone') {
-      setFilterControllValue(value);
-      setActivityFilter(new Set<string>());
-    }
+  // const handleFilterControll = (value: string) => {
+  //   if (value === 'showAll') {
+  //     setFilterControllValue(value);
+  //     setActivityFilter(FILTER_OPTIONS);
+  //     setIsFilterOn(false);
+  //   } else if (value === 'showNone') {
+  //     setFilterControllValue(value);
+  //     setActivityFilter(new Set<string>());
+  //   }
+
+  //   // setIsFilterOn(true);
+  // };
+
+  const handleFilterControll = () => {
+    setActivityFilter(new Set<string>());
+    setIsFilterOn(false);
   };
 
   const handleFilterChange = (filterOption: string) => {
@@ -35,6 +45,7 @@ function FilterComponent({ showFilter }: FilterComponentProp) {
       updatedFilterValues.add(filterOption);
     }
     setActivityFilter(updatedFilterValues);
+    setIsFilterOn(true);
   };
 
   const scrollLeft = () => {
@@ -53,7 +64,7 @@ function FilterComponent({ showFilter }: FilterComponentProp) {
 
   const filterControl = (
     <div className="filterControll">
-      <Form>
+      {/* <Form style={isFilterOn ? { visibility: 'visible' } : { visibility: 'hidden' }}>
         <Form.Check
           label="Vis alle"
           reverse
@@ -72,7 +83,8 @@ function FilterComponent({ showFilter }: FilterComponentProp) {
           disabled={activityFilter.size <= 0}
           onChangeCapture={() => handleFilterControll('showNone')}
         />
-      </Form>
+      </Form> */}
+      <Button onClick={handleFilterControll}>Reset filter</Button>
     </div>
   );
 

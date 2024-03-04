@@ -8,6 +8,8 @@ export type SetState<T> = Dispatch<SetStateAction<T>>;
 type GlobalContextProps = {
   activityFilter: Set<string>;
   setActivityFilter: SetState<Set<string>>;
+  isFilterOn: boolean;
+  setIsFilterOn: SetState<boolean>;
 };
 
 export const GlobalContext = createContext<GlobalContextProps | undefined>(undefined);
@@ -31,7 +33,8 @@ type GlobalContextProviderProps = {
 };
 
 export function GlobalContextProvider({ children, enabled = true }: GlobalContextProviderProps) {
-  const [activityFilter, setActivityFilter] = useState<Set<string>>(FILTER_OPTIONS);
+  const [activityFilter, setActivityFilter] = useState<Set<string>>(new Set());
+  const [isFilterOn, setIsFilterOn] = useState(false);
 
   useEffect(() => {
     // Before page load do this:
@@ -50,6 +53,8 @@ export function GlobalContextProvider({ children, enabled = true }: GlobalContex
   const globalContextValues: GlobalContextProps = {
     activityFilter,
     setActivityFilter,
+    isFilterOn,
+    setIsFilterOn,
   };
   return <GlobalContext.Provider value={globalContextValues}>{children}</GlobalContext.Provider>;
 }
