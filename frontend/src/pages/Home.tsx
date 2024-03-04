@@ -32,6 +32,7 @@ export function Home() {
           {activities.length > 0 ? (
             activities.map((activity) => (
               <CardComp
+                id={activity.id}
                 title={activity.title}
                 img={activity.activity_image}
                 description={activity.details}

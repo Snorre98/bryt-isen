@@ -63,6 +63,7 @@ export async function getActivities(): Promise<ActivityDto[]> {
   return response.data;
 }
 
+
 /**
  * GET-request for CSRF-token used to make sure all requests come from the frontend of the actual site
  * @returns token of type string

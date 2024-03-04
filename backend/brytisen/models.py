@@ -24,7 +24,7 @@ class Activity(models.Model):
 
     title = models.CharField(max_length=40, null=True, blank=True)  # Aktivitet navn: f.eks. "Topptur"
 
-    details = models.TextField()  # Utdypende beskrivelse av aktivitet
+    details = models.TextField(null=True, blank=True)  # Utdypende beskrivelse av aktivitet
 
     activity_rules = models.TextField(default='Default rules apply.', null=True, blank=True)
 

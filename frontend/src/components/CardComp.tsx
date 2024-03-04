@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { ActivityDto } from '../dto';
+import { putActivity } from '~/api';
+import { CustomToast } from '~/components/CustomToast';;
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
 import profileImg from '../assets/download.jpeg';
 
 export type DetailsCardProps = {
-  key: string;
+  id: number;
   title: string;
   img: string;
   description: string;
@@ -14,7 +18,7 @@ export type DetailsCardProps = {
   activity_type: string;
 };
 
-export default function CardComp({ title, img, description, rules, activity_type }: DetailsCardProps) {
+export default function CardComp({ id, title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
 
@@ -23,6 +27,28 @@ export default function CardComp({ title, img, description, rules, activity_type
 
   const { user } = useAuthContext();
 
+  const [showToast, setShowToast] = useState(false);
+
+  const reportActivity = (event: any) => {
+    console.log(id)
+
+    const data: Partial<ActivityDto> = {
+      isReported : true
+    };
+
+    putActivity(id,data)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("Rapportert")
+          setShowToast(true)
+        }
+      })
+      .catch((error:any) => {
+        console.log(error)
+        throw new Error(error);
+      });
+  }
+
   // Function to handle opening review form modal
   const handleReviewFormOpen = () => {
     setShow(false); // Close details modal if open
@@ -30,6 +56,7 @@ export default function CardComp({ title, img, description, rules, activity_type
   };
 
   return (
+    <>
     <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4' }}>
       <Card.Img variant="top" src={img} style={{ objectFit: 'cover', height: '10rem' }} />
       <Card.Body>
@@ -47,7 +74,10 @@ export default function CardComp({ title, img, description, rules, activity_type
           <Modal.Title>
             <h2>{title}</h2>
             {user && (
-              <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button> // Button to open review form
+              <>
+                <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button><br />
+                <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">Rapporter</button>
+              </>
             )}
           </Modal.Title>
         </Modal.Header>
@@ -101,10 +131,19 @@ export default function CardComp({ title, img, description, rules, activity_type
           </Button>
         )} */}
       </Modal>
+      <CustomToast
+      toastTitle="Rapportert"
+      toastMessage="Aktiviteten ble rapportert"
+      variant="warning"
+      setToastState={setShowToast}
+      toastState={showToast}
+      />
       {/* Review Form Modal */}
       <Modal show={showReviewForm} onHide={() => setShowReviewForm(false)}>
         <ReviewForm activity_title={title} />
       </Modal>
     </Card>
+    </>
+    
   );
 }

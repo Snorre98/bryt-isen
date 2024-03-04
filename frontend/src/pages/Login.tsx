@@ -3,7 +3,7 @@ import { Button, Container, Form } from 'react-bootstrap';
 import { loginUser, getUser } from '~/api';
 import { CustomToast } from '~/components/CustomToast';
 import { PageWrapper } from '~/components/PageWrapper';
-import { useAuthContext } from '~/contextProviders/AuthContextProvider';
+import { useAuthContext } from '~/contextProviders/AuthContextProvider';;
 
 export function Login() {
   const [username, setUsername] = useState('');
