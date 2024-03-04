@@ -54,7 +54,7 @@ class Activity(models.Model):
 
     activity_image = models.ImageField(upload_to=unique_file_upload, null=True, blank=True)
 
-    # TODO: establish activity - user (owner) realtion
+
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -62,6 +62,7 @@ class Activity(models.Model):
         null=True,
         blank=True,
     )
+    
     isReported = models.BooleanField(null=True, blank=True)
 
 

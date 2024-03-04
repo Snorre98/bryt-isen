@@ -5,6 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { ActivityDto } from '../dto';
 import { putActivity } from '~/api';
 import { CustomToast } from '~/components/CustomToast';;
+import ReviewComp from './ReviewComp';
+import ReviewForm from './ReviewForm';
+import profileImg from '../assets/download.jpeg';
 
 export type DetailsCardProps = {
   id: number;
@@ -17,11 +20,12 @@ export type DetailsCardProps = {
 
 export default function CardComp({ id, title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const { user, setUser } = useAuthContext();
+  const { user } = useAuthContext();
 
   const [showToast, setShowToast] = useState(false);
 
@@ -45,11 +49,11 @@ export default function CardComp({ id, title, img, description, rules, activity_
       });
   }
 
-  useEffect(() => {
-    if (user) {
-      setUser(user);
-    }
-  }, [user, setUser]);
+  // Function to handle opening review form modal
+  const handleReviewFormOpen = () => {
+    setShow(false); // Close details modal if open
+    setShowReviewForm(true); // Open review form modal
+  };
 
   return (
     <>
@@ -68,60 +72,64 @@ export default function CardComp({ id, title, img, description, rules, activity_
       <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh' }}>
         <Modal.Header closeButton>
           <Modal.Title>
-            <h2>{title}</h2>{user && (
-            <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">Rapporter</button>
-          )}
-          <button type="button" onClick={reportActivity} className="btn btn-danger btn-sm m-2">Slett aktiviter</button>
+            <h2>{title}</h2>
+            {user && (
+              <>
+                <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button><br />
+                <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">Rapporter</button>
+              </>
+            )}
           </Modal.Title>
         </Modal.Header>
-        <div style={{ padding: '1rem' }}>
-          <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
-          <p style={{ margin: '1rem' }}>{description}</p>
+        <Modal.Body style={{ maxHeight: 'calc(95vh - 200px)', overflow: 'auto' }}>
+          <div style={{ padding: '1rem' }}>
+            <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
+            <p style={{ margin: '1rem' }}>{description}</p>
 
-          <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Regler</h5>
-          <p style={{ margin: '1rem' }}>{rules}</p>
+            <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Regler</h5>
+            <p style={{ margin: '1rem' }}>{rules}</p>
 
-          <h6 style={{ fontWeight: '600', margin: '0.5rem' }}>Kategori</h6>
-          <p style={{ margin: '1rem' }}>{activity_type}</p>
-          <div
-            style={{
-              height: '20%',
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              overflow: 'hidden',
-            }}
-          >
-            <img
-              src={img}
-              alt="Image"
+            <h6 style={{ fontWeight: '600', margin: '0.5rem' }}>Kategori</h6>
+            <p style={{ margin: '1rem' }}>{activity_type}</p>
+            <div
               style={{
-                border: '1px solid #e4e4e4',
-                // alignSelf: 'center',
-                height: '10%',
-                width: '80%',
-                objectFit: 'contain',
-                justifySelf: 'center',
-                borderRadius: '0.375rem',
-              }}
-            />
-          </div>
-          {/* <Button variant="info" onClick={handleClose} style={{ width: '100%' }}>
-            Close
-          </Button> */}
-        </div>
-        {/*//TODO: ADD EDIT BUTTON*/}
-        {/* {user && (
-            <Button
-              variant="outline-warning"
-              onClick={() => {
-                alert('Dette virker ikke enda!');
+                height: '20%',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
               }}
             >
-              Edit
-            </Button>
-          )} */}
+              <img
+                src={img}
+                alt="Image"
+                style={{
+                  border: '1px solid #e4e4e4',
+                  height: '10%',
+                  width: '80%',
+                  objectFit: 'contain',
+                  justifySelf: 'center',
+                  borderRadius: '0.375rem',
+                }}
+              />
+            </div>
+          </div>
+          <ReviewComp
+            username={'roar'}
+            rating={5}
+            review_description={
+              'dette var gøyiuwedfi uguwv  e fuy wgefuywefgwueyf guwyegfuy wegfuywgf uywegfu wehfuiwe wefbdwe de altså!!'
+            }
+            img={profileImg}
+          />
+          <ReviewComp username={'knut'} rating={3} review_description={'dette var kjedelig!'} img={profileImg} />
+        </Modal.Body>
+        {/* {user && (
+          <Button variant="outline-warning" onClick={() => alert('Dette virker ikke enda!')}>
+            Edit
+          </Button>
+        )} */}
       </Modal>
       <CustomToast
       toastTitle="Rapportert"
@@ -130,6 +138,10 @@ export default function CardComp({ id, title, img, description, rules, activity_
       setToastState={setShowToast}
       toastState={showToast}
       />
+      {/* Review Form Modal */}
+      <Modal show={showReviewForm} onHide={() => setShowReviewForm(false)}>
+        <ReviewForm activity_title={title} />
+      </Modal>
     </Card>
     </>
     
