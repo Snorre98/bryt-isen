@@ -39,4 +39,5 @@ export const ROUTES_BACKEND = {
   login_brytisen_user: '/login/',
   logout_brytisen_user: '/logout/',
   brytisen_user: '/user/',
+  review_list: '/reviews/',
 };

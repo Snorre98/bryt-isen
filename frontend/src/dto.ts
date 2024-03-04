@@ -14,6 +14,7 @@ export type ActivityDto = {
   activity_image: File | null;
   owner?: number;
   isReported?: boolean;
+  
 };
 
 /**
@@ -46,4 +47,12 @@ export type ObjectPermissionDto = {
 export type GroupDto = {
   id: number;
   name: string;
+};
+
+export type ReviewDto = {
+  id: number;
+  activityID: number;
+  rating: number;
+  description: string;
+  ownerID: number;
 };

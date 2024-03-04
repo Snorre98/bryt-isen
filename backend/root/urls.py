@@ -29,6 +29,7 @@ from brytisen import views
 
 router = routers.DefaultRouter()
 router.register(r'activities', views.ActivityView, 'activities')
+router.register(r'reviews', views.ReviewView, 'reviews')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,4 +42,5 @@ urlpatterns = [
     path('user/', views.UserView.as_view(), name='user'),
     path('users/', views.AllUsersView.as_view(), name='users'),
     path('', include(router.urls)),
+    path('activities/<int:pk>/reviews/', views.ActivityReviewsAPIView.as_view(), name='activity-reviews'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

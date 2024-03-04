@@ -1,9 +1,11 @@
 from __future__ import annotations
+import genericpath
 
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from rest_framework.request import Request
-from rest_framework.generics import ListAPIView
+#from rest_framework.generics import ListAPIView
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
 
@@ -12,8 +14,8 @@ from django.middleware.csrf import get_token
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 
-from .models import User, Activity
-from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer
+from .models import User, Activity, Review
+from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, ReviewSerializer
 
 """
     Views are what we interact with from frontend to get data from the database.
@@ -161,7 +163,7 @@ class UserView(APIView):
         return Response(data=current_user)
 
 
-class AllUsersView(ListAPIView):
+class AllUsersView(generics.ListAPIView):
     """
     View that allows for accessing a list of all users.
     Can be accessed by a custom permission class, similar to
@@ -173,3 +175,15 @@ class AllUsersView(ListAPIView):
     permission_classes = (DjangoModelPermissionsOrAnonReadOnly,)
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+
+class ReviewView(viewsets.ModelViewSet):
+    """
+    View to access review data.
+    Can be accessed by anyone from localhost:3000
+    """
+
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+

@@ -2,20 +2,19 @@ import { Col } from 'react-bootstrap';
 import '../styles/Review.css';
 
 export type ReviewProps = {
-  username: string;
+  ownerID: number;
   rating: number;
   review_description: string;
-  img: string;
 };
 
 // Endre funksjonen til å returnere JSX istedenfor void
-export default function ReviewComp({ username, rating, review_description, img }: ReviewProps) {
+export default function ReviewComp({ ownerID, rating, review_description}: ReviewProps) {
   // Returner et JSX-element som viser informasjonen
   return (
     <div className="container">
       <div className="header">
         <img src={img} alt="Profile" className="profileImage" />
-        <h3>{username}</h3>
+        <h3>{ownerID}</h3>
       </div>
       <div className="ratingContainer">
         <p>Rating: {rating}</p>

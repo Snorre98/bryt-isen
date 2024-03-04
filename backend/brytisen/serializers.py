@@ -12,7 +12,7 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 
-from .models import User, Activity
+from .models import User, Activity, Review
 
 logger = logging.getLogger(__name__)
 
@@ -201,3 +201,30 @@ class UserSerializer(serializers.ModelSerializer):
             perm_objs.append(self._obj_permission_to_obj(obj_perm=obj_perm))
 
         return perm_objs  # list of objects which user has permissions to manipulate
+
+
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    """
+    reviewSerializer serialises all
+    fields in the review model.
+    """
+
+
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+    def create(self, validated_data: dict) -> Review:
+        owner = validated_data.get('owner')
+        review_description = validated_data.get('details')
+        rating = validated_data.get('rating')
+        isReported = validated_data.get('isReported')
+        activityID = validated_data.get("activityID")
+        if owner and review_description and rating and isReported and activityID:
+            # Handle the image file if included in the request
+            review = Review.objects.create(**validated_data)
+            review.save()
+
+            return review

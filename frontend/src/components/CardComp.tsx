@@ -4,9 +4,11 @@ import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
 import profileImg from '../assets/download.jpeg';
+import { getActivities, getReviews } from '~/api';
+import { ReviewDto } from '~/dto';
 
 export type DetailsCardProps = {
-  key: string;
+  key: number;
   title: string;
   img: string;
   description: string;
@@ -14,20 +16,33 @@ export type DetailsCardProps = {
   activity_type: string;
 };
 
-export default function CardComp({ title, img, description, rules, activity_type }: DetailsCardProps) {
+export default function CardComp({ key, title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
-
+  const [reviews, setReviews] = useState<ReviewDto>();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  
+  if (!reviews) return [];
 
   const { user } = useAuthContext();
+
+  useEffect(() => {
+    getReviews().then((reviews) => {
+      setReviews(reviews);
+    });
+  }, []);
+
 
   // Function to handle opening review form modal
   const handleReviewFormOpen = () => {
     setShow(false); // Close details modal if open
     setShowReviewForm(true); // Open review form modal
   };
+
+  const filteredReviews = reviews.filter((review) => review.activity_ID === activityId);
+
+  
 
   return (
     <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4' }}>
@@ -82,15 +97,27 @@ export default function CardComp({ title, img, description, rules, activity_type
               />
             </div>
           </div>
+
+          <div style={{ padding: '1rem' }}>
+            {/* Activity details */}
+            {filteredReviews.map((review : ReviewDto) => (
+              <ReviewComp
+                key={review.id}
+                ownerID={review.ownerID}
+                rating={review.rating}
+                review_description={review.description}
+              />
+            ))}
+          </div>
+          
           <ReviewComp
-            username={'roar'}
+            ownerID={1}
             rating={5}
             review_description={
               'dette var gøyiuwedfi uguwv  e fuy wgefuywefgwueyf guwyegfuy wegfuywgf uywegfu wehfuiwe wefbdwe de altså!!'
             }
-            img={profileImg}
           />
-          <ReviewComp username={'knut'} rating={3} review_description={'dette var kjedelig!'} img={profileImg} />
+          <ReviewComp ownerID={2} rating={3} review_description={'dette var kjedelig!'} />
         </Modal.Body>
         {/* {user && (
           <Button variant="outline-warning" onClick={() => alert('Dette virker ikke enda!')}>

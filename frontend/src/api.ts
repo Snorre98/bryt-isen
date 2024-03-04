@@ -6,7 +6,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from 'axios';
-import { ActivityDto, RegisterUserDto, UserDto } from './dto';
+import { ActivityDto, RegisterUserDto, ReviewDto, UserDto } from './dto';
 import { BACKEND_DOMAIN } from './constants';
 import { ROUTES } from './routes';
 import { reverse } from './named-urls';
@@ -124,5 +124,18 @@ export async function logout(): Promise<AxiosResponse> {
 export async function getUser(): Promise<UserDto> {
   const url = BACKEND_DOMAIN + ROUTES.backend.brytisen_user;
   const response = await axios.get<UserDto>(url, { withCredentials: true });
+  return response.data;
+}
+
+
+export async function postreview(data: any): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.review_list;
+  const response = await axios.post(url, data, { withCredentials: true });
+  return response;
+}
+
+export async function getReviews(): Promise<ReviewDto> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.review_list;
+  const response = await axios.get(url, { withCredentials: true });
   return response.data;
 }

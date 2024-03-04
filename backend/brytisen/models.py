@@ -4,6 +4,8 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 
 from .utils.unique_file_upload import unique_file_upload
 
@@ -109,3 +111,18 @@ class User(AbstractUser):
 
 
 # TODO: add review class
+class Review(models.Model):
+    """
+    Model for the review object
+    * details
+    * rating
+    * actrivity
+    * owner
+    * isReported
+    """
+
+    details = models.TextField(max_length=40)  # Utdypende beskrivelse av aktivitet
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])  # Rating of the review
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name='reviews')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
+    isReported = models.BooleanField(null=False)
