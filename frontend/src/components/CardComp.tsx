@@ -8,6 +8,8 @@ import { CustomToast } from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
 import profileImg from '../assets/download.jpeg';
+import Countdown from 'react-countdown';
+import React from 'react';
 
 
 export type DetailsCardProps = {
@@ -23,6 +25,14 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
   const [visTimer, setVisTimer] = useState(false);
+
+  const [timerHours, setTimerHours] = useState(0);
+  const [timerMinutes, setTimerMinutes] = useState(0);
+  const [timerSeconds, setTimerSeconds] = useState(0);
+
+  const [seconds, setSeconds] = React.useState(0);
+
+  const intervalRef = React.useRef(null);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -61,11 +71,53 @@ export default function CardComp({ id, title, img, description, rules, activity_
     setVisTimer(true);
   }
 
-  
-
   const handleStartTimer = () => {
-    
+    // Clear any existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  
+    setSeconds(timerSeconds + timerMinutes * 60 + timerHours * 3600);
+  
+    // Start a new interval
+    intervalRef.current = setInterval(() => {
+      setSeconds((prevSeconds) => {
+        if (prevSeconds <= 1) {
+          clearInterval(intervalRef.current);
+          return 0;
+        }
+        return prevSeconds - 1;
+      });
+    }, 1000);
+  };
+
+  React.useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  function formatSecondsAsText(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+  
+    let parts: string[] = [];
+    if (hours > 0) {
+      parts.push(`${hours} time${hours > 1 ? 'r' : ''}`);
+    }
+    if (minutes > 0) {
+      parts.push(`${minutes} minutt${minutes > 1 ? 'er' : ''}`);
+    }
+    if (remainingSeconds > 0 || (hours === 0 && minutes === 0)) {
+      parts.push(`${remainingSeconds} sekund${remainingSeconds > 1 ? 'er' : ''}`);
+    }
+  
+    return parts.join(', ').replace(/, ([^,]*)$/, ' og $1'); // Replace the last comma with ' og '
   }
+  
 
   return (
     <>
@@ -88,32 +140,39 @@ export default function CardComp({ id, title, img, description, rules, activity_
               {user && (
                 <>
                   <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button>
-                  <br />
-                  {!visTimer ? <Button onClick={handleVisTimer}>Timer</Button> : null}
-                  {visTimer && <>
-                    <InputGroup className="mt-2">
-                      <InputGroup.Text id="basic-addon1">Timer</InputGroup.Text>
-                      <Form.Control
-                        placeholder=""
-                        aria-label="Timer"
-                        aria-describedby="basic-addon1"
-                      />
-                      <InputGroup.Text id="basic-addon2">Minutter</InputGroup.Text>
-                      <Form.Control
-                        placeholder=""
-                        aria-label="Minutter"
-                        aria-describedby="basic-addon2"
-                      />
-                      <InputGroup.Text id="basic-addon3">Sekunder</InputGroup.Text>
-                      <Form.Control
-                        placeholder=""
-                        aria-label="Sekunder"
-                        aria-describedby="basic-addon3"
-                      />
-                    </InputGroup>
-                    <button type="button" onClick={handleStartTimer} className="btn btn-danger btn-sm"> Start Timer</button>
-                  </>}
-                  <br /> 
+                </>
+              )}
+              {!visTimer ? <><br /><Button onClick={handleVisTimer}>Timer</Button></> : null}
+              {visTimer ? <>
+                <InputGroup className="mt-4">
+                  <InputGroup.Text>Timer</InputGroup.Text>
+                  <Form.Control
+                    placeholder=""
+                    aria-label="Timer"
+                    aria-describedby="basic-addon1"
+                    onChange={(e) => setTimerHours(Number(e.target.value))}
+                  />
+                  <InputGroup.Text>Minutter</InputGroup.Text>
+                  <Form.Control
+                    placeholder=""
+                    aria-label="Minutter"
+                    aria-describedby="basic-addon2"
+                    onChange={(e) => setTimerMinutes(Number(e.target.value))}
+                  />
+                  <InputGroup.Text>Sekunder</InputGroup.Text>
+                  <Form.Control
+                    placeholder=""
+                    aria-label="Sekunder"
+                    aria-describedby="basic-addon3"
+                    onChange={(e) => setTimerSeconds(Number(e.target.value))}
+                  />
+                </InputGroup>
+                <button type="button" onClick={handleStartTimer} className="btn btn-primary btn-sm"> Start Timer</button>
+                <p>{formatSecondsAsText(seconds)}</p>
+              </>: <br /> }
+              
+              {user && (
+                <>
                   <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">
                     Rapporter
                   </button>
