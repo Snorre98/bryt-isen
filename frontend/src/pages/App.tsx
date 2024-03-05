@@ -15,7 +15,7 @@ function App() {
     <>
       <Router>
         <Routes>
-        <Switch>
+          {/* <Switch> */}
           <Route element={<BrytisenOutlet />}>
             <Route path="/" element={<Home />} />
             <Route path="/activityForm" element={<ActivityForm />} />
@@ -24,7 +24,7 @@ function App() {
             <Route path="/testapi" element={<ApiTestPage />} />
             <Route path="/editActivity{id}" element={<EditActivity />} />
           </Route>
-        </Switch>
+          {/* </Switch> */}
         </Routes>
       </Router>
     </>
