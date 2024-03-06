@@ -19,7 +19,7 @@ export type DetailsCardProps = {
 export default function CardComp({ key, title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
-  const [reviews, setReviews] = useState<ReviewDto>();
+  const [reviews, setReviews] = useState<ReviewDto>([]);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   
@@ -40,9 +40,8 @@ export default function CardComp({ key, title, img, description, rules, activity
     setShowReviewForm(true); // Open review form modal
   };
 
-  const filteredReviews = reviews.filter((review) => review.activity_ID === activityId);
+  const filteredReviews: ReviewDto[] = reviews.filter((review) => review.activity_ID === key) as ReviewDto[];
 
-  
 
   return (
     <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4' }}>

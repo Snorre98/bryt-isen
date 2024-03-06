@@ -13,7 +13,6 @@ export default function ReviewComp({ ownerID, rating, review_description}: Revie
   return (
     <div className="container">
       <div className="header">
-        <img src={img} alt="Profile" className="profileImage" />
         <h3>{ownerID}</h3>
       </div>
       <div className="ratingContainer">

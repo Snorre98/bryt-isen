@@ -50,6 +50,7 @@ export type GroupDto = {
 };
 
 export type ReviewDto = {
+  filter(arg0: (review: any) => boolean): unknown;
   id: number;
   activityID: number;
   rating: number;
