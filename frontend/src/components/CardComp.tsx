@@ -8,7 +8,7 @@ import { CustomToast } from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
 import profileImg from '../assets/download.jpeg';
-import Countdown from 'react-countdown';
+import Countdown from 'react-countdown';;
 import React from 'react';
 
 
