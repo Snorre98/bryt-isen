@@ -93,9 +93,7 @@ class IsOwnerOrReadOnly(BasePermission):
     """
 
     def has_permission(self, request, view):
-        """
-        Allow any authenticated user to report the activity.
-        """
+        """Allow any authenticated user to report the activity."""
         return True  # Allow any authenticated user to report the activity
 
     def has_object_permission(self, request, view, obj):
