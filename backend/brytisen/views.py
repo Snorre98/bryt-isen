@@ -1,5 +1,6 @@
 from __future__ import annotations
 import genericpath
+from django.shortcuts import get_object_or_404
 
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
@@ -162,7 +163,6 @@ class UserView(APIView):
         # returns the user data of the current request (the one currently autenticated)
         return Response(data=current_user)
 
-
 class AllUsersView(generics.ListAPIView):
     """
     View that allows for accessing a list of all users.
@@ -187,3 +187,21 @@ class ReviewView(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+
+
+class ActivityReviewsAPIView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, pk):
+        activity = get_object_or_404(Activity, pk=pk)
+        reviews = Review.objects.filter(activity=activity)
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, pk):
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(activity_id=pk, reviewer=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -6,12 +6,12 @@ import { ActivityType } from './constants';
  * Activity data-transfer-object, used to transer an acitivyt object to and from backend
  */
 export type ActivityDto = {
-  id?: number | string;
+  id?: number;
   title: string;
   details: string;
   activity_rules: string;
   activity_type: ActivityType | string;
-  activity_image: File | null;
+  activity_image: File;
   owner?: number;
   isReported?: boolean;
   
@@ -52,8 +52,8 @@ export type GroupDto = {
 export type ReviewDto = {
   filter(arg0: (review: any) => boolean): unknown;
   id: number;
-  activityID: number;
+  activity: number;
   rating: number;
-  description: string;
-  ownerID: number;
+  details: string;
+  owner: number;
 };

@@ -8,7 +8,7 @@ import { getActivities, getReviews } from '~/api';
 import { ReviewDto } from '~/dto';
 
 export type DetailsCardProps = {
-  key: number;
+  //activityID: number;
   title: string;
   img: string;
   description: string;
@@ -16,19 +16,20 @@ export type DetailsCardProps = {
   activity_type: string;
 };
 
-export default function CardComp({ key, title, img, description, rules, activity_type }: DetailsCardProps) {
+export default function CardComp({ activityID, title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
   const [reviews, setReviews] = useState<ReviewDto>([]);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   
-  if (!reviews) return [];
 
   const { user } = useAuthContext();
 
   useEffect(() => {
-    getReviews().then((reviews) => {
+    getReviews().then((reviews : ReviewDto) => {
+      console.log('her er reviews', reviews);
+      console.log('her er activityID', activityID);
       setReviews(reviews);
     });
   }, []);
@@ -40,7 +41,7 @@ export default function CardComp({ key, title, img, description, rules, activity
     setShowReviewForm(true); // Open review form modal
   };
 
-  const filteredReviews: ReviewDto[] = reviews.filter((review) => review.activity_ID === key) as ReviewDto[];
+  const filteredReviews: ReviewDto[] = reviews?.filter((review) => review.activity_ID === activityID) as ReviewDto[];
 
 
   return (
@@ -102,9 +103,9 @@ export default function CardComp({ key, title, img, description, rules, activity
             {filteredReviews.map((review : ReviewDto) => (
               <ReviewComp
                 key={review.id}
-                ownerID={review.ownerID}
+                ownerID={review.owner}
                 rating={review.rating}
-                review_description={review.description}
+                review_description={review.details}
               />
             ))}
           </div>

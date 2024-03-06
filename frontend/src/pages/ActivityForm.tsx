@@ -47,7 +47,7 @@ function ActivityForm() {
       details: activityDetails,
       activity_rules: activityRules,
       activity_type: activityType,
-      activity_image: activityImageFile,
+      activity_image: activityImageFile as File,
     };
 
     postActivity(data)

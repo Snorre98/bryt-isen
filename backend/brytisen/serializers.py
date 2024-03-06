@@ -221,8 +221,8 @@ class ReviewSerializer(serializers.ModelSerializer):
         review_description = validated_data.get('details')
         rating = validated_data.get('rating')
         isReported = validated_data.get('isReported')
-        activityID = validated_data.get("activityID")
-        if owner and review_description and rating and isReported and activityID:
+        activity = validated_data.get("activity")
+        if owner and review_description and rating and isReported and activity:
             # Handle the image file if included in the request
             review = Review.objects.create(**validated_data)
             review.save()

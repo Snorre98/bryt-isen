@@ -17,6 +17,10 @@ export function Home() {
         console.log(error);
       });
   }, []);
+
+  const activityReviews = () => {
+
+  }
   return (
     <PageWrapper>
       <div
@@ -32,7 +36,7 @@ export function Home() {
           {activities.length > 0 ? (
             activities.map((activity) => (
               <CardComp
-                key={activity.id}
+                id={activity.id}
                 title={activity.title}
                 img={activity.activity_image}
                 description={activity.details}
