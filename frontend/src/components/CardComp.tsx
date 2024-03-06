@@ -87,7 +87,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
                   <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button>
                   <br />
                   {user && (
-                <Link as={Link} to="/activityForm">
+                <Link as={Link} to="/editActivity">
                     <Button>Endre aktivitet</Button> {/* Add the edit button */}
                 </Link>
               )}
