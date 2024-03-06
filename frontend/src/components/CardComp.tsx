@@ -57,13 +57,17 @@ export default function CardComp({ id, title, img, description, rules, activity_
     setShowReviewForm(true); // Open review form modal
   };
 
-  const handleEdit = () => {
-    setShow(false);
-    setEditMode(true);
-    handleClose(); // Close the modal when entering edit mode, you can adjust this based on your design.
+  const editActivityURL = (id: number) => {
+    if (id !== undefined && id !== null) {
+      const url = "/editActivity/" + id.toString();
+      return url;
+    } else {
+      // Handle the case when id is undefined or null
+      console.error("Invalid id:", id);
+      return ""; // or throw an error, or handle it in a way that makes sense for your application
+    }
   };
-
-
+  
   return (
     <>
       <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
@@ -87,7 +91,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
                   <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button>
                   <br />
                   {user && (
-                <Link as={Link} to="/editActivity">
+                <Link as={Link} to={editActivityURL(id)}>
                     <Button>Endre aktivitet</Button> {/* Add the edit button */}
                 </Link>
               )}

@@ -30,6 +30,8 @@ export function Home() {
       });
   }, []);
 
+
+
   return (
     <PageWrapper>
       <FilterComponent showFilter={showFilter} />
@@ -60,7 +62,7 @@ export function Home() {
                   .filter((activity) => activityFilter.has(activity.activity_type))
                   .map((activity) => (
                     <CardComp
-                      key={activity.id}
+                      id={activity.id}
                       title={activity.title}
                       img={activity.activity_image}
                       description={activity.details}
@@ -70,7 +72,7 @@ export function Home() {
                   ))
               : activities.map((activity) => (
                   <CardComp
-                    key={activity.id}
+                    id={activity.id}
                     title={activity.title}
                     img={activity.activity_image}
                     description={activity.details}

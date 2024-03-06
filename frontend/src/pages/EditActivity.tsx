@@ -16,7 +16,7 @@ import { ActivityDto } from '~/dto';
 
 function EditActivity() {
   const [activity, setActivity] = useState<ActivityDto>();
-  const { handle } = useParams();
+  let { id } = useParams();
 
 
 
@@ -26,9 +26,9 @@ function EditActivity() {
 
   useEffect(() => {
     // Fetch activity details based on the ID from the URL
-    getActivity(handle).then(setActivity)
+    getActivity(id).then(setActivity)
     .catch((error: unknown) => {console.log(error)})
-  }, [handle]);
+  }, [id]);
   
   const [activityTitle, setActivityTitle] = useState('');
   const [activityDetails, setActivityDetails] = useState('');

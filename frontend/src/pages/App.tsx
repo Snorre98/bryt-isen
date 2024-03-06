@@ -22,7 +22,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/testapi" element={<ApiTestPage />} />
-            <Route path="/editActivity" element={<EditActivity activityId={id} />} />
+            <Route path="/editActivity/:id" element={<EditActivity />} />
           </Route>
         
         </Routes>
