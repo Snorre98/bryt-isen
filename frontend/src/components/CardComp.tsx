@@ -11,6 +11,7 @@ import profileImg from '../assets/download.jpeg';
 import Countdown from 'react-countdown';;
 import React from 'react';
 
+import { Link } from 'react-router-dom';
 
 export type DetailsCardProps = {
   id: number;
@@ -38,6 +39,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const [seconds, setSeconds] = React.useState(0);
 
   const intervalRef = React.useRef(null);
+  const [editMode, setEditMode] = useState(false); // New state for edit mode
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -174,6 +176,13 @@ export default function CardComp({ id, title, img, description, rules, activity_
   }
   
 
+  const handleEdit = () => {
+    setShow(false);
+    setEditMode(true);
+    handleClose(); // Close the modal when entering edit mode, you can adjust this based on your design.
+  };
+
+
   return (
     <>
       <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
@@ -234,6 +243,9 @@ export default function CardComp({ id, title, img, description, rules, activity_
               
               {user && (
                 <>
+                <Link as={Link} to="/activityForm">
+                    <Button>Endre aktivitet</Button> {/* Add the edit button */}
+                </Link>
                   <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">
                     Rapporter
                   </button>
@@ -274,6 +286,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
                   }}
                 />
               </div>
+
             </div>
             <ReviewComp
               username={'roar'}
