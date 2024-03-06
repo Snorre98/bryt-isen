@@ -3,7 +3,7 @@ import { Button, Card, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ActivityDto } from '../dto';
-import { putActivity } from '~/api';
+import { postReportedActivity } from '~/api';
 import { CustomToast } from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
@@ -22,7 +22,6 @@ export type DetailsCardProps = {
 export default function CardComp({ id, title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
-  const [editMode, setEditMode] = useState(false); // New state for edit mode
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -31,23 +30,13 @@ export default function CardComp({ id, title, img, description, rules, activity_
 
   const [showToast, setShowToast] = useState(false);
 
-  const reportActivity = (event: any) => {
-    console.log(id);
-
-    const data: Partial<ActivityDto> = {
-      isReported: true,
-    };
-
-    putActivity(id, data)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log('Rapportert');
-          setShowToast(true);
-        }
+  const handleReportActivity = (activity_id: number) => {
+    postReportedActivity(activity_id)
+      .then(() => {
+        console.log('rapportert');
       })
-      .catch((error: any) => {
+      .catch((error) => {
         console.log(error);
-        throw new Error(error);
       });
   };
 
@@ -56,13 +45,6 @@ export default function CardComp({ id, title, img, description, rules, activity_
     setShow(false); // Close details modal if open
     setShowReviewForm(true); // Open review form modal
   };
-
-  const handleEdit = () => {
-    setShow(false);
-    setEditMode(true);
-    handleClose(); // Close the modal when entering edit mode, you can adjust this based on your design.
-  };
-
 
   return (
     <>
@@ -87,13 +69,17 @@ export default function CardComp({ id, title, img, description, rules, activity_
                   <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button>
                   <br />
                   {user && (
-                <Link as={Link} to="/activityForm">
-                    <Button>Endre aktivitet</Button> {/* Add the edit button */}
-                </Link>
-              )}
-  
+                    <Link as={Link} to="/activityForm">
+                      <Button>Endre aktivitet</Button> {/* Add the edit button */}
+                    </Link>
+                  )}
+
                   <br />
-                  <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">
+                  <button
+                    type="button"
+                    onClick={() => handleReportActivity(id)}
+                    className="btn btn-outline-secondary btn-sm"
+                  >
                     Rapporter
                   </button>
                 </>
@@ -133,7 +119,6 @@ export default function CardComp({ id, title, img, description, rules, activity_
                   }}
                 />
               </div>
-
             </div>
             <ReviewComp
               username={'roar'}

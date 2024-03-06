@@ -61,6 +61,7 @@ export function Home() {
                   .map((activity) => (
                     <CardComp
                       key={activity.id}
+                      id={activity.id}
                       title={activity.title}
                       img={activity.activity_image}
                       description={activity.details}
@@ -76,16 +77,24 @@ export function Home() {
                     description={activity.details}
                     rules={activity.activity_rules}
                     activity_type={activity.activity_type}
+                    id={activity.id}
                   />
                 )))}
         </div>
       </div>
-      <CustomToast toastTitle="Aktivitet" variant={'info'} toastState={loading} toastMessage={'Laster... '} />
+      <CustomToast
+        toastTitle="Aktivitet"
+        variant={'info'}
+        toastState={loading}
+        toastMessage={'Laster... '}
+        setToastState={setLoading}
+      />
       <CustomToast
         toastTitle="Aktivitet"
         variant={'warning'}
         toastState={showErrorToast}
         toastMessage={errorToastMessage}
+        setToastState={setShowErrorToast}
       />
     </PageWrapper>
   );
