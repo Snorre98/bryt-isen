@@ -5,6 +5,7 @@ import { getUser, registerUser } from '~/api';
 import { AlertComponent } from './AlertComponent';
 import { CustomToast } from './CustomToast';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
+import { useNavigate } from 'react-router-dom';
 
 export function RegiserUserForm() {
   const [username, setUsername] = useState('');
@@ -15,6 +16,8 @@ export function RegiserUserForm() {
   const [toastMessage, setToastMessage] = useState('');
   const [showToast, setShowToast] = useState(false);
   const { user, setUser } = useAuthContext();
+
+  const navigate = useNavigate();
 
   const SUCCESS_MESSAGE: string = 'Bruker registrert';
   const ERROR_MESSAGE: string = 'Kunne ikke registrere bruker';
@@ -40,6 +43,7 @@ export function RegiserUserForm() {
           getUser().then((user) => {
             setUser(user);
           });
+          navigate('/');
         } else if (response.status === 400) {
           //TODO make this work
           setRegistrationStatus('info');
@@ -56,46 +60,42 @@ export function RegiserUserForm() {
   };
 
   return (
-    <>
+    <><div style={{ display: 'flex', height: '100%', width: '50%' }}>
       <Form onSubmit={handleRegistration}>
         <Form.Group className="mb-3" controlId="formRegisterUser">
-          <Form.Label>Username</Form.Label>
+          <Form.Label>Brukernavn</Form.Label>
           <Form.Control
             required
             type="text"
-            placeholder="username"
             onChange={(event) => {
               const inputValue: unknown = event.target.value;
               setUsername(inputValue);
             }}
           />
-          <Form.Label>Forname</Form.Label>
+          <Form.Label>Fornavn</Form.Label>
           <Form.Control
             required
             //value={forname}
             type="text"
-            placeholder="Forname"
             onChange={(event) => {
               const inputValue: unknown = event.target.value;
               setFirstname(inputValue);
             }}
           />
-          <Form.Label>Lastname</Form.Label>
+          <Form.Label>Etternavn</Form.Label>
 
           <Form.Control
             required
             type="text"
-            placeholder="Lastname"
             onChange={(event) => {
               const inputValue: unknown = event.target.value;
               setLastname(inputValue);
             }}
           />
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Passord</Form.Label>
           <Form.Control
             required
-            type="text"
-            placeholder="Password"
+            type="password"
             onChange={(event) => {
               const inputValue: unknown = event.target.value;
               setPassword(inputValue);
@@ -115,7 +115,7 @@ export function RegiserUserForm() {
         variant={registrationStatus}
         setToastState={setShowToast}
         toastState={showToast}
-      />
+      /></div>
     </>
   );
 }

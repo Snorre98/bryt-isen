@@ -153,7 +153,7 @@ function ActivityForm() {
                 </Button>
               </Form>
             </div>
-            <div className="previewContainer">
+            {/*<div className="previewContainer">
               <Form className="form">
                 <Form.Group>
                   <Form.Label>Utfylt tittel</Form.Label>
@@ -193,7 +193,7 @@ function ActivityForm() {
                   />
                 </Form.Group>
               </Form>
-            </div>
+            </div>*/}
             <div className="imgPreviewContainer" style={activityImageFile ? { backgroundColor: '#95FFAB' } : {}}>
               <h6 style={{ margin: '0.2em' }}>Valgt bilde</h6>
               <div className="imagePreviewWrapper">
