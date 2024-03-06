@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Modal } from 'react-bootstrap';
+import { Button, Card, Form, InputGroup, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ActivityDto } from '../dto';
@@ -8,6 +8,9 @@ import { CustomToast } from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
 import profileImg from '../assets/download.jpeg';
+import Countdown from 'react-countdown';;
+import React from 'react';
+
 import { Link } from 'react-router-dom';
 
 export type DetailsCardProps = {
@@ -22,6 +25,20 @@ export type DetailsCardProps = {
 export default function CardComp({ id, title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
+  const [visTimer, setVisTimer] = useState(false);
+  const [visStart, setVisStart] = useState(true);
+  const [visStop, setVisStop] = useState(false);
+  const [visStartIgjen, setStartIgjen] = useState(false);
+  const [visReset, setReset] = useState(false);
+
+
+  const [timerHours, setTimerHours] = useState(0);
+  const [timerMinutes, setTimerMinutes] = useState(0);
+  const [timerSeconds, setTimerSeconds] = useState(0);
+
+  const [seconds, setSeconds] = React.useState(0);
+
+  const intervalRef = React.useRef(null);
   const [editMode, setEditMode] = useState(false); // New state for edit mode
 
   const handleClose = () => setShow(false);
@@ -57,6 +74,108 @@ export default function CardComp({ id, title, img, description, rules, activity_
     setShowReviewForm(true); // Open review form modal
   };
 
+  const handleVisTimer = () => {
+    setVisTimer(true);
+  }
+
+  const handleStartTimer = () => {
+
+    if (timerHours === 0 && timerMinutes === 0 && timerSeconds === 0) {
+      return; // Exit the function early
+    }
+    // Clear any existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  
+    setSeconds(timerSeconds + timerMinutes * 60 + timerHours * 3600);
+  
+    // Start a new interval
+    intervalRef.current = setInterval(() => {
+      setSeconds((prevSeconds) => {
+        if (prevSeconds <= 1) {
+          clearInterval(intervalRef.current);
+          return 0;
+        }
+        return prevSeconds - 1;
+      });
+    }, 1000);
+    setVisStop(true);
+    setVisStart(false);
+    setReset(true);
+  };
+
+  const handleStopTimer = () => {
+    clearInterval(intervalRef.current);
+    setVisStop(false);
+    setStartIgjen(true);
+    setReset(true);
+  }
+
+  const handleStartIgjen = () => {
+    // Sjekk om det allerede er en interval funksjon kjørende
+    if (intervalRef.current) {
+        clearInterval(intervalRef.current); // Stopper det eksisterende intervallet for å unngå flere intervaller som kjører samtidig
+    }
+
+    // Start intervallet på nytt uten å endre 'seconds'
+    intervalRef.current = setInterval(() => {
+        setSeconds((prevSeconds) => {
+            if (prevSeconds <= 1) {
+                clearInterval(intervalRef.current); // Stopper timeren når den når 0
+                setVisStop(false); // Gjemmer "Stopp Timer"-knappen
+                setStartIgjen(false); // Gjemmer "Start Igjen"-knappen siden timeren er fullført
+                return 0; // Tilbakestiller 'seconds' til 0, eller du kan sette den til din opprinnelige timerverdi hvis du vil starte loop
+            }
+            return prevSeconds - 1;
+        });
+    }, 1000);
+
+    // Viser "Stopp Timer"-knappen siden timeren kjører
+    setVisStop(true);
+    // Gjemmer "Start Igjen"-knappen mens timeren kjører
+    setStartIgjen(false);
+}
+
+  const handleReset = () => {
+    setStartIgjen(false);
+    setReset(false);
+    setVisStart(true);
+    setVisStop(false);
+    setSeconds(0);
+    setTimerHours(0);
+    setTimerMinutes(0);
+    setTimerSeconds(0);
+  }
+
+  React.useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  function formatSecondsAsText(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+  
+    let parts: string[] = [];
+    if (hours > 0) {
+      parts.push(`${hours} time${hours > 1 ? 'r' : ''}`);
+    }
+    if (minutes > 0) {
+      parts.push(`${minutes} minutt${minutes > 1 ? 'er' : ''}`);
+    }
+    if (remainingSeconds > 0 || (hours === 0 && minutes === 0)) {
+      parts.push(`${remainingSeconds} sekund${remainingSeconds > 1 ? 'er' : ''}`);
+    }
+  
+    return parts.join(', ').replace(/, ([^,]*)$/, ' og $1'); // Replace the last comma with ' og '
+  }
+  
+
   const handleEdit = () => {
     setShow(false);
     setEditMode(true);
@@ -85,14 +204,48 @@ export default function CardComp({ id, title, img, description, rules, activity_
               {user && (
                 <>
                   <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button>
-                  <br />
-                  {user && (
+                </>
+              )}
+              {!visTimer ? <><br /><Button onClick={handleVisTimer}>Timer</Button></> : null}
+              {visTimer ? <>
+                <InputGroup className="mt-4">
+                  <InputGroup.Text>Timer</InputGroup.Text>
+                  <Form.Control
+                    value={timerHours}
+                    placeholder=""
+                    aria-label="Timer"
+                    aria-describedby="basic-addon1"
+                    onChange={(e) => setTimerHours(Number(e.target.value))}
+                  />
+                  <InputGroup.Text>Minutter</InputGroup.Text>
+                  <Form.Control
+                    value={timerMinutes}
+                    placeholder=""
+                    aria-label="Minutter"
+                    aria-describedby="basic-addon2"
+                    onChange={(e) => setTimerMinutes(Number(e.target.value))}
+                  />
+                  <InputGroup.Text>Sekunder</InputGroup.Text>
+                  <Form.Control
+                    value={timerSeconds}
+                    placeholder=""
+                    aria-label="Sekunder"
+                    aria-describedby="basic-addon3"
+                    onChange={(e) => setTimerSeconds(Number(e.target.value))}
+                  />
+                </InputGroup>
+                {visStart && <button type="button" onClick={handleStartTimer} className="btn btn-primary btn-sm"> Start Timer</button>}
+                {visStop && <button type="button" onClick={handleStopTimer} className="btn btn-danger btn-sm "> Stop Timer</button>}
+                {visStartIgjen && <button type="button" onClick={handleStartIgjen} className="btn btn-success btn-sm"> Start Igjen</button>}
+                {visReset && <button type="button" onClick={handleReset} className="btn btn-danger btn-sm m-2"> Nullstill </button>}
+                <p>{formatSecondsAsText(seconds)}</p>
+              </>: <br /> }
+              
+              {user && (
+                <>
                 <Link as={Link} to="/activityForm">
                     <Button>Endre aktivitet</Button> {/* Add the edit button */}
                 </Link>
-              )}
-  
-                  <br />
                   <button type="button" onClick={reportActivity} className="btn btn-outline-secondary btn-sm">
                     Rapporter
                   </button>
