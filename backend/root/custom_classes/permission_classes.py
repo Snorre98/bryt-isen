@@ -60,3 +60,17 @@ class CustomDjangoObjectPermissions(DjangoObjectPermissions):
             has_perm = user.has_perm(perm_list=post_perms)  # Checking if the user has the required permissions.
             return has_perm  # return boolean dependent on user perms
         return True  # Default to True if not a POST request or if authenticated and no specific permissions required.
+
+
+class IsOwnerOrReadOnly(BasePermission):
+    "Checks if a request has permission"
+
+    def has_permission(self, request: Request, view: APIView) -> bool:  # noqa: PLR0917
+        "Extends BasePermission Django class, for superuser"
+        user: User = request.user
+        return user.is_active  # Check if user is active
+
+    def has_object_permission(self, request: Request, view: APIView, obj: Any) -> bool:  # noqa: PLR0917
+        "Method for checking object-level permissions"
+        user: User = request.user
+        return user.is_authenticated and obj.owner == user  # Check if the user is the owner of the object
