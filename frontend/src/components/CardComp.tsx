@@ -25,6 +25,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
   const [visTimer, setVisTimer] = useState(false);
+  const [visStop, setVisStop] = useState(false);
 
   const [timerHours, setTimerHours] = useState(0);
   const [timerMinutes, setTimerMinutes] = useState(0);
@@ -89,7 +90,13 @@ export default function CardComp({ id, title, img, description, rules, activity_
         return prevSeconds - 1;
       });
     }, 1000);
+    setVisStop(true);
   };
+
+  const handleStopTimer = () => {
+    clearInterval(intervalRef.current);
+    setVisStop(false);
+  }
 
   React.useEffect(() => {
     return () => {
@@ -168,6 +175,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
                   />
                 </InputGroup>
                 <button type="button" onClick={handleStartTimer} className="btn btn-primary btn-sm"> Start Timer</button>
+                {visStop && <button type="button" onClick={handleStopTimer} className="btn btn-danger btn-sm m-2"> Stop Timer</button>}
                 <p>{formatSecondsAsText(seconds)}</p>
               </>: <br /> }
               
