@@ -25,9 +25,11 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
   const [visTimer, setVisTimer] = useState(false);
+  const [visStart, setVisStart] = useState(true);
   const [visStop, setVisStop] = useState(false);
   const [visStartIgjen, setStartIgjen] = useState(false);
   const [visReset, setReset] = useState(false);
+
 
   const [timerHours, setTimerHours] = useState(0);
   const [timerMinutes, setTimerMinutes] = useState(0);
@@ -97,6 +99,8 @@ export default function CardComp({ id, title, img, description, rules, activity_
       });
     }, 1000);
     setVisStop(true);
+    setVisStart(false);
+    setReset(true);
   };
 
   const handleStopTimer = () => {
@@ -134,6 +138,8 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const handleReset = () => {
     setStartIgjen(false);
     setReset(false);
+    setVisStart(true);
+    setVisStop(false);
     setSeconds(0);
     setTimerHours(0);
     setTimerMinutes(0);
@@ -219,10 +225,10 @@ export default function CardComp({ id, title, img, description, rules, activity_
                     onChange={(e) => setTimerSeconds(Number(e.target.value))}
                   />
                 </InputGroup>
-                <button type="button" onClick={handleStartTimer} className="btn btn-primary btn-sm"> Start Timer</button>
-                {visStop && <button type="button" onClick={handleStopTimer} className="btn btn-danger btn-sm m-2"> Stop Timer</button>}
-                {visStartIgjen && <button type="button" onClick={handleStartIgjen} className="btn btn-success btn-sm m-2"> Start Igjen</button>}
-                {visReset && <button type="button" onClick={handleReset} className="btn btn-danger btn-sm"> Nullstill </button>}
+                {visStart && <button type="button" onClick={handleStartTimer} className="btn btn-primary btn-sm"> Start Timer</button>}
+                {visStop && <button type="button" onClick={handleStopTimer} className="btn btn-danger btn-sm "> Stop Timer</button>}
+                {visStartIgjen && <button type="button" onClick={handleStartIgjen} className="btn btn-success btn-sm"> Start Igjen</button>}
+                {visReset && <button type="button" onClick={handleReset} className="btn btn-danger btn-sm m-2"> Nullstill </button>}
                 <p>{formatSecondsAsText(seconds)}</p>
               </>: <br /> }
               
