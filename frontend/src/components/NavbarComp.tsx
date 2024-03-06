@@ -6,11 +6,14 @@ import { useEffect, useRef, useState } from 'react';
 import navImage from '../assets/bryt-isen-logo-blue-notext.png';
 import '../styles/NavBar.css';
 import { UserDto } from '~/dto';
+import { useNavigate } from 'react-router-dom';
 
 function NavbarComp() {
   const { user, setUser } = useAuthContext();
   const prevUserRef = useRef<UserDto | undefined>(undefined);
   const [userGradient, setUserGradient] = useState('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user?.username !== prevUserRef.current?.username) {
@@ -27,6 +30,7 @@ function NavbarComp() {
     logout()
       .then((response) => {
         response.status === HTTP_200_OK && setUser(undefined);
+        navigate('/');
         // window.location.reload();
       })
       .catch(console.error);
