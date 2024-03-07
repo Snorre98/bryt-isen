@@ -5,7 +5,7 @@ type CustomToastProps = {
   toastMessage: string;
   variant: string;
   toastState: boolean;
-  setToastState?: React.Dispatch<React.SetStateAction<boolean>>;
+  setToastState: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function CustomToast({ toastTitle, toastMessage, variant, toastState, setToastState }: CustomToastProps) {

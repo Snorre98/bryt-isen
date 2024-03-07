@@ -30,6 +30,15 @@ export const ROUTES_BACKEND = {
    */
   activity_list: '/api/activities/',
   activity_detail: '/api/activities/:pk/',
+  /*This does not work yet: */
+  user_activities: '/users/:user_id/activities/',
+
+  /**
+   * report activity
+   *
+   */
+
+  reported_activity: '/reported-activities/',
 
   /**
    *

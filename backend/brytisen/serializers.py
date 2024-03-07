@@ -3,16 +3,15 @@ from __future__ import annotations
 import logging
 import itertools
 
-from django.forms import ImageField
-
 from guardian.models import UserObjectPermission
 
 from rest_framework import serializers
 
+from django.forms import ImageField
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 
-from .models import User, Activity
+from .models import User, Activity, ReportedActivity
 
 logger = logging.getLogger(__name__)
 
@@ -41,18 +40,17 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     # file = serializers.ImageField(write_only=True, required=True)
 
-    owner = serializers.ReadOnlyField(source='owner.username') 
+    # owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Activity
         fields = '__all__'
-   
 
     def create(self, validated_data: dict) -> Activity:
         validated_data['owner'] = self.context['request'].user
         title = validated_data.get('title')
         details = validated_data.get('details')
-        activity_rules = validated_data.get('activity_rules') 
+        activity_rules = validated_data.get('activity_rules')
         activity_type = validated_data.get('activity_type')
         activity_image = validated_data.get('activity_image')
         if title and details and activity_rules and activity_type and activity_image:
@@ -63,6 +61,19 @@ class ActivitySerializer(serializers.ModelSerializer):
                 activity.activity_image = activity_image
                 activity.save()
         return activity
+
+
+class ReportedActivitySerializer(serializers.ModelSerializer):
+    """Serializer for the ReportedActivity model."""
+
+    class Meta:
+        model = ReportedActivity
+        fields = '__all__'
+
+    def create(self, validated_data):
+        """Create and return a new ReportedActivity instance, given the validated data."""
+        validated_data['reported_by_user'] = self.context['request'].user
+        return ReportedActivity.objects.create(**validated_data)
 
 
 ##
@@ -173,8 +184,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ['password', 'user_permissions']  # avoids exposing sensitive information to the API by excluding fields from serialization
-        #fields = ['id', 'username', 'activities', 'owner', "object_permissions"]
-        
+        # fields = ['id', 'username', 'activities', 'owner', "object_permissions"]
 
     # the methode mentioned above
     # returns user permissions, provided in the user object as a list of strings
