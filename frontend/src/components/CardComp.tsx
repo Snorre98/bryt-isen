@@ -28,6 +28,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const [visStop, setVisStop] = useState(false);
   const [visStartIgjen, setStartIgjen] = useState(false);
   const [visReset, setReset] = useState(false);
+  const [visReport, setVisReport] = useState(true);
 
   const [timerHours, setTimerHours] = useState(0);
   const [timerMinutes, setTimerMinutes] = useState(0);
@@ -47,11 +48,13 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const handleReportActivity = (activity_id: number) => {
     postReportedActivity(activity_id)
       .then(() => {
+        setVisReport(false);
         console.log('rapportert');
       })
       .catch((error) => {
         console.log(error);
       });
+      
   };
 
   // Function to handle opening review form modal
@@ -258,13 +261,18 @@ export default function CardComp({ id, title, img, description, rules, activity_
                   <Link as={Link} to="/activityForm">
                     <Button>Endre aktivitet</Button> {/* Add the edit button */}
                   </Link>
-                  <button
+                  <br />
+                  {
+                    visReport ? (
+                      <button
                     type="button"
                     onClick={() => handleReportActivity(id)}
                     className="btn btn-outline-secondary btn-sm"
                   >
                     Rapporter
                   </button>
+                    ) : (<p><small>Rapportert</small></p>)
+                  } 
                 </>
               )}
             </Modal.Title>
