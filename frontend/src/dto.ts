@@ -6,14 +6,13 @@ import { ActivityType } from './constants';
  * Activity data-transfer-object, used to transer an acitivyt object to and from backend
  */
 export type ActivityDto = {
-  id: number;
+  id?: number;
   title: string;
   details: string;
   activity_rules: string;
   activity_type: ActivityType | string;
   activity_image: File | null;
   owner?: number;
-  isReported?: boolean;
 };
 
 /**

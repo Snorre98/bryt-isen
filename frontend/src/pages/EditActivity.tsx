@@ -3,12 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, Dropdown, Form } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 //import EditFormComponent from "../components/"; // Adjust the import path based on your project structure
-import { getActivity, postActivity} from '~/api'; // Add the API function to get activity by ID
+import { getActivity, postActivity } from '~/api'; // Add the API function to get activity by ID
 import { CustomToast } from '~/components/CustomToast';
 import { PageWrapper } from '~/components/PageWrapper';
 import { ActivityType } from '~/constants';
 import { ActivityDto } from '~/dto';
-
 
 //type EditActivityProps = {
 //  activityId: number | string
@@ -18,18 +17,19 @@ function EditActivity() {
   const [activity, setActivity] = useState<ActivityDto>();
   let { id } = useParams();
 
-
-
-//const EditActivity: React.FC<EditActivityPageProps> = () => {
+  //const EditActivity: React.FC<EditActivityPageProps> = () => {
   //const { id } = useParams<{ id: string }>();
   //const [activity, setActivity] = useState<any>(null); // Update with the actual type of your activity
 
   useEffect(() => {
     // Fetch activity details based on the ID from the URL
-    getActivity(id).then(setActivity)
-    .catch((error: unknown) => {console.log(error)})
+    getActivity(id)
+      .then(setActivity)
+      .catch((error: unknown) => {
+        console.log(error);
+      });
   }, [id]);
-  
+
   const [activityTitle, setActivityTitle] = useState('');
   const [activityDetails, setActivityDetails] = useState('');
   const [activityRules, setActivityRules] = useState('');
@@ -156,7 +156,9 @@ function EditActivity() {
                 <Form.Group controlId="formCategory">
                   <Form.Label>Velg kategori</Form.Label>
                   <Dropdown>
-                    <Dropdown.Toggle id="dropdown-basic">{activityType ? activityType : activity?.activity_type}</Dropdown.Toggle>
+                    <Dropdown.Toggle id="dropdown-basic">
+                      {activityType ? activityType : activity?.activity_type}
+                    </Dropdown.Toggle>
                     <Dropdown.Menu>
                       {Object.entries(ActivityType).map(([key, value]) => (
                         <Dropdown.Item key={key} onClick={() => setActivityType(value)}>
@@ -168,7 +170,7 @@ function EditActivity() {
                 </Form.Group>
                 <Form.Group controlId="formFile" className="mb-3">
                   <Form.Label>Legg til bilde</Form.Label>
-                  <Form.Control required type="file" onChange={extractImage}/>
+                  <Form.Control required type="file" onChange={extractImage} />
                 </Form.Group>
                 <Button type="submit" variant="primary" size="lg">
                   Opprett aktivitet
@@ -234,7 +236,6 @@ function EditActivity() {
       </PageWrapper>
     </>
   );
-
-};
+}
 
 export default EditActivity;

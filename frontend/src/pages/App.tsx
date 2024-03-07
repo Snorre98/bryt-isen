@@ -15,7 +15,6 @@ function App() {
     <>
       <Router>
         <Routes>
-        
           <Route element={<BrytisenOutlet />}>
             <Route path="/" element={<Home />} />
             <Route path="/activityForm" element={<ActivityForm />} />
@@ -24,7 +23,6 @@ function App() {
             <Route path="/testapi" element={<ApiTestPage />} />
             <Route path="/editActivity/:id" element={<EditActivity />} />
           </Route>
-        
         </Routes>
       </Router>
     </>
