@@ -1,13 +1,18 @@
-import { useEffect, useState, useRef } from 'react';
-import { Button, Card, Form, InputGroup, Modal } from 'react-bootstrap';
-import { useAuthContext } from '~/contextProviders/AuthContextProvider';
+import {useEffect, useRef, useState} from 'react';
+import {Button, Card, Form, InputGroup, Modal} from 'react-bootstrap';
+import {useAuthContext} from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { CustomToast } from '~/components/CustomToast';
+import {CustomToast} from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
-import { getReviews, deleteActivity, postReportedActivity } from '~/api';
-import { ReviewDto } from '~/dto';
-import { Link } from 'react-router-dom';
+import {
+  deleteActivity,
+  getReviews,
+  postReportedActivity,
+  postReportReview
+} from '~/api';
+import {ReviewDto} from '~/dto';
+import {Link} from 'react-router-dom';
 
 export type DetailsCardProps = {
   id: number;
@@ -39,15 +44,15 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const intervalRef = useRef(null);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const { user } = useAuthContext();
-
-  useEffect(() => {
+  const handleShow = () => {
     getReviews().then((data : ReviewDto[]) => {
       setReviews(data)
     }).catch((error)=>{console.log(error)});
-  }, []);
+    setShow(true);
+  }
+
+  const { user } = useAuthContext();
+
 
 
   const [showToast, setShowToast] = useState(false);
@@ -55,17 +60,21 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const [toastMsg, setToastMsg] = useState("")
   const [submitStatus, setSubmitStatus] = useState('');
 
+
   //TODO: add to report?
   //const RAPPORT_ERROR_MSG = "Kunne ikke rapportere"
   //const RAPPORT_SUCCESS_MSG = "Aktivitet ble rapportert"
 
   const DELETE_SUCCESS_MSG = "Aktivitet ble slettet!"
   const DELETE_ERROR_MSG = "Aktivitet kunne ikke slettes, noe gikk feil!"
+
+  const REPORT_REVIEW_SUCCESS = "Vurdering ble rapportert!"
+  const REPORT_REVIEW_ERROR = "Vurdering ble ikke rapportert!"
+
   const handleReportActivity = (activity_id: number) => {
     postReportedActivity(activity_id)
       .then(() => {
         setVisReport(false);
-        console.log('rapportert');
       })
       .catch((error) => {
         console.log(error);
@@ -198,7 +207,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
     }
   }
 
-  const handleDelete = (activity_id: number) => {
+  const handleDeleteActivity = (activity_id: number) => {
     setToastTitle("Slett aktivitet")
     deleteActivity(activity_id).
     then((response) => {
@@ -218,7 +227,23 @@ export default function CardComp({ id, title, img, description, rules, activity_
         setSubmitStatus("warning")
         setShowToast(true)
       })
+  }
 
+  const handleReporteReview = (review_id: number) => {
+    postReportReview(review_id)
+      .then( (reportedReviews) => {
+          setToastMsg("Rapporter vurdering")
+          setToastMsg(REPORT_REVIEW_SUCCESS)
+          setSubmitStatus("success")
+          setShowToast(true)
+      }
+      )
+      .catch(()=>{
+        setToastMsg("Rapporter vurdering")
+        setToastMsg(REPORT_REVIEW_ERROR)
+        setSubmitStatus("warning")
+        setShowToast(true)
+      })
   }
 
   return (
@@ -235,105 +260,110 @@ export default function CardComp({ id, title, img, description, rules, activity_
             Se mer
           </Button>
         </Card.Body>
-        <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh' }}>
+        <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh'}} size="lg">
           <Modal.Header closeButton>
             <Modal.Title>
               <h2>{title}</h2>
 
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Header style={{display: "flex", flexDirection: "column", gap: "1rem"}}>
+            <div style={{display: "flex", flexDirection: "column", gap: "1rem", justifyContent: "flex-start", alignItems: "flex-start" }}>
+            {!visTimer ? (
+              <>
+                <br />
+                <Button onClick={handleVisTimer}>Timer</Button>
+              </>
+            ) : null}
+            {visTimer ? (
+              <>
+                <InputGroup className="mt-4">
+                  <InputGroup.Text>Timer</InputGroup.Text>
+                  <Form.Control
+                    value={timerHours}
+                    placeholder=""
+                    aria-label="Timer"
+                    aria-describedby="basic-addon1"
+                    onChange={(e) => setTimerHours(Number(e.target.value))}
+                  />
+                  <InputGroup.Text>Minutter</InputGroup.Text>
+                  <Form.Control
+                    value={timerMinutes}
+                    placeholder=""
+                    aria-label="Minutter"
+                    aria-describedby="basic-addon2"
+                    onChange={(e) => setTimerMinutes(Number(e.target.value))}
+                  />
+                  <InputGroup.Text>Sekunder</InputGroup.Text>
+                  <Form.Control
+                    value={timerSeconds}
+                    placeholder=""
+                    aria-label="Sekunder"
+                    aria-describedby="basic-addon3"
+                    onChange={(e) => setTimerSeconds(Number(e.target.value))}
+                  />
+                </InputGroup>
+                {visStart && (
+                  <button type="button" onClick={handleStartTimer} className="btn btn-primary btn-sm">
+                    {' '}
+                    Start Timer
+                  </button>
+                )}
+                {visStop && (
+                  <button type="button" onClick={handleStopTimer} className="btn btn-danger btn-sm ">
+                    {' '}
+                    Stop Timer
+                  </button>
+                )}
+                {visStartIgjen && (
+                  <button type="button" onClick={handleStartIgjen} className="btn btn-success btn-sm">
+                    {' '}
+                    Start Igjen
+                  </button>
+                )}
+                {visReset && (
+                  <button type="button" onClick={handleReset} className="btn btn-danger btn-sm m-2">
+                    {' '}
+                    Nullstill{' '}
+                  </button>
+                )}
+                <p>{formatSecondsAsText(seconds)}</p>
+              </>
+            ) : (
+              <br />
+            )}
+            </div>
+            <div style={{display: "flex", flexDirection: "row", gap: "1rem"}}>
+            {isOwner() && (
+              <>
+                <Link as={Link} to={editActivityURL(id)}>
+                  <Button>Endre aktivitet</Button> {/* Add the edit button */}
+                </Link>
+                <Button variant="danger" onClick={() => handleDeleteActivity(id)}>Slett aktivitet</Button>
+
+                <br />
+
+              </>
+            )}
               {user && (
                 <>
                   <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button>
                 </>
               )}
-              {!visTimer ? (
-                <>
-                  <br />
-                  <Button onClick={handleVisTimer}>Timer</Button>
-                </>
-              ) : null}
-              {visTimer ? (
-                <>
-                  <InputGroup className="mt-4">
-                    <InputGroup.Text>Timer</InputGroup.Text>
-                    <Form.Control
-                      value={timerHours}
-                      placeholder=""
-                      aria-label="Timer"
-                      aria-describedby="basic-addon1"
-                      onChange={(e) => setTimerHours(Number(e.target.value))}
-                    />
-                    <InputGroup.Text>Minutter</InputGroup.Text>
-                    <Form.Control
-                      value={timerMinutes}
-                      placeholder=""
-                      aria-label="Minutter"
-                      aria-describedby="basic-addon2"
-                      onChange={(e) => setTimerMinutes(Number(e.target.value))}
-                    />
-                    <InputGroup.Text>Sekunder</InputGroup.Text>
-                    <Form.Control
-                      value={timerSeconds}
-                      placeholder=""
-                      aria-label="Sekunder"
-                      aria-describedby="basic-addon3"
-                      onChange={(e) => setTimerSeconds(Number(e.target.value))}
-                    />
-                  </InputGroup>
-                  {visStart && (
-                    <button type="button" onClick={handleStartTimer} className="btn btn-primary btn-sm">
-                      {' '}
-                      Start Timer
+              {
+                user && (visReport ? (
+                    <button
+                      type="button"
+                      onClick={() => handleReportActivity(id)}
+                      className="btn btn-outline-secondary btn-sm"
+                    >
+                      Rapporter
                     </button>
-                  )}
-                  {visStop && (
-                    <button type="button" onClick={handleStopTimer} className="btn btn-danger btn-sm ">
-                      {' '}
-                      Stop Timer
-                    </button>
-                  )}
-                  {visStartIgjen && (
-                    <button type="button" onClick={handleStartIgjen} className="btn btn-success btn-sm">
-                      {' '}
-                      Start Igjen
-                    </button>
-                  )}
-                  {visReset && (
-                    <button type="button" onClick={handleReset} className="btn btn-danger btn-sm m-2">
-                      {' '}
-                      Nullstill{' '}
-                    </button>
-                  )}
-                  <p>{formatSecondsAsText(seconds)}</p>
-                </>
-              ) : (
-                <br />
-              )}
-
-              {isOwner() && (
-                <>
-                  <Link as={Link} to={editActivityURL(id)}>
-                    <Button>Endre aktivitet</Button> {/* Add the edit button */}
-                  </Link>
-                  <Button variant="danger" onClick={() => handleDelete(id)}>Slett aktivitet</Button>
-
-                  <br />
-                  {
-                    user && (visReport ? (
-                      <button
-                    type="button"
-                    onClick={() => handleReportActivity(id)}
-                    className="btn btn-outline-secondary btn-sm"
-                  >
-                    Rapporter
-                  </button>
-                    ) : (<p><small>Rapportert</small></p>)
-                    )}
-                </>
-
-              )}
-            </Modal.Title>
+                  ) : (<p><small>Rapportert</small></p>)
+                )}
+            </div>
           </Modal.Header>
-          <Modal.Body style={{maxHeight: 'calc(95vh - 200px)', overflow: 'auto'}}>
+          <Modal.Body style={{maxHeight: 'calc(95vh - 200px)', overflow: 'auto', padding: "1rem"}}>
             <div style={{padding: '1rem'}}>
               <h5 style={{fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
               <p style={{ margin: '1rem' }}>{description}</p>
@@ -368,7 +398,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
             </div>
           </div>
 
-            <div style={{padding: '1rem'}}>
+            <div>
               {reviews.length > 0 && reviews.filter((review) => review.activity === id)
                 .map((review: ReviewDto) => (
                 <ReviewComp
@@ -377,11 +407,12 @@ export default function CardComp({ id, title, img, description, rules, activity_
                   rating={review.rating}
                   review_description={review.details}
                   owner_name={review.owner_username}
+                  children={
+                  <Button onClick={() => handleReporteReview(review.id)}>Rapporter</Button>
+                }
                 />
               ))}
             </div>
-
-
           </Modal.Body>
         </Modal>
         <CustomToast
@@ -396,7 +427,6 @@ export default function CardComp({ id, title, img, description, rules, activity_
           <ReviewForm
             activity_title={title}
             activity_id={id}
-            //owner_id={user.id}
           />
         </Modal>
       </Card>

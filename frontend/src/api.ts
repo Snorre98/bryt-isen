@@ -166,6 +166,24 @@ export async function getReportedActivities(): Promise<ActivityDto> {
   return response.data;
 }
 
+export async function postReportReview(review_id: number): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.report_review_list;
+  const data = { review_id: review_id };
+  const response = await axios.post(url, data, { withCredentials: true });
+  return response;
+}
+
+export async function getReportedReviews(): Promise<ReviewDto[]> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.report_review_list;
+  const response = await axios.get<ReviewDto>(url, { withCredentials: true });
+  return response.data;
+}
+export async function getReportedReview(review_id: number): Promise<ReviewDto> {
+  const url = BACKEND_DOMAIN + reverse({pattern: ROUTES.backend.report_review_detail, urlParams: {pk: review_id}})
+  const response = await axios.get<ReviewDto>(url, { withCredentials: true });
+  return response.data;
+}
+
 /**
  *TODO: fix the view for this api call:
  */

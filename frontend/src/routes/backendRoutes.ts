@@ -40,6 +40,9 @@ export const ROUTES_BACKEND = {
 
   reported_activity: '/reported-activities/',
 
+  report_review_list: '/reported-reviews/',
+  report_review_detail: '/reported-reviews/:pk/',
+
   /**
    *
    * User registration, login, logout
