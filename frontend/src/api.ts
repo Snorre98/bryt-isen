@@ -128,7 +128,7 @@ export async function getUser(): Promise<UserDto> {
 }
 
 
-export async function postreview(data: any): Promise<AxiosResponse> {
+export async function postReview(data: ReviewDto): Promise<AxiosResponse> {
   const url = BACKEND_DOMAIN + ROUTES.backend.review_list;
   const response = await axios.post(url, data, { withCredentials: true });
   return response;

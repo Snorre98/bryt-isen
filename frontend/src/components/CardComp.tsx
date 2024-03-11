@@ -8,7 +8,7 @@ import { getActivities, getReviews } from '~/api';
 import { ReviewDto } from '~/dto';
 
 export type DetailsCardProps = {
-  //activityID: number;
+  id: number;
   title: string;
   img: string;
   description: string;
@@ -16,10 +16,12 @@ export type DetailsCardProps = {
   activity_type: string;
 };
 
-export default function CardComp({ activityID, title, img, description, rules, activity_type }: DetailsCardProps) {
+export default function CardComp({ id, title, img, description, rules, activity_type }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
   const [reviews, setReviews] = useState<ReviewDto>([]);
+  const [filteredReviews, setFilteredReviews] = useState<ReviewDto[]>([]); // Define filteredReviews state
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   
@@ -28,9 +30,12 @@ export default function CardComp({ activityID, title, img, description, rules, a
 
   useEffect(() => {
     getReviews().then((reviews : ReviewDto) => {
-      console.log('her er reviews', reviews);
-      console.log('her er activityID', activityID);
-      setReviews(reviews);
+      //console.log('her er reviews', reviews, "for id", id);
+      //console.log('her er activityID', id);
+      //setReviews(reviews);
+      const filteredReviews: ReviewDto[] = reviews?.filter((review) => review.activity === id) as ReviewDto[];
+      console.log('her er filteredReviews', filteredReviews, "for", "aktivitet_id", id);
+      setFilteredReviews(filteredReviews);
     });
   }, []);
 
@@ -41,7 +46,7 @@ export default function CardComp({ activityID, title, img, description, rules, a
     setShowReviewForm(true); // Open review form modal
   };
 
-  const filteredReviews: ReviewDto[] = reviews?.filter((review) => review.activity_ID === activityID) as ReviewDto[];
+  
 
 
   return (
@@ -110,14 +115,7 @@ export default function CardComp({ activityID, title, img, description, rules, a
             ))}
           </div>
           
-          <ReviewComp
-            ownerID={1}
-            rating={5}
-            review_description={
-              'dette var gøyiuwedfi uguwv  e fuy wgefuywefgwueyf guwyegfuy wegfuywgf uywegfu wehfuiwe wefbdwe de altså!!'
-            }
-          />
-          <ReviewComp ownerID={2} rating={3} review_description={'dette var kjedelig!'} />
+          
         </Modal.Body>
         {/* {user && (
           <Button variant="outline-warning" onClick={() => alert('Dette virker ikke enda!')}>
@@ -130,7 +128,7 @@ export default function CardComp({ activityID, title, img, description, rules, a
       </Modal>
       {/* Review Form Modal */}
       <Modal show={showReviewForm} onHide={() => setShowReviewForm(false)}>
-        <ReviewForm activity_title={title} />
+        <ReviewForm activity_title={title} activityID={id} ownerID={user ? user.id : 0}/>
       </Modal>
     </Card>
   );

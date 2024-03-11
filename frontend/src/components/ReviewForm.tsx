@@ -1,11 +1,34 @@
 import { title } from 'process';
+import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { postReview } from '~/api';
+import { ReviewDto } from '~/dto';
 
 type ReviewFormProps = {
   activity_title: string;
+  activityID: number;
+  ownerID?: number;
 };
 
-export default function ReviewForm({ activity_title }: ReviewFormProps) {
+
+
+export default function ReviewForm({ activity_title, activityID, ownerID }: ReviewFormProps) {
+  const [activity_review_description, setReview] = useState('');
+  const [review_rating, setRating] = useState(0);
+  const submitActivity = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    const data: ReviewDto = {
+      filter(arg0) {
+        
+      },
+      details: activity_review_description,
+      rating: review_rating,
+      owner: ownerID,
+      activity: activityID,
+    };
+    postReview(data)
+
+  }
   return (
     <>
       <Modal.Header closeButton>
@@ -13,7 +36,11 @@ export default function ReviewForm({ activity_title }: ReviewFormProps) {
           <h2>Vurdering av: {activity_title}</h2>
         </Modal.Title>
       </Modal.Header>
-      <Form.Control as="textarea" rows={3} />
+      <Form.Control as="textarea" 
+        rows={3} 
+        value={activity_review_description}
+        onChange={(event) => {setReview(event.target.value);}}
+/>
       <p>Rating: antall stjerner</p>
       <Form>
         <div className="mb-3">
@@ -25,11 +52,15 @@ export default function ReviewForm({ activity_title }: ReviewFormProps) {
               type="radio"
               id={`inline-radio-${value}`}
               key={value}
+              checked={review_rating === value}
+              onChange={() => setRating(value)}
             />
           ))}
         </div>
       </Form>
-      <Button variant="primary">Send inn</Button>
+      <Button variant="primary" onClick={submitActivity}>
+        Send inn
+      </Button>
     </>
   );
 }
