@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Card, Form, InputGroup, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { postReportedActivity } from '~/api';
+import {deleteActivity, postReportedActivity} from '~/api';
 import { CustomToast } from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
@@ -44,7 +44,16 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const { user } = useAuthContext();
 
   const [showToast, setShowToast] = useState(false);
+  const [toastTitle, setToastTitle] = useState("")
+  const [toastMsg, setToastMsg] = useState("")
+  const [submitStatus, setSubmitStatus] = useState('');
 
+  //TODO: add to report?
+  //const RAPPORT_ERROR_MSG = "Kunne ikke rapportere"
+  //const RAPPORT_SUCCESS_MSG = "Aktivitet ble rapportert"
+
+  const DELETE_SUCCESS_MSG = "Aktivitet ble slettet!"
+  const DELETE_ERROR_MSG = "Aktivitet kunne ikke slettes, noe gikk feil!"
   const handleReportActivity = (activity_id: number) => {
     postReportedActivity(activity_id)
       .then(() => {
@@ -181,6 +190,31 @@ export default function CardComp({ id, title, img, description, rules, activity_
     }
   }
 
+  const handleDelete = (activity_id: number) => {
+    setToastTitle("Slett aktivitet")
+    deleteActivity(activity_id).
+    then((response) => {
+      console.log(response);
+      setToastMsg(DELETE_SUCCESS_MSG)
+      setSubmitStatus("success")
+      setShowToast(true)
+
+      setTimeout(()=>{
+        handleClose()
+        location.reload()
+      }, 1000)
+
+
+    })
+      .catch((error)=>{
+        console.log(error)
+        setToastMsg(DELETE_ERROR_MSG)
+        setSubmitStatus("warning")
+        setShowToast(true)
+      })
+
+  }
+
   return (
     <>
       <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
@@ -273,8 +307,10 @@ export default function CardComp({ id, title, img, description, rules, activity_
                   <Link as={Link} to={editActivityURL(id)}>
                     <Button>Endre aktivitet</Button> {/* Add the edit button */}
                   </Link>
+                  <Button variant="danger" onClick={() => handleDelete(id)}>Slett aktivitet</Button>
 
                 </>
+
               )}
               {user && (<button
                 type="button"
@@ -331,9 +367,9 @@ export default function CardComp({ id, title, img, description, rules, activity_
           </Modal.Body>
         </Modal>
         <CustomToast
-          toastTitle="Rapportert"
-          toastMessage="Aktiviteten ble rapportert"
-          variant="warning"
+          toastTitle={toastTitle}
+          toastMessage={toastMsg}
+          variant={submitStatus}
           setToastState={setShowToast}
           toastState={showToast}
         />

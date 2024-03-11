@@ -16,6 +16,7 @@ function EditActivity() {
   const [activityType, setActivityType] = useState<ActivityType | string>("");
   const [activityImageFile, setActivityImageFile] = useState<File>();
   const [imageUrl, setImageUrl] = useState<string>('');
+  const [showImageFormFiled, setShowImageFormField] = useState(false)
   //const EditActivity: React.FC<EditActivityPageProps> = () => {
   //const { id } = useParams<{ id: string }>();
   //const [activity, setActivity] = useState<any>(null); // Update with the actual type of your activity
@@ -59,9 +60,8 @@ function EditActivity() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  const SUCCESS_MESSAGE = 'Aktivitet ble registrert!';
-  const ERROR_MESSAGE = 'Kunne ikke registrer aktivitet';
-
+  const SUCCESS_MESSAGE = 'Aktivitet ble endret!';
+  const ERROR_MESSAGE = 'Kunne ikke endre aktivitet';
 
 
   const extractImage = (event: { target: HTMLInputElement }) => {
@@ -183,8 +183,19 @@ function EditActivity() {
                   </Dropdown>
                 </Form.Group>
                 <Form.Group controlId="formFile" className="mb-3">
-                  <Form.Label>Legg til bilde</Form.Label>
-                  <Form.Control required type="file" onChange={extractImage} />
+                  <br/>
+                  <Button onClick={() => {
+                    setShowImageFormField(true)
+                  }}>Vil du endre bilde?</Button>
+                  <br/>
+                  <br/>
+                  {showImageFormFiled && (
+                    <>
+                      <Form.Label>Legg til bilde</Form.Label>
+                      <Form.Control required type="file" onChange={extractImage}/>
+                    </>)}
+
+
                 </Form.Group>
                 <Button type="submit" variant="primary" size="lg">
                   Endre aktivitet
