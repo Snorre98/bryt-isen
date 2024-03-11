@@ -6,7 +6,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from 'axios';
-import { ActivityDto, RegisterUserDto, UserDto } from './dto';
+import { ActivityDto, CheckFavoriteResponseDto, RegisterUserDto, UserDto } from './dto';
 import { BACKEND_DOMAIN } from './constants';
 import { ROUTES } from './routes';
 import { reverse } from './named-urls';
@@ -153,3 +153,23 @@ export async function getReportedActivities(): Promise<ActivityDto> {
 //   const response = await axios.get<ActivityDto[]>(url, { withCredentials: true });
 //   return response.data;
 // }
+
+export async function postFavoritedActivity(activity: number, user: number): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.favorited_activity;
+  const data = { 
+    activity_id: activity,
+    favorited_by_user: user
+  };
+  const response = await axios.post(url, data, { withCredentials: true });
+  return response;
+}
+
+export async function checkFavoriteActivity(userId: number, activityId: number): Promise<CheckFavoriteResponse> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.favorited_activity;
+
+  // Make the GET request to the backend to check if the activity is favorited
+  const response = await axios.get<CheckFavoriteResponseDto>(url, { withCredentials: true });
+  
+  // Return the data from the response
+  return response.data;
+}

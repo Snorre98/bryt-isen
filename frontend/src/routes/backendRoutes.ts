@@ -41,6 +41,13 @@ export const ROUTES_BACKEND = {
   reported_activity: '/reported-activities/',
 
   /**
+   * favorited activity
+   *
+   *
+   */
+  favorited_activity: '/favorited-activities/',
+
+  /**
    *
    * User registration, login, logout
    */

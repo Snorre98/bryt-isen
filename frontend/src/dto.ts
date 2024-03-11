@@ -46,3 +46,12 @@ export type GroupDto = {
   id: number;
   name: string;
 };
+
+export type FavoriseDto = {
+  id: number;
+  user: number;
+};
+
+export type CheckFavoriteResponseDto {
+  isFavorited: boolean;
+}

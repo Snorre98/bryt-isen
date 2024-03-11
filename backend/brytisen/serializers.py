@@ -83,10 +83,36 @@ class FavoritedActivitySerializer(serializers.ModelSerializer):
         model = FavoritedActivity
         fields = '__all__'
 
+    #def create(self, validated_data):
+    #    """Create and return a new FavoritedActivity instance, given the validated data."""
+    #    validated_data['favorited_by_user'] = self.context['request'].user
+    #    return FavoritedActivity.objects.create(**validated_data)
+
     def create(self, validated_data):
-        """Create and return a new FavoritedActivity instance, given the validated data."""
-        validated_data['favorited_by_user'] = self.context['request'].user
-        return FavoritedActivity.objects.create(**validated_data)
+        """Toggle favorited status for a given activity and user."""
+        user = self.context['request'].user
+        activity = validated_data['activity_id']
+
+        # Attempt to find an existing favorite entry
+        existing_favorite = FavoritedActivity.objects.filter(
+            favorited_by_user=user,
+            activity_id=activity,
+            is_favorited=True
+        ).first()
+
+        # If an existing entry is found, unfavorite (delete) it
+        if existing_favorite:
+            existing_favorite.delete()
+            # You might return None or a specific response indicating the unfavorited status
+            return None
+        else:
+            # Otherwise, create a new favorite entry
+            validated_data['favorited_by_user'] = user
+            try:
+                return FavoritedActivity.objects.create(**validated_data)
+            except Exception as e:
+                # Handle specific integrity errors, e.g., duplicate entries, if necessary
+                raise serializers.ValidationError({"detail": "Could not create the favorite activity due to an integrity error."}) from e
 
 
 ##

@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly
 
 from django.shortcuts import get_object_or_404
@@ -69,6 +70,22 @@ class FavoritedActivityViewSet(viewsets.ModelViewSet):
     queryset = FavoritedActivity.objects.all()
     serializer_class = FavoritedActivitySerializer
     permission_classes = [IsAuthenticated]
+    
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def check_favorite(self, request):
+        user_id = request.query_params.get('user_id')
+        activity_id = request.query_params.get('activity_id')
+
+        if not user_id or not activity_id:
+            return Response({'detail': 'Missing user_id or activity_id'}, status=status.HTTP_400_BAD_REQUEST)
+
+        is_favorited = self.queryset.filter(
+            favorited_by_user_id=user_id, 
+            activity_id=activity_id,
+            is_favorited=True
+        ).exists()
+
+        return Response({'isFavorited': is_favorited})
 
 
 @method_decorator(ensure_csrf_cookie, 'dispatch')

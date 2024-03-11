@@ -79,6 +79,8 @@ class FavoritedActivity(models.Model):
         blank=False,
     )
     
+    is_favorited: models.BooleanField
+    
     class Meta:
         verbose_name = 'Reported Activity'
         verbose_name_plural = 'Reported Activities'
