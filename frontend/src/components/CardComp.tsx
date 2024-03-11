@@ -314,7 +314,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
 
                   <br />
                   {
-                    visReport ? (
+                    user && (visReport ? (
                       <button
                     type="button"
                     onClick={() => handleReportActivity(id)}
@@ -323,17 +323,10 @@ export default function CardComp({ id, title, img, description, rules, activity_
                     Rapporter
                   </button>
                     ) : (<p><small>Rapportert</small></p>)
-                  } 
+                    )} 
                 </>
 
               )}
-              {user && (<button
-                type="button"
-                onClick={() => handleReportActivity(id)}
-                className="btn btn-outline-secondary btn-sm"
-              >
-                Rapporter
-              </button>)}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body style={{maxHeight: 'calc(95vh - 200px)', overflow: 'auto'}}>
