@@ -18,9 +18,10 @@ export type DetailsCardProps = {
   description: string;
   rules: string;
   activity_type: string;
+  owner: number;
 };
 
-export default function CardComp({ id, title, img, description, rules, activity_type }: DetailsCardProps) {
+export default function CardComp({ id, title, img, description, rules, activity_type, owner }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
   const [visTimer, setVisTimer] = useState(false);
@@ -171,6 +172,15 @@ export default function CardComp({ id, title, img, description, rules, activity_
     }
   };
 
+  const isOwner = ():boolean => {
+    if(user &&  user.id === owner) {
+      return true;
+    }else {
+      console.log("bruker: ", user, "id: ", user?.id, "owner: ", owner)
+      return false;
+    }
+  }
+
   return (
     <>
       <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
@@ -258,25 +268,26 @@ export default function CardComp({ id, title, img, description, rules, activity_
                 <br />
               )}
 
-              {user && (
+              {isOwner() && (
                 <>
                   <Link as={Link} to={editActivityURL(id)}>
                     <Button>Endre aktivitet</Button> {/* Add the edit button */}
                   </Link>
-                  <button
-                    type="button"
-                    onClick={() => handleReportActivity(id)}
-                    className="btn btn-outline-secondary btn-sm"
-                  >
-                    Rapporter
-                  </button>
+
                 </>
               )}
+              {user && (<button
+                type="button"
+                onClick={() => handleReportActivity(id)}
+                className="btn btn-outline-secondary btn-sm"
+              >
+                Rapporter
+              </button>)}
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body style={{ maxHeight: 'calc(95vh - 200px)', overflow: 'auto' }}>
-            <div style={{ padding: '1rem' }}>
-              <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
+          <Modal.Body style={{maxHeight: 'calc(95vh - 200px)', overflow: 'auto'}}>
+            <div style={{padding: '1rem'}}>
+              <h5 style={{fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
               <p style={{ margin: '1rem' }}>{description}</p>
 
               <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Regler</h5>

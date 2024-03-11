@@ -67,6 +67,7 @@ export function Home() {
                       description={activity.details}
                       rules={activity.activity_rules}
                       activity_type={activity.activity_type}
+                      owner = {activity.owner}
                     />
                   ))
               : activities.map((activity) => (
@@ -78,6 +79,7 @@ export function Home() {
                     description={activity.details}
                     rules={activity.activity_rules}
                     activity_type={activity.activity_type}
+                    owner = {activity.owner}
                   />
                 )))}
         </div>
