@@ -13,8 +13,8 @@ from django.middleware.csrf import get_token
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 
-from .models import User, Activity, ReportedActivity
-from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, ReportedActivitySerializer
+from .models import User, Activity, ReportedActivity, FavoritedActivity
+from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, ReportedActivitySerializer, FavoritedActivitySerializer
 from .permission_classes import IsOwnerOrReadOnly
 
 """
@@ -60,6 +60,14 @@ class ReportedActivityViewSet(viewsets.ModelViewSet):
 
     queryset = ReportedActivity.objects.all()
     serializer_class = ReportedActivitySerializer
+    permission_classes = [IsAuthenticated]
+
+    
+class FavoritedActivityViewSet(viewsets.ModelViewSet):
+    """Viewset for managing reported activities."""
+
+    queryset = FavoritedActivity.objects.all()
+    serializer_class = FavoritedActivitySerializer
     permission_classes = [IsAuthenticated]
 
 
