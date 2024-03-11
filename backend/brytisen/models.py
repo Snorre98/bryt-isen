@@ -26,45 +26,47 @@ class Activity(models.Model):
 
     title = models.CharField(max_length=40, null=True, blank=True)  # Aktivitet navn: f.eks. "Topptur"
 
-    details = models.TextField()  # Utdypende beskrivelse av aktivitet
+    details = models.TextField(null=True, blank=True)  # Utdypende beskrivelse av aktivitet
 
     activity_rules = models.TextField(default='Default rules apply.', null=True, blank=True)
-
-    # TODO: Find a bette way for activity_type
-    # UNDEFINED = 'UNDEFINED'
-    # TRENING = 'TRENING'
-    # FYLLA = 'FYLLA'
-    # VERV = 'VERV'
-    # TOPPTUR = 'TOPPTUR'
-
-    # TYPE_CHOICES = [
-    #
-    #     (UNDEFINED, 'Undefined'),
-    #     (TRENING, 'Trening'),
-    #     (FYLLA, 'Fylla'),
-    #     (VERV, 'Verv'),
-    #     (TOPPTUR, 'Topptur'),
-    # ]
 
     activity_type = models.CharField(
         max_length=120,
         null=True,
         blank=True,
-        # choices=TYPE_CHOICES,
-        # default='undefined',
-    )  # TEMPORARY: this is now drop-down, will become multiple choice form
+    )
 
     activity_image = models.ImageField(upload_to=unique_file_upload, null=True, blank=True)
 
-    # TODO: establish activity - user (owner) realtion
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='activites',
+        related_name='user_activities',
         null=True,
         blank=True,
     )
+
     isReported = models.BooleanField(null=True, blank=True)
+
+
+class ReportedActivity(models.Model):
+    """Model to track activities reported by users."""
+
+    activity_id = models.ForeignKey(Activity, on_delete=models.CASCADE)
+    reported_by_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='user_reports',
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = 'Reported Activity'
+        verbose_name_plural = 'Reported Activities'
+
+    # def __str__(self):
+    #     return f'Reported {self.activity} by {self.reporter} at {self.reported_at}'
 
 
 #

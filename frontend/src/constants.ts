@@ -6,19 +6,28 @@ export const XCSRFTOKEN = 'X-CSRFToken';
 export const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN; //env. variable in docker env
 
 /**
- * Activity types, used in dto
+ * Activity types, used in dto and filter
  */
 
 export const ActivityType = {
-  UNDEFINED: 'Udefinert',
   TRENING: 'Trening',
-  FYLLA: 'Fylla',
+  FEST: 'Fest',
   VERV: 'Verv',
-  TOPPTUR: 'Topptur',
+  QUIZ: 'Quiz',
+  KREATIV: 'Kreative aktiviteter',
+  AKTIVE_SPILL: 'Aktive spill',
+  BRETTSPIL: 'Brettspill',
+  GAMING: 'Gaming',
+  FILM: 'Film',
+  TEATER: 'Teater',
+  LÆRE: 'Lære',
+  JOBB: 'Jobb',
+  ANNET: 'Annet',
 } as const;
 
 export type ActivityType = (typeof ActivityType)[keyof typeof ActivityType];
 
+export const FILTER_OPTIONS: Set<string> = new Set<string>(Object.values(ActivityType));
 /**
  *
  */

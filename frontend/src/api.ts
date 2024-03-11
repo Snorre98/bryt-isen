@@ -64,6 +64,15 @@ export async function getActivities(): Promise<ActivityDto[]> {
 }
 
 /**
+ * DELETE-request for activity by
+ * */
+export async function deleteActivity(id:number): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.activity_detail, urlParams: { pk: id } });
+  const response = await axios.delete(url, { withCredentials: true });
+  return response;
+}
+
+/**
  * GET-request for CSRF-token used to make sure all requests come from the frontend of the actual site
  * @returns token of type string
  */
@@ -139,3 +148,30 @@ export async function getReviews(): Promise<ReviewDto> {
   const response = await axios.get(url, { withCredentials: true });
   return response.data;
 }
+
+export async function postReportedActivity(activity_id: number): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity;
+  const data = { activity_id: activity_id };
+  const response = await axios.post(url, data, { withCredentials: true });
+  return response;
+}
+
+/**
+ * GET-request for all acitivies
+ * @returns list containing JSON with activity data
+ */
+export async function getReportedActivities(): Promise<ActivityDto> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity;
+  const response = await axios.get<ActivityDto>(url, { withCredentials: true });
+  return response.data;
+}
+
+/**
+ *TODO: fix the view for this api call:
+ */
+// export async function getUserActivities(activity_owner: string): Promise<ActivityDto[]> {
+//   const url =
+//     BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.user_activities, urlParams: { user_id: activity_owner } });
+//   const response = await axios.get<ActivityDto[]>(url, { withCredentials: true });
+//   return response.data;
+// }

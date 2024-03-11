@@ -1,22 +1,21 @@
 from __future__ import annotations
-import genericpath
-from django.shortcuts import get_object_or_404
 
-from rest_framework import status, viewsets
+from rest_framework import status, generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.request import Request
-#from rest_framework.generics import ListAPIView
-from rest_framework import generics
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
+from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly, IsAuthenticatedOrReadOnly
 
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import login, logout
 from django.middleware.csrf import get_token
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 
-from .models import User, Activity, Review
-from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, ReviewSerializer
+from .models import User, Activity, ReportedActivity, Review
+from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, ReportedActivitySerializer, ReviewSerializer
+from .permission_classes import IsOwnerOrReadOnly
 
 """
     Views are what we interact with from frontend to get data from the database.
@@ -41,7 +40,27 @@ class ActivityView(viewsets.ModelViewSet):
 
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
+
+    # TODO: add functionality to get activity by username, the soultion here introduced permission issues
+
+    # def get_queryset(self):
+    #     # Get the user from the URL parameters or use the current authenticated user
+    #     activity_owner = self.kwargs.get('owner', None)
+    #     # user = self.request.user if user_id is None else get_object_or_404(User, pk=user_id)
+    #     user = self.request.user if activity_owner is None else get_object_or_404(User, pk=activity_owner)
+
+    #     # Filter activities by the specified user
+    #     queryset = user.user_activities.all()
+    #     return queryset
+
+
+class ReportedActivityViewSet(viewsets.ModelViewSet):
+    """Viewset for managing reported activities."""
+
+    queryset = ReportedActivity.objects.all()
+    serializer_class = ReportedActivitySerializer
+    permission_classes = [IsAuthenticated]
 
 
 @method_decorator(ensure_csrf_cookie, 'dispatch')
@@ -163,7 +182,8 @@ class UserView(APIView):
         # returns the user data of the current request (the one currently autenticated)
         return Response(data=current_user)
 
-class AllUsersView(generics.ListAPIView):
+
+class AllUsersView(ListAPIView):
     """
     View that allows for accessing a list of all users.
     Can be accessed by a custom permission class, similar to

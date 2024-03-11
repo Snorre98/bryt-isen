@@ -8,6 +8,7 @@ import ActivityForm from './ActivityForm';
 import { ApiTestPage } from './ApiTestPage';
 import Home from './Home';
 import { BrytisenOutlet } from '~/components/BrytisenOutlet';
+import EditActivity from './EditActivity';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/testapi" element={<ApiTestPage />} />
+            <Route path="/editActivity/:id" element={<EditActivity />} />
           </Route>
         </Routes>
       </Router>

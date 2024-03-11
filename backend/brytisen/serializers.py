@@ -9,10 +9,11 @@ from guardian.models import UserObjectPermission
 
 from rest_framework import serializers
 
+from django.forms import ImageField
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 
-from .models import User, Activity, Review
+from .models import User, Activity, ReportedActivity, Review
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,7 @@ class ActivitySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data: dict) -> Activity:
+        validated_data['owner'] = self.context['request'].user
         title = validated_data.get('title')
         details = validated_data.get('details')
         activity_rules = validated_data.get('activity_rules')
@@ -58,8 +60,20 @@ class ActivitySerializer(serializers.ModelSerializer):
             if activity_image:
                 activity.activity_image = activity_image
                 activity.save()
+        return activity
 
-            return activity
+
+class ReportedActivitySerializer(serializers.ModelSerializer):
+    """Serializer for the ReportedActivity model."""
+
+    class Meta:
+        model = ReportedActivity
+        fields = '__all__'
+
+    def create(self, validated_data):
+        """Create and return a new ReportedActivity instance, given the validated data."""
+        validated_data['reported_by_user'] = self.context['request'].user
+        return ReportedActivity.objects.create(**validated_data)
 
 
 ##
@@ -201,9 +215,6 @@ class UserSerializer(serializers.ModelSerializer):
             perm_objs.append(self._obj_permission_to_obj(obj_perm=obj_perm))
 
         return perm_objs  # list of objects which user has permissions to manipulate
-
-
-
 
 class ReviewSerializer(serializers.ModelSerializer):
     """

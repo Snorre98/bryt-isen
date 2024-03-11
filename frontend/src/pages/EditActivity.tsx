@@ -1,34 +1,68 @@
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Dropdown, Form } from 'react-bootstrap';
-import '../styles/ActivityForm.css';
-import { postActivity } from '~/api';
-import { ActivityType } from '~/constants';
-import { ActivityDto } from '~/dto';
+import { useParams } from 'react-router-dom';
+import {getActivity, putActivity} from '~/api'; // Add the API function to get activity by ID
 import { CustomToast } from '~/components/CustomToast';
 import { PageWrapper } from '~/components/PageWrapper';
+import { ActivityType } from '~/constants';
 
-function ActivityForm() {
-  const [activityTitle, setActivityTitle] = useState('');
-  const [activityDetails, setActivityDetails] = useState('');
-  const [activityRules, setActivityRules] = useState('');
-  const [activityType, setActivityType] = useState<ActivityType | string>('');
-  const [activityImageFile, setActivityImageFile] = useState<File | null>(null);
+
+function EditActivity() {
+  //const [activity, setActivity] = useState<ActivityDto>();
+  const { id } = useParams();
+  const [activityTitle, setActivityTitle] = useState("");
+  const [activityDetails, setActivityDetails] = useState("");
+  const [activityRules, setActivityRules] = useState("");
+  const [activityType, setActivityType] = useState<ActivityType | string>("");
+  const [activityImageFile, setActivityImageFile] = useState<File>();
   const [imageUrl, setImageUrl] = useState<string>('');
-
-  const [submitStatus, setSubmitStatus] = useState('');
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
-
-  const SUCCESS_MESSAGE = 'Aktivitet ble registrert!';
-  const ERROR_MESSAGE = 'Kunne ikke registrer aktivitet';
+  const [showImageFormFiled, setShowImageFormField] = useState(false)
+  //const EditActivity: React.FC<EditActivityPageProps> = () => {
+  //const { id } = useParams<{ id: string }>();
+  //const [activity, setActivity] = useState<any>(null); // Update with the actual type of your activity
 
   useEffect(() => {
+    // Fetch activity details based on the ID from the URL
+    getActivity(id)
+      .then((activity) => {
+        setActivityTitle(activity.title)
+        setActivityDetails(activity.details)
+        setActivityRules(activity.activity_rules)
+        setActivityType(activity.activity_type)
+        setActivityImageFile(activityImageFile)
+        // @ts-ignore
+        setImageUrl(activity.activity_image)
+        console.log("DETTE ER BILDE: ", activity.activity_image)
+      })
+      .catch((error: unknown) => {
+        console.log(error);
+      });
+  }, [id]);
+
+ /*useEffect(() => {
     if (activityImageFile) {
       const fileUrl = URL.createObjectURL(activityImageFile);
       setImageUrl(fileUrl);
       return () => URL.revokeObjectURL(fileUrl);
     }
+  }, [activityImageFile]);*/
+
+  useEffect(() => {
+    if (activityImageFile instanceof File) { // Check if activityImageFile is a File object
+      const fileUrl = URL.createObjectURL(activityImageFile);
+      setImageUrl(fileUrl);
+      return () => URL.revokeObjectURL(fileUrl);
+    }
   }, [activityImageFile]);
+
+
+  const [submitStatus, setSubmitStatus] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  const SUCCESS_MESSAGE = 'Aktivitet ble endret!';
+  const ERROR_MESSAGE = 'Kunne ikke endre aktivitet';
+
 
   const extractImage = (event: { target: HTMLInputElement }) => {
     const target = event.target as HTMLInputElement;
@@ -40,39 +74,41 @@ function ActivityForm() {
     }
   };
 
+
   const submitActivity = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    const data: ActivityDto = {
-      title: activityTitle,
-      details: activityDetails,
-      activity_rules: activityRules,
-      activity_type: activityType,
-      activity_image: activityImageFile as File,
-    };
 
-    postActivity(data)
+    // Create an instance of FormData
+    const formData = new FormData();
+
+    // Append each field to the formData object
+    formData.append('title', activityTitle);
+    formData.append('details', activityDetails);
+    formData.append('activity_rules', activityRules);
+    formData.append('activity_type', activityType);
+    // Only append the file if one has been selected
+    if (activityImageFile) {
+      formData.append('activity_image', activityImageFile, activityImageFile.name);
+    }
+
+    // Use putActivity to send the FormData
+    putActivity(id, formData)
       .then((response) => {
-        if (response.status === 201) {
+        if (response.status === 200 || response.status === 201) { // Assuming 200 OK or 201 Created are success statuses
           setSubmitStatus('success');
           setToastMessage(SUCCESS_MESSAGE);
           setShowToast(true);
 
-          setActivityTitle('');
-          setActivityDetails('');
-          setActivityRules('');
-          setActivityType(''); // Assuming undefined is the initial state for activityType
-          setActivityImageFile(null);
-          setImageUrl(''); // Clear the image preview as well
+          // Reset form fields (if necessary)
         }
       })
       .catch((error) => {
         setSubmitStatus('warning');
         setToastMessage(ERROR_MESSAGE);
         setShowToast(true);
-        throw new Error(error);
+        console.error(error);
       });
   };
-
   useEffect(() => {
     // Cleanup the object URL
     return () => {
@@ -134,7 +170,9 @@ function ActivityForm() {
                 <Form.Group controlId="formCategory">
                   <Form.Label>Velg kategori</Form.Label>
                   <Dropdown>
-                    <Dropdown.Toggle id="dropdown-basic">{activityType ? activityType : 'Velg'}</Dropdown.Toggle>
+                    <Dropdown.Toggle id="dropdown-basic">
+                      {activityType}
+                    </Dropdown.Toggle>
                     <Dropdown.Menu>
                       {Object.entries(ActivityType).map(([key, value]) => (
                         <Dropdown.Item key={key} onClick={() => setActivityType(value)}>
@@ -145,15 +183,26 @@ function ActivityForm() {
                   </Dropdown>
                 </Form.Group>
                 <Form.Group controlId="formFile" className="mb-3">
-                  <Form.Label>Legg til bilde</Form.Label>
-                  <Form.Control required type="file" onChange={extractImage} />
+                  <br/>
+                  <Button onClick={() => {
+                    setShowImageFormField(true)
+                  }}>Vil du endre bilde?</Button>
+                  <br/>
+                  <br/>
+                  {showImageFormFiled && (
+                    <>
+                      <Form.Label>Legg til bilde</Form.Label>
+                      <Form.Control required type="file" onChange={extractImage}/>
+                    </>)}
+
+
                 </Form.Group>
                 <Button type="submit" variant="primary" size="lg">
-                  Opprett aktivitet
+                  Endre aktivitet
                 </Button>
               </Form>
             </div>
-            {/*<div className="previewContainer">
+            <div className="previewContainer">
               <Form className="form">
                 <Form.Group>
                   <Form.Label>Utfylt tittel</Form.Label>
@@ -193,7 +242,7 @@ function ActivityForm() {
                   />
                 </Form.Group>
               </Form>
-            </div>*/}
+            </div>
             <div className="imgPreviewContainer" style={activityImageFile ? { backgroundColor: '#95FFAB' } : {}}>
               <h6 style={{ margin: '0.2em' }}>Valgt bilde</h6>
               <div className="imagePreviewWrapper">
@@ -214,4 +263,4 @@ function ActivityForm() {
   );
 }
 
-export default ActivityForm;
+export default EditActivity;

@@ -4,6 +4,7 @@ import { loginUser, getUser } from '~/api';
 import { CustomToast } from '~/components/CustomToast';
 import { PageWrapper } from '~/components/PageWrapper';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
+import { useNavigate } from 'react-router-dom';
 
 export function Login() {
   const [username, setUsername] = useState('');
@@ -12,6 +13,8 @@ export function Login() {
   const [toastMessage, setToastMessage] = useState('');
   const [showToast, setShowToast] = useState(false);
   const { user, setUser } = useAuthContext();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -41,6 +44,7 @@ export function Login() {
               setloginStatus('success');
               setToastMessage(SUCCESS_MESSAGE + user.username);
               setShowToast(true);
+              navigate('/');
             })
             .catch((error) => {
               console.log(error);
@@ -66,11 +70,10 @@ export function Login() {
       <div style={{ display: 'flex', height: '100%', width: '50%' }}>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mt-4" controlId="formBasicEmail">
-            <Form.Label>Username</Form.Label>
+            <Form.Label>Brukernavn</Form.Label>
             <Form.Control
               required
               type="text"
-              placeholder="username"
               onChange={(event) => setUsername(event.target.value)}
             />
           </Form.Group>
@@ -79,8 +82,7 @@ export function Login() {
             <Form.Label>Passord</Form.Label>
             <Form.Control
               required
-              type="text"
-              placeholder="Password"
+              type="password"
               onChange={(event) => setPassword(event.target.value)}
             />
           </Form.Group>

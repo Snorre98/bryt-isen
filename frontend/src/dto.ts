@@ -13,8 +13,6 @@ export type ActivityDto = {
   activity_type: ActivityType | string;
   activity_image: File;
   owner?: number;
-  isReported?: boolean;
-  
 };
 
 /**
