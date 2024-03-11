@@ -13,7 +13,7 @@ from django.forms import ImageField
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 
-from .models import User, Activity, ReportedActivity, Review
+from .models import User, Activity, ReportedActivity, Review, ReportedReview
 
 logger = logging.getLogger(__name__)
 
@@ -39,12 +39,15 @@ class ActivitySerializer(serializers.ModelSerializer):
     ActivitySerializer serialises all
     fields in the activity model.
     """
-
-    # file = serializers.ImageField(write_only=True, required=True)
+    owner_username = serializers.SerializerMethodField()
 
     class Meta:
         model = Activity
-        fields = '__all__'
+        fields = ['id','title', 'details', 'activity_rules', 'activity_image', 'activity_type', 'owner', 'owner_username']
+
+    def get_owner_username(self, obj):
+        # This method is called for each Review instance during serialization
+        return obj.owner.username if obj.owner else None
 
     def create(self, validated_data: dict) -> Activity:
         validated_data['owner'] = self.context['request'].user
@@ -142,7 +145,7 @@ class RegisterSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs: dict) -> dict:
-        # getts the values in the Python dictionery on keys:
+        # gets the values in the Python dictionery on keys:
         username = attrs.get('username')
         first_name = attrs.get('first_name')
         last_name = attrs.get('last_name')
@@ -151,7 +154,8 @@ class RegisterSerializer(serializers.Serializer):
         if username and password:
             # username and password is required and was provided.
             # creates user:
-            user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, password=password)
+            user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username,
+                                            password=password)
             # authenticates the user that was created (unique user?)
             user = authenticate(request=self.context.get('request'), username=username, password=password)
             # if the user is authenticated the serializer does not throw an error and the user creation is finalized
@@ -183,7 +187,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ['password', 'user_permissions']  # avoids exposing sensitive information to the API by excluding fields from serialization
+        exclude = ['password',
+                   'user_permissions']  # avoids exposing sensitive information to the API by excluding fields from serialization
 
     # the methode mentioned above
     # returns user permissions, provided in the user object as a list of strings
@@ -216,26 +221,41 @@ class UserSerializer(serializers.ModelSerializer):
 
         return perm_objs  # list of objects which user has permissions to manipulate
 
+
 class ReviewSerializer(serializers.ModelSerializer):
     """
     reviewSerializer serialises all
     fields in the review model.
     """
 
+    owner_username = serializers.SerializerMethodField()
 
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ['id', 'details', 'rating', 'activity', 'owner', 'owner_username']
+
+    def get_owner_username(self, obj):
+        # This method is called for each Review instance during serialization
+        return obj.owner.username if obj.owner else None
 
     def create(self, validated_data: dict) -> Review:
-        owner = validated_data.get('owner')
+        validated_data['owner'] = self.context['request'].user
         review_description = validated_data.get('details')
         rating = validated_data.get('rating')
-        isReported = validated_data.get('isReported')
         activity = validated_data.get("activity")
-        if owner and review_description and rating and isReported and activity:
+        if review_description and rating and activity:
             # Handle the image file if included in the request
             review = Review.objects.create(**validated_data)
             review.save()
 
             return review
+
+
+class ReportedReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportedReview
+        fields = '__all__'
+
+    def create(self, validated_data: dict):
+        validated_data['reported_by_user'] = self.context['request'].user
+        return ReportedReview.objects.create(**validated_data)

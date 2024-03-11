@@ -1,4 +1,3 @@
-import { title } from 'process';
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { postReview } from '~/api';
@@ -6,28 +5,23 @@ import { ReviewDto } from '~/dto';
 
 type ReviewFormProps = {
   activity_title: string;
-  activityID: number;
-  ownerID?: number;
+  activity_id: number;
 };
 
 
 
-export default function ReviewForm({ activity_title, activityID, ownerID }: ReviewFormProps) {
+export default function ReviewForm({ activity_title, activity_id }: ReviewFormProps) {
   const [activity_review_description, setReview] = useState('');
   const [review_rating, setRating] = useState(0);
   const submitActivity = (event: { preventDefault: () => void }) => {
     event.preventDefault();
+
     const data: ReviewDto = {
-      filter(arg0) {
-        
-      },
       details: activity_review_description,
       rating: review_rating,
-      owner: ownerID,
-      activity: activityID,
+      activity: activity_id
     };
     postReview(data)
-
   }
   return (
     <>

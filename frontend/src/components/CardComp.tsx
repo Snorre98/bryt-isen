@@ -5,10 +5,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { CustomToast } from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
-import profileImg from '../assets/download.jpeg';
-import { getActivities, getReviews, deleteActivity, postReportedActivity } from '~/api';
+import { getReviews, deleteActivity, postReportedActivity } from '~/api';
 import { ReviewDto } from '~/dto';
 import { Link } from 'react-router-dom';
+
 export type DetailsCardProps = {
   id: number;
   title: string;
@@ -22,8 +22,7 @@ export type DetailsCardProps = {
 export default function CardComp({ id, title, img, description, rules, activity_type, owner }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
-  const [reviews, setReviews] = useState<ReviewDto>([]);
-  const [filteredReviews, setFilteredReviews] = useState<ReviewDto[]>([]); // Define filteredReviews state
+  const [reviews, setReviews] = useState<ReviewDto[]>([]);
   const [visTimer, setVisTimer] = useState(false);
   const [visStart, setVisStart] = useState(true);
   const [visStop, setVisStop] = useState(false);
@@ -45,14 +44,9 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const { user } = useAuthContext();
 
   useEffect(() => {
-    getReviews().then((reviews : ReviewDto) => {
-      //console.log('her er reviews', reviews, "for id", id);
-      //console.log('her er activityID', id);
-      //setReviews(reviews);
-      const filteredReviews: ReviewDto[] = reviews?.filter((review) => review.activity === id) as ReviewDto[];
-      console.log('her er filteredReviews', filteredReviews, "for", "aktivitet_id", id);
-      setFilteredReviews(filteredReviews);
-    });
+    getReviews().then((data : ReviewDto[]) => {
+      setReviews(data)
+    }).catch((error)=>{console.log(error)});
   }, []);
 
 
@@ -185,13 +179,13 @@ export default function CardComp({ id, title, img, description, rules, activity_
     return parts.join(', ').replace(/, ([^,]*)$/, ' og $1'); // Replace the last comma with ' og '
   }
 
-  const editActivityURL = (id: number) => {
-    if (id !== undefined && id !== null) {
-      const url = '/editActivity/' + id.toString();
+  const editActivityURL = (activity_id: number) => {
+    if (activity_id !== undefined && activity_id !== null) {
+      const url = '/editActivity/' + activity_id.toString();
       return url;
     } else {
       // Handle the case when id is undefined or null
-      console.error('Invalid id:', id);
+      console.error('Invalid id:', activity_id);
       return ''; // or throw an error, or handle it in a way that makes sense for your application
     }
   };
@@ -200,7 +194,6 @@ export default function CardComp({ id, title, img, description, rules, activity_
     if(user &&  user.id === owner) {
       return true;
     }else {
-      console.log("bruker: ", user, "id: ", user?.id, "owner: ", owner)
       return false;
     }
   }
@@ -218,8 +211,6 @@ export default function CardComp({ id, title, img, description, rules, activity_
         handleClose()
         location.reload()
       }, 1000)
-
-
     })
       .catch((error)=>{
         console.log(error)
@@ -248,6 +239,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
           <Modal.Header closeButton>
             <Modal.Title>
               <h2>{title}</h2>
+
               {user && (
                 <>
                   <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button>
@@ -376,23 +368,21 @@ export default function CardComp({ id, title, img, description, rules, activity_
             </div>
           </div>
 
-          <div style={{ padding: '1rem' }}>
-            {/* Activity details */}
-            {filteredReviews.map((review : ReviewDto) => (
-              <ReviewComp
-                key={review.id}
-                ownerID={review.owner}
-                rating={review.rating}
-                review_description={review.details}
-              />
-            ))}
-          </div>
+            <div style={{padding: '1rem'}}>
+              {reviews.length > 0 && reviews.filter((review) => review.activity === id)
+                .map((review: ReviewDto) => (
+                <ReviewComp
+                  key={review.id}
+                  owner_id={review.owner}
+                  rating={review.rating}
+                  review_description={review.details}
+                  owner_name={review.owner_username}
+                />
+              ))}
+            </div>
 
 
-        </Modal.Body>
-        {user && (
-          <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button> // Button to open review form
-        )}
+          </Modal.Body>
         </Modal>
         <CustomToast
           toastTitle={toastTitle}
@@ -403,7 +393,11 @@ export default function CardComp({ id, title, img, description, rules, activity_
         />
         {/* Review Form Modal */}
         <Modal show={showReviewForm} onHide={() => setShowReviewForm(false)}>
-          <ReviewForm activity_title={title} activityID={id} ownerID={user ? user.id : 0}/>
+          <ReviewForm
+            activity_title={title}
+            activity_id={id}
+            //owner_id={user.id}
+          />
         </Modal>
       </Card>
     </>

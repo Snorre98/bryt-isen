@@ -13,11 +13,15 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'first_name', 'last_name')
 
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('owner', 'rating', 'details', 'isReported')
+    list_display = ('owner', 'rating', 'details')
 
 
 class ReportedActivityAdmin(admin.ModelAdmin):
     list_display = ('activity_id',)
+
+
+class ReportedReviewAdmin(admin.ModelAdmin):
+    list_display = ('review_id',)
 
 
 admin.site.register(Activity, ActivityAdmin)

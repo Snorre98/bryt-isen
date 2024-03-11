@@ -29,6 +29,7 @@ export function Home() {
         console.log(error);
       });
   }, []);
+
   return (
     <PageWrapper>
       <FilterComponent showFilter={showFilter} />
@@ -58,6 +59,7 @@ export function Home() {
               ? activities
                   .filter((activity) => activityFilter.has(activity.activity_type))
                   .map((activity) => (
+
                     <CardComp
                       key={activity.id}
                       id={activity.id}

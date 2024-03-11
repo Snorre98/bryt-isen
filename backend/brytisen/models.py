@@ -6,8 +6,8 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-
 from .utils.unique_file_upload import unique_file_upload
+
 
 # Create your models here.
 
@@ -46,7 +46,6 @@ class Activity(models.Model):
         blank=True,
     )
 
-    isReported = models.BooleanField(null=True, blank=True)
 
 
 class ReportedActivity(models.Model):
@@ -56,7 +55,7 @@ class ReportedActivity(models.Model):
     reported_by_user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='user_reports',
+        related_name='user_reported_activities',
         null=True,
         blank=True,
     )
@@ -112,19 +111,40 @@ class User(AbstractUser):
     )
 
 
-# TODO: add review class
 class Review(models.Model):
     """
     Model for the review object
     * details
     * rating
-    * actrivity
+    * activity
     * owner
-    * isReported
     """
 
     details = models.TextField(max_length=40)  # Utdypende beskrivelse av aktivitet
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])  # Rating of the review
-    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name='reviews')
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
-    isReported = models.BooleanField(null=False)
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name='review_activity')
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='review_owner',
+        null=True,
+        blank=True,)
+
+
+class ReportedReview(models.Model):
+    """Model to track reviews reported by users."""
+
+    review_id = models.ForeignKey(Review, on_delete=models.CASCADE)
+    reported_by_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='user_reported_reviews',
+        null=True,
+        blank=True,
+    )
+
+
+
+    class Meta:
+        verbose_name = 'Reported Review'
+        verbose_name_plural = 'Reported Reviews'

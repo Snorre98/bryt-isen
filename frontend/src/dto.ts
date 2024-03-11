@@ -48,12 +48,12 @@ export type GroupDto = {
 };
 
 export type ReviewDto = {
-  filter(arg0: (review: any) => boolean): unknown;
   id?: number;
   activity: number;
   rating: number;
   details: string;
   owner?: number;
+  owner_username?: string;
 };
 
 

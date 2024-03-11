@@ -5,7 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly, \
+    IsAuthenticatedOrReadOnly
 
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import login, logout
@@ -13,8 +14,9 @@ from django.middleware.csrf import get_token
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 
-from .models import User, Activity, ReportedActivity, Review
-from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, ReportedActivitySerializer, ReviewSerializer
+from .models import User, Activity, ReportedActivity, Review, ReportedReview
+from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, \
+    ReportedActivitySerializer, ReviewSerializer, ReportedReviewSerializer
 from .permission_classes import IsOwnerOrReadOnly
 
 """
@@ -87,6 +89,7 @@ class LoginView(APIView):
     """
 
     permission_classes = [AllowAny]  # Defines permission level for this view
+
     # Defines what happens when a POST request commes at this view
 
     def post(self, request: Request) -> Response:
@@ -208,20 +211,12 @@ class ReviewView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
+class ReportedReviewsViewSet(viewsets.ModelViewSet):
+    """
+    View to access reviews that have been reported
+    """
 
-class ActivityReviewsAPIView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = ReportedReview.objects.all()
+    serializer_class = ReportedReviewSerializer
+    permission_classes = [IsAuthenticated]
 
-    def get(self, request, pk):
-        activity = get_object_or_404(Activity, pk=pk)
-        reviews = Review.objects.filter(activity=activity)
-        serializer = ReviewSerializer(reviews, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, pk):
-        serializer = ReviewSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(activity_id=pk, reviewer=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

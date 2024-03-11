@@ -143,7 +143,7 @@ export async function postReview(data: ReviewDto): Promise<AxiosResponse> {
   return response;
 }
 
-export async function getReviews(): Promise<ReviewDto> {
+export async function getReviews(): Promise<ReviewDto[]> {
   const url = BACKEND_DOMAIN + ROUTES.backend.review_list;
   const response = await axios.get(url, { withCredentials: true });
   return response.data;
