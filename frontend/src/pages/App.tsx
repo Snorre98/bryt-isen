@@ -5,7 +5,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { Login } from '../pages/Login';
 import Signup from './SignupPage';
 import ActivityForm from './ActivityForm';
-//import FavoritesPages from './FavoritesPage';
+import FavoritesPages from './FavoritesPage';
 import { ApiTestPage } from './ApiTestPage';
 import Home from './Home';
 import { BrytisenOutlet } from '~/components/BrytisenOutlet';
@@ -22,8 +22,8 @@ function App() {
             <Route path="/activityForm" element={<ActivityForm />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-{/*             <Route path="/favorites" element={<FavoritesPage />} />
- */}            <Route path="/testapi" element={<ApiTestPage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/testapi" element={<ApiTestPage />} />
             <Route path="/favorites" element={<ApiTestPage />} />
             <Route path="/editActivity{id}" element={<EditActivity />} />
           </Route>
