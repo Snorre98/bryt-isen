@@ -31,7 +31,6 @@ router = routers.DefaultRouter()
 router.register(r'activities', views.ActivityView, 'activities')
 router.register(r'reported-activities', views.ReportedActivityViewSet, 'reported activities')
 router.register(r'favorited-activities', views.FavoritedActivityViewSet, 'favorited activities')
-router.register(r'check-favorite', views.FavoritedActivityViewSet, 'favorited activities')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -47,11 +47,7 @@ export type GroupDto = {
   name: string;
 };
 
-export type FavoriseDto = {
-  id: number;
-  user: number;
+export type FavoriteDto = {
+  activity_id: number;
+  favorited_by_user: number;
 };
-
-export type CheckFavoriteResponseDto {
-  isFavorited: boolean;
-}

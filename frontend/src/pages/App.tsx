@@ -22,7 +22,7 @@ function App() {
             <Route path="/activityForm" element={<ActivityForm />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/favorites" element={<FavoritesPage />} />
+            {/* <Route path="/favorites" element={<FavoritesPage />} /> */}
             <Route path="/testapi" element={<ApiTestPage />} />
             <Route path="/favorites" element={<ApiTestPage />} />
             <Route path="/editActivity{id}" element={<EditActivity />} />
