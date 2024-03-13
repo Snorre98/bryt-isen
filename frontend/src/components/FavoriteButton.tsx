@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Heart from "react-animated-heart"
 import { Button } from "react-bootstrap"
 import { getSearchParamsForLocation } from "react-router-dom/dist/dom";
-import { postFavoritedActivity, getFavoritedActivities } from "~/api";
+import { postFavoritedActivity, deleteFavoritActivity, getFavoritedActivities } from "~/api";
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import { CustomToast } from '~/components/CustomToast';
 
@@ -13,19 +13,18 @@ export type FavoriteProps = {
 function FavoriteButton({activity_id}:FavoriteProps) {
     const { user, setUser } = useAuthContext();
     const [isClick, setClick] = useState(false);
+    const [combinationId, setCombinationId] = useState<number>();
     const [showErrorToast, setShowErrorToast] = useState(false);
     const [errorToastMessage, setErrorToastMessage] = useState('');
 
     //Get all favorite, markere acitivty med hjerte hvis favorited
     useEffect(() => {
-    console.log("Nytt kort")
-    console.log("User: ",user!.id);
-    console.log("Activity: ",activity_id);
     getFavoritedActivities()
     .then((data) => {
         data.forEach((combination) => {
-            if (combination.favorited_by_user == user!.id && combination.activity_id == activity_id) {
+            if (combination.owner == user!.id && combination.activity_id == activity_id) {
                 setClick(true)
+                setCombinationId(combination.id)
             }
         });
     })
@@ -34,16 +33,23 @@ function FavoriteButton({activity_id}:FavoriteProps) {
         setErrorToastMessage('Kunne ikke hente inn favoriserte aktiviteter!');
         console.log(error);
     });
-    }, []);
+    }, [isClick]);
 
     const handleFavoritedActivity = (activity_id: number) => {
         if (isClick) {
-            //Delete API favorite
-            setClick(!isClick)
+            console.log(combinationId);
+            deleteFavoritActivity(combinationId!)
+                .then(() => {
+                    console.log("fjern")
+                    setClick(false)
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         } else {
             postFavoritedActivity(activity_id, user!.id)
             .then(() => {
-                setClick(!isClick)
+                setClick(true)
             })
             .catch((error) => {
                 console.log(error);

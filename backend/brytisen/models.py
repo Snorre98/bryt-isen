@@ -71,12 +71,12 @@ class ReportedActivity(models.Model):
 #
 class FavoritedActivity(models.Model):
     activity_id = models.ForeignKey(Activity, on_delete=models.CASCADE)
-    favorited_by_user = models.ForeignKey(
+    owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='user_favorites',
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
     )
     
     class Meta:

@@ -48,6 +48,7 @@ export type GroupDto = {
 };
 
 export type FavoriteDto = {
+  id: number;
   activity_id: number;
-  favorited_by_user: number;
+  owner: number;
 };

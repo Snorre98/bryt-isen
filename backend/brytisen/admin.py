@@ -15,6 +15,8 @@ class UserAdmin(admin.ModelAdmin):
 
 class ReportedActivityAdmin(admin.ModelAdmin):
     list_display = ('activity_id',)
+    
+
 
 
 admin.site.register(Activity, ActivityAdmin)

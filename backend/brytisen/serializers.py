@@ -76,7 +76,7 @@ class ReportedActivitySerializer(serializers.ModelSerializer):
         return ReportedActivity.objects.create(**validated_data)
 
 
-class FavoritedActivitySerializer(serializers.ModelSerializer):
+class FavoritedActivitySerializer(serializers.ModelSerializer) :
     """Serializer for the FavoritedActivity model."""
 
     class Meta:
@@ -88,11 +88,13 @@ class FavoritedActivitySerializer(serializers.ModelSerializer):
     #    validated_data['favorited_by_user'] = self.context['request'].user
     #    return FavoritedActivity.objects.create(**validated_data)
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict)-> FavoritedActivity:
         """Create and return a new ReportedActivity instance, given the validated data."""
         #activity_id = validated_data.get('activity_id')
-        validated_data['favorited_by_user'] = self.context['request'].user
-        return FavoritedActivity.objects.create(**validated_data)
+        validated_data['owner'] = self.context['request'].user
+        favorite = FavoritedActivity.objects.create(**validated_data)
+        favorite.save()
+        return favorite
 
 
 ##

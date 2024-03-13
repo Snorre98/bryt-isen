@@ -169,3 +169,9 @@ export async function getFavoritedActivities(): Promise<FavoriteDto[]> {
   const response = await axios.get<FavoriteDto[]>(url, { withCredentials: true });
   return response.data;
 }
+
+export async function deleteFavoritActivity(id:number): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.favorited_activity_detail, urlParams: { pk: id } });
+  const response = await axios.delete(url, { withCredentials: true });
+  return response;
+}
