@@ -1,8 +1,7 @@
 import React from 'react';
 import '~/styles/SpinTheWheel.css';
 import { ActivityDto } from '~/dto';
-
-
+import { Button } from 'react-bootstrap';
 
 interface WheelProps {
   activities: ActivityDto[];
@@ -18,9 +17,9 @@ const WheelOfPrizes: React.FC<WheelProps> = ({ activities, onWin }) => {
 
   return (
     <div className="button-container">
-      <button type="button" onClick={selectRandomPrize} className="btn btn-primary btn-lg m-2">
-                      Spin the wheel
-                    </button>
+      <Button type="button" onClick={selectRandomPrize} className="btn btn-primary btn-lg m-2">
+          Spin the wheel
+      </Button>
     </div>
   );
 };
