@@ -51,7 +51,7 @@ export function Home() {
         setErrorToastMessage('Kunne ikke hente inn aktiviteter!');
         console.log(error);
       });
-  }, [showFavorites]);
+  }, [showFavorites, activities]);
 
   const handleShowFavoritesChange = (event: any) => {
     setShowFavorites(event.target.checked);
