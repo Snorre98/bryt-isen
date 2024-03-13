@@ -1,0 +1,12 @@
+.SpinTheWheel {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* This makes the container fill the whole viewport height */
+  width: 100vw; /* This makes the container fill the whole viewport width */
+}

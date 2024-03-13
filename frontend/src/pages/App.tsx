@@ -9,6 +9,7 @@ import { ApiTestPage } from './ApiTestPage';
 import Home from './Home';
 import { BrytisenOutlet } from '~/components/BrytisenOutlet';
 import EditActivity from './EditActivity';
+import SpinTheWheel from './SpinTheWheel';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/testapi" element={<ApiTestPage />} />
             <Route path="/editActivity/:id" element={<EditActivity />} />
+            <Route path="/spinTheWheel" element={<SpinTheWheel />} />
           </Route>
         </Routes>
       </Router>
