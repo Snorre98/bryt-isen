@@ -11,7 +11,7 @@ export type ActivityDto = {
   details: string;
   activity_rules: string;
   activity_type: ActivityType | string;
-  activity_image: File | null;
+  activity_image: File;
   owner?: number;
 };
 

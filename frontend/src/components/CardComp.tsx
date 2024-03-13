@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Card, Form, InputGroup, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { postReportedActivity } from '~/api';
+import {deleteActivity, postReportedActivity} from '~/api';
 import { CustomToast } from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
@@ -19,9 +19,10 @@ export type DetailsCardProps = {
   description: string;
   rules: string;
   activity_type: string;
+  owner: number;
 };
 
-export default function CardComp({ id, title, img, description, rules, activity_type }: DetailsCardProps) {
+export default function CardComp({ id, title, img, description, rules, activity_type, owner }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
   const [visTimer, setVisTimer] = useState(false);
@@ -45,7 +46,16 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const { user } = useAuthContext();
 
   const [showToast, setShowToast] = useState(false);
+  const [toastTitle, setToastTitle] = useState("")
+  const [toastMsg, setToastMsg] = useState("")
+  const [submitStatus, setSubmitStatus] = useState('');
 
+  //TODO: add to report?
+  //const RAPPORT_ERROR_MSG = "Kunne ikke rapportere"
+  //const RAPPORT_SUCCESS_MSG = "Aktivitet ble rapportert"
+
+  const DELETE_SUCCESS_MSG = "Aktivitet ble slettet!"
+  const DELETE_ERROR_MSG = "Aktivitet kunne ikke slettes, noe gikk feil!"
   const handleReportActivity = (activity_id: number) => {
     postReportedActivity(activity_id)
       .then(() => {
@@ -164,11 +174,50 @@ export default function CardComp({ id, title, img, description, rules, activity_
     return parts.join(', ').replace(/, ([^,]*)$/, ' og $1'); // Replace the last comma with ' og '
   }
 
-  const handleEdit = () => {
-    setShow(false);
-    setEditMode(true);
-    handleClose(); // Close the modal when entering edit mode, you can adjust this based on your design.
+  const editActivityURL = (id: number) => {
+    if (id !== undefined && id !== null) {
+      const url = '/editActivity/' + id.toString();
+      return url;
+    } else {
+      // Handle the case when id is undefined or null
+      console.error('Invalid id:', id);
+      return ''; // or throw an error, or handle it in a way that makes sense for your application
+    }
   };
+
+  const isOwner = ():boolean => {
+    if(user &&  user.id === owner) {
+      return true;
+    }else {
+      console.log("bruker: ", user, "id: ", user?.id, "owner: ", owner)
+      return false;
+    }
+  }
+
+  const handleDelete = (activity_id: number) => {
+    setToastTitle("Slett aktivitet")
+    deleteActivity(activity_id).
+    then((response) => {
+      console.log(response);
+      setToastMsg(DELETE_SUCCESS_MSG)
+      setSubmitStatus("success")
+      setShowToast(true)
+
+      setTimeout(()=>{
+        handleClose()
+        location.reload()
+      }, 1000)
+
+
+    })
+      .catch((error)=>{
+        console.log(error)
+        setToastMsg(DELETE_ERROR_MSG)
+        setSubmitStatus("warning")
+        setShowToast(true)
+      })
+
+  }
 
   return (
     <>
@@ -264,14 +313,16 @@ export default function CardComp({ id, title, img, description, rules, activity_
                 <br />
               )}
 
-              {user && (
+              {isOwner() && (
                 <>
-                  <Link as={Link} to="/activityForm">
+                  <Link as={Link} to={editActivityURL(id)}>
                     <Button>Endre aktivitet</Button> {/* Add the edit button */}
                   </Link>
+                  <Button variant="danger" onClick={() => handleDelete(id)}>Slett aktivitet</Button>
+
                   <br />
                   {
-                    visReport ? (
+                    user && (visReport ? (
                       <button
                     type="button"
                     onClick={() => handleReportActivity(id)}
@@ -280,14 +331,15 @@ export default function CardComp({ id, title, img, description, rules, activity_
                     Rapporter
                   </button>
                     ) : (<p><small>Rapportert</small></p>)
-                  } 
+                    )} 
                 </>
+
               )}
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body style={{ maxHeight: 'calc(95vh - 200px)', overflow: 'auto' }}>
-            <div style={{ padding: '1rem' }}>
-              <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
+          <Modal.Body style={{maxHeight: 'calc(95vh - 200px)', overflow: 'auto'}}>
+            <div style={{padding: '1rem'}}>
+              <h5 style={{fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
               <p style={{ margin: '1rem' }}>{description}</p>
 
               <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Regler</h5>
@@ -331,9 +383,9 @@ export default function CardComp({ id, title, img, description, rules, activity_
           </Modal.Body>
         </Modal>
         <CustomToast
-          toastTitle="Rapportert"
-          toastMessage="Aktiviteten ble rapportert"
-          variant="warning"
+          toastTitle={toastTitle}
+          toastMessage={toastMsg}
+          variant={submitStatus}
           setToastState={setShowToast}
           toastState={showToast}
         />

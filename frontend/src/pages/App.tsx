@@ -16,7 +16,6 @@ function App() {
     <>
       <Router>
         <Routes>
-          {/* <Switch> */}
           <Route element={<BrytisenOutlet />}>
             <Route path="/" element={<Home />} />
             <Route path="/activityForm" element={<ActivityForm />} />
@@ -24,10 +23,8 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             {/* <Route path="/favorites" element={<FavoritesPage />} /> */}
             <Route path="/testapi" element={<ApiTestPage />} />
-            <Route path="/favorites" element={<ApiTestPage />} />
-            <Route path="/editActivity{id}" element={<EditActivity />} />
+            <Route path="/editActivity/:id" element={<EditActivity />} />
           </Route>
-          {/* </Switch> */}
         </Routes>
       </Router>
     </>

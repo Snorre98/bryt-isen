@@ -30,6 +30,8 @@ export async function getActivity(id: string | number): Promise<ActivityDto> {
   return response.data;
 }
 
+
+
 /**
  * POST function for adding activity to DB.
  * @param data of the activity to be created and posted to the DB
@@ -62,6 +64,18 @@ export async function getActivities(): Promise<ActivityDto[]> {
   const response = await axios.get<ActivityDto[]>(url, { withCredentials: true });
   return response.data;
 }
+
+
+/**
+ * DELETE-request for activity by
+ * */
+export async function deleteActivity(id:number): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.activity_detail, urlParams: { pk: id } });
+  const response = await axios.delete(url, { withCredentials: true });
+  return response;
+}
+
+
 
 /**
  * GET-request for CSRF-token used to make sure all requests come from the frontend of the actual site

@@ -108,17 +108,19 @@ export function Home() {
                       description={activity.details}
                       rules={activity.activity_rules}
                       activity_type={activity.activity_type}
+                      owner = {activity.owner}
                     />
                   ))
               : activities.map((activity) => (
                   <CardComp
                     key={activity.id}
+                    id={activity.id}
                     title={activity.title}
                     img={activity.activity_image}
                     description={activity.details}
                     rules={activity.activity_rules}
                     activity_type={activity.activity_type}
-                    id={activity.id}
+                    owner = {activity.owner}
                   />
                 )))}
         </div>
