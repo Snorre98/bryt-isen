@@ -40,7 +40,6 @@ function FavoriteButton({activity_id}:FavoriteProps) {
             console.log(combinationId);
             deleteFavoritActivity(combinationId!)
                 .then(() => {
-                    console.log("fjern")
                     setClick(false)
                 })
                 .catch((error) => {
