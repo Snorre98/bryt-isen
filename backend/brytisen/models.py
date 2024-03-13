@@ -66,6 +66,22 @@ class ReportedActivity(models.Model):
     # def __str__(self):
     #     return f'Reported {self.activity} by {self.reporter} at {self.reported_at}'
 
+#
+# Favorite modelreported_by_user
+#
+class FavoritedActivity(models.Model):
+    activity_id = models.ForeignKey(Activity, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='user_favorites',
+        null=True,
+        blank=True,
+    )
+    
+    class Meta:
+        verbose_name = 'Reported Activity'
+        verbose_name_plural = 'Reported Activities'
 
 #
 # User model

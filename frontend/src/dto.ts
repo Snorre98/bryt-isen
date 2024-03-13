@@ -46,3 +46,9 @@ export type GroupDto = {
   id: number;
   name: string;
 };
+
+export type FavoriteDto = {
+  id: number;
+  activity_id: number;
+  owner: number;
+};
