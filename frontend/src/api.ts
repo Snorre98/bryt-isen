@@ -6,10 +6,11 @@
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from 'axios';
-import { ActivityDto, RegisterUserDto, ReviewDto, UserDto } from './dto';
+import { ActivityDto, RegisterUserDto, ReportedActivityDto, ReportedReviewDto, ReviewDto, UserDto } from './dto';
 import { BACKEND_DOMAIN } from './constants';
 import { ROUTES } from './routes';
 import { reverse } from './named-urls';
+import { ROUTES_BACKEND } from '~/routes/backendRoutes';
 
 /**
  * GET, PUT, POST http requests for activity object
@@ -66,7 +67,7 @@ export async function getActivities(): Promise<ActivityDto[]> {
 /**
  * DELETE-request for activity by
  * */
-export async function deleteActivity(id:number): Promise<AxiosResponse> {
+export async function deleteActivity(id: number): Promise<AxiosResponse> {
   const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.activity_detail, urlParams: { pk: id } });
   const response = await axios.delete(url, { withCredentials: true });
   return response;
@@ -136,7 +137,6 @@ export async function getUser(): Promise<UserDto> {
   return response.data;
 }
 
-
 export async function postReview(data: ReviewDto): Promise<AxiosResponse> {
   const url = BACKEND_DOMAIN + ROUTES.backend.review_list;
   const response = await axios.post(url, data, { withCredentials: true });
@@ -160,9 +160,9 @@ export async function postReportedActivity(activity_id: number): Promise<AxiosRe
  * GET-request for all acitivies
  * @returns list containing JSON with activity data
  */
-export async function getReportedActivities(): Promise<ActivityDto> {
+export async function getReportedActivities(): Promise<ReportedActivityDto[]> {
   const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity;
-  const response = await axios.get<ActivityDto>(url, { withCredentials: true });
+  const response = await axios.get<ReportedActivityDto[]>(url, { withCredentials: true });
   return response.data;
 }
 
@@ -173,23 +173,32 @@ export async function postReportReview(review_id: number): Promise<AxiosResponse
   return response;
 }
 
-export async function getReportedReviews(): Promise<ReviewDto[]> {
+export async function getReportedReviews(): Promise<ReportedReviewDto[]> {
   const url = BACKEND_DOMAIN + ROUTES.backend.report_review_list;
-  const response = await axios.get<ReviewDto>(url, { withCredentials: true });
+  const response = await axios.get<ReportedReviewDto[]>(url, { withCredentials: true });
   return response.data;
 }
 export async function getReportedReview(review_id: number): Promise<ReviewDto> {
-  const url = BACKEND_DOMAIN + reverse({pattern: ROUTES.backend.report_review_detail, urlParams: {pk: review_id}})
+  const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.report_review_detail, urlParams: { pk: review_id } });
   const response = await axios.get<ReviewDto>(url, { withCredentials: true });
   return response.data;
 }
 
 /**
- *TODO: fix the view for this api call:
- */
-// export async function getUserActivities(activity_owner: string): Promise<ActivityDto[]> {
-//   const url =
-//     BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.user_activities, urlParams: { user_id: activity_owner } });
-//   const response = await axios.get<ActivityDto[]>(url, { withCredentials: true });
-//   return response.data;
-// }
+ *
+ * gets reported review by review ID
+ * */
+export async function getReportedReviewByReviewId(review_id: number): Promise<ReportedReviewDto[]> {
+  //const url = BACKEND_DOMAIN+ reverse({pattern: ROUTES.backend.reported_review_by_review, urlParams: {pk: review_id}})
+  const queryParams = `?review_id=${review_id}`;
+  const url = BACKEND_DOMAIN + ROUTES.backend.report_review_list + queryParams;
+  const response = await axios.get<ReportedReviewDto[]>(url, { withCredentials: true });
+  return response.data;
+}
+
+export async function getReportedReviewById(id: number): Promise<ReportedReviewDto[]> {
+  const queryParams = `?id=${id}`;
+  const url = BACKEND_DOMAIN + ROUTES.backend.report_review_list + queryParams;
+  const response = await axios.get<ReportedReviewDto[]>(url, { withCredentials: true });
+  return response.data;
+}

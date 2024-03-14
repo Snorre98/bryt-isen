@@ -7,13 +7,12 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly, \
     IsAuthenticatedOrReadOnly
-
+from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import login, logout
 from django.middleware.csrf import get_token
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
-
 from .models import User, Activity, ReportedActivity, Review, ReportedReview
 from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, \
     ReportedActivitySerializer, ReviewSerializer, ReportedReviewSerializer
@@ -219,4 +218,6 @@ class ReportedReviewsViewSet(viewsets.ModelViewSet):
     queryset = ReportedReview.objects.all()
     serializer_class = ReportedReviewSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['review_id', 'id']
 

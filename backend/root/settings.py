@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'django_filters',
     'corsheaders',
     'rest_framework',
     'guardian',
@@ -123,6 +124,7 @@ AUTHENTICATION_BACKENDS = [
 # AUTHENTICATION_BACKENDS += []
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     # https://simpleisbetterthancomplex.com/tutorial/2018/11/22/how-to-implement-token-authentication-using-django-rest-framework.html
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.SessionAuthentication',),
     'DEFAULT_PERMISSION_CLASSES': [
@@ -130,7 +132,7 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.DjangoObjectPermissions',
         'root.custom_classes.permission_classes.SuperUserPermission',
         # 'root.custom_classes.permission_classes.CustomDjangoObjectPermissions',
-    ],
+    ]
 }
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

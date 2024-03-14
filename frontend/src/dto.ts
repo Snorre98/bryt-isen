@@ -15,6 +15,12 @@ export type ActivityDto = {
   owner?: number;
 };
 
+export type ReportedActivityDto = {
+  id?: number;
+  activity_id: number;
+  reported_by_user: number;
+};
+
 /**
  * Data transfer object used to transfer registration data to backend
  */
@@ -56,4 +62,8 @@ export type ReviewDto = {
   owner_username?: string;
 };
 
-
+export type ReportedReviewDto = {
+  id?: number;
+  review_id: number;
+  reported_by_user: number;
+};

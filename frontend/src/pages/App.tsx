@@ -9,6 +9,9 @@ import { ApiTestPage } from './ApiTestPage';
 import Home from './Home';
 import { BrytisenOutlet } from '~/components/BrytisenOutlet';
 import EditActivity from './EditActivity';
+import {ActivityDetailPage} from "~/pages/ActivityDetailPage/ActivityDetailPage";
+import {ActivitiesContextProvider} from "~/contextProviders/ActivitiesContextProvider";
+import {ReviewsContextProvider} from "~/contextProviders/ReviewContextProvider";
 
 function App() {
   return (
@@ -16,12 +19,20 @@ function App() {
       <Router>
         <Routes>
           <Route element={<BrytisenOutlet />}>
-            <Route path="/" element={<Home />} />
+
+            <Route path="/" element={
+              <ActivitiesContextProvider>
+                <ReviewsContextProvider>
+              <Home />
+                </ReviewsContextProvider>
+              </ActivitiesContextProvider>} />
+
             <Route path="/activityForm" element={<ActivityForm />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/testapi" element={<ApiTestPage />} />
             <Route path="/editActivity/:id" element={<EditActivity />} />
+            <Route path="/activities/:id" element={<ActivityDetailPage/>}/>
           </Route>
         </Routes>
       </Router>

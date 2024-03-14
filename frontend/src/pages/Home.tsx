@@ -1,34 +1,17 @@
-import { useEffect, useState } from 'react';
-import { getActivities } from '~/api';
+import { useState } from 'react';
+
 import CardComp from '~/components/CardComp';
-import { ActivityDto } from '../dto';
 import '../styles/Home.css';
 import { PageWrapper } from '~/components/PageWrapper';
 import { Icon } from '@iconify/react';
 import FilterComponent from '~/components/FilterComponent/FilterComponent';
 import { useGlobalContext } from '~/contextProviders/GlobalContextProvider';
-import { CustomToast } from '~/components/CustomToast';
+import { useActivitiesContext } from '~/contextProviders/ActivitiesContextProvider';
 
 export function Home() {
-  const [activities, setActivities] = useState<ActivityDto[]>([]);
   const [showFilter, setShowFilter] = useState(false);
   const { activityFilter, isFilterOn } = useGlobalContext();
-  const [loading, setLoading] = useState(true);
-  const [showErrorToast, setShowErrorToast] = useState(false);
-  const [errorToastMessage, setErrorToastMessage] = useState('');
-
-  useEffect(() => {
-    getActivities()
-      .then((data) => {
-        setLoading(false);
-        setActivities(data);
-      })
-      .catch((error) => {
-        setShowErrorToast(true);
-        setErrorToastMessage('Kunne ikke hente inn aktiviteter!');
-        console.log(error);
-      });
-  }, []);
+  const { activities } = useActivitiesContext();
 
   return (
     <PageWrapper>
@@ -54,12 +37,12 @@ export function Home() {
         }}
       >
         <div className="activityCardWrapper">
-          {activities.length > 0 &&
+          {activities &&
+            activities.length > 0 &&
             (isFilterOn
               ? activities
                   .filter((activity) => activityFilter.has(activity.activity_type))
                   .map((activity) => (
-
                     <CardComp
                       key={activity.id}
                       id={activity.id}
@@ -68,7 +51,7 @@ export function Home() {
                       description={activity.details}
                       rules={activity.activity_rules}
                       activity_type={activity.activity_type}
-                      owner = {activity.owner}
+                      owner={activity.owner}
                     />
                   ))
               : activities.map((activity) => (
@@ -80,25 +63,11 @@ export function Home() {
                     description={activity.details}
                     rules={activity.activity_rules}
                     activity_type={activity.activity_type}
-                    owner = {activity.owner}
+                    owner={activity.owner}
                   />
                 )))}
         </div>
       </div>
-      <CustomToast
-        toastTitle="Aktivitet"
-        variant={'info'}
-        toastState={loading}
-        toastMessage={'Laster... '}
-        setToastState={setLoading}
-      />
-      <CustomToast
-        toastTitle="Aktivitet"
-        variant={'warning'}
-        toastState={showErrorToast}
-        toastMessage={errorToastMessage}
-        setToastState={setShowErrorToast}
-      />
     </PageWrapper>
   );
 }

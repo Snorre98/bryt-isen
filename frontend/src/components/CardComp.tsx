@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
-import {Button, Card, Form, InputGroup, Modal} from 'react-bootstrap';
+import {Button, Card, Form, InputGroup, Modal, ModalBody} from 'react-bootstrap';
 import {useAuthContext} from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {CustomToast} from '~/components/CustomToast';
@@ -13,6 +13,7 @@ import {
 } from '~/api';
 import {ReviewDto} from '~/dto';
 import {Link} from 'react-router-dom';
+import {useReviewsContext} from "~/contextProviders/ReviewContextProvider";
 
 export type DetailsCardProps = {
   id: number;
@@ -27,7 +28,9 @@ export type DetailsCardProps = {
 export default function CardComp({ id, title, img, description, rules, activity_type, owner }: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
-  const [reviews, setReviews] = useState<ReviewDto[]>([]);
+  const { user } = useAuthContext();
+  //const [reviews, setReviews] = useState<ReviewDto[]>([]);
+  const {reviews} = useReviewsContext();
   const [visTimer, setVisTimer] = useState(false);
   const [visStart, setVisStart] = useState(true);
   const [visStop, setVisStop] = useState(false);
@@ -45,13 +48,13 @@ export default function CardComp({ id, title, img, description, rules, activity_
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    getReviews().then((data : ReviewDto[]) => {
+   /* getReviews().then((data : ReviewDto[]) => {
       setReviews(data)
-    }).catch((error)=>{console.log(error)});
+    }).catch((error)=>{console.log(error)});*/
     setShow(true);
   }
 
-  const { user } = useAuthContext();
+
 
 
 
@@ -61,15 +64,14 @@ export default function CardComp({ id, title, img, description, rules, activity_
   const [submitStatus, setSubmitStatus] = useState('');
 
 
-  //TODO: add to report?
   //const RAPPORT_ERROR_MSG = "Kunne ikke rapportere"
   //const RAPPORT_SUCCESS_MSG = "Aktivitet ble rapportert"
 
   const DELETE_SUCCESS_MSG = "Aktivitet ble slettet!"
   const DELETE_ERROR_MSG = "Aktivitet kunne ikke slettes, noe gikk feil!"
 
-  const REPORT_REVIEW_SUCCESS = "Vurdering ble rapportert!"
-  const REPORT_REVIEW_ERROR = "Vurdering ble ikke rapportert!"
+  //const REPORT_REVIEW_SUCCESS = "Vurdering ble rapportert!"
+  //const REPORT_REVIEW_ERROR = "Vurdering ble ikke rapportert!"
 
   const handleReportActivity = (activity_id: number) => {
     postReportedActivity(activity_id)
@@ -82,11 +84,6 @@ export default function CardComp({ id, title, img, description, rules, activity_
 
   };
 
-  // Function to handle opening review form modal
-  const handleReviewFormOpen = () => {
-    setShow(false); // Close details modal if open
-    setShowReviewForm(true); // Open review form modal
-  };
 
   const handleVisTimer = () => {
     setVisTimer(true);
@@ -199,6 +196,17 @@ export default function CardComp({ id, title, img, description, rules, activity_
     }
   };
 
+  const activityDetailPageURL = (activity_id: number) => {
+    if (activity_id !== undefined && activity_id !== null) {
+      const url = '/activities/' + activity_id.toString();
+      return url;
+    } else {
+      // Handle the case when id is undefined or null
+      console.error('Invalid id:', activity_id);
+      return ''; // or throw an error, or handle it in a way that makes sense for your application
+    }
+  }
+
   const isOwner = ():boolean => {
     if(user &&  user.id === owner) {
       return true;
@@ -228,24 +236,6 @@ export default function CardComp({ id, title, img, description, rules, activity_
         setShowToast(true)
       })
   }
-
-  const handleReporteReview = (review_id: number) => {
-    postReportReview(review_id)
-      .then( (reportedReviews) => {
-          setToastMsg("Rapporter vurdering")
-          setToastMsg(REPORT_REVIEW_SUCCESS)
-          setSubmitStatus("success")
-          setShowToast(true)
-      }
-      )
-      .catch(()=>{
-        setToastMsg("Rapporter vurdering")
-        setToastMsg(REPORT_REVIEW_ERROR)
-        setSubmitStatus("warning")
-        setShowToast(true)
-      })
-  }
-
   return (
     <>
       <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
@@ -259,7 +249,9 @@ export default function CardComp({ id, title, img, description, rules, activity_
           <Button variant="primary" onClick={handleShow}>
             Se mer
           </Button>
+          {/*<Link as={Link} to={activityDetailPageURL(id)} target="_blank">Open Detail page</Link>*/}
         </Card.Body>
+      </Card>
         <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh'}} size="lg">
           <Modal.Header closeButton>
             <Modal.Title>
@@ -347,7 +339,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
             )}
               {user && (
                 <>
-                  <Button onClick={handleReviewFormOpen}>Legg til anmeldelse</Button>
+                  <Button onClick={ () => setShowReviewForm(true)}>Legg til anmeldelse</Button>
                 </>
               )}
               {
@@ -363,7 +355,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
                 )}
             </div>
           </Modal.Header>
-          <Modal.Body style={{maxHeight: 'calc(95vh - 200px)', overflow: 'auto', padding: "1rem"}}>
+          <Modal.Body style={{maxHeight: 'calc(95vh - 200px)', overflow: 'auto', paddingBottom: "5rem", borderRadius:"4rem"}}>
             <div style={{padding: '1rem'}}>
               <h5 style={{fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
               <p style={{ margin: '1rem' }}>{description}</p>
@@ -399,37 +391,38 @@ export default function CardComp({ id, title, img, description, rules, activity_
           </div>
 
             <div>
-              {reviews.length > 0 && reviews.filter((review) => review.activity === id)
-                .map((review: ReviewDto) => (
-                <ReviewComp
-                  key={review.id}
-                  owner_id={review.owner}
-                  rating={review.rating}
-                  review_description={review.details}
-                  owner_name={review.owner_username}
-                  children={
-                  <Button onClick={() => handleReporteReview(review.id)}>Rapporter</Button>
-                }
-                />
-              ))}
+              {
+                reviews &&  (reviews.length > 0 && reviews.filter((review) => review.activity === id).reverse()
+                  .map((review: ReviewDto) => (
+                    <ReviewComp
+                      key={review.id}
+                      owner_id={review.owner}
+                      rating={review.rating}
+                      review_description={review.details}
+                      owner_name={review.owner_username}
+                      review_id={review.id}
+                    />
+                  )))
+              }
+
             </div>
           </Modal.Body>
         </Modal>
-        <CustomToast
-          toastTitle={toastTitle}
-          toastMessage={toastMsg}
-          variant={submitStatus}
-          setToastState={setShowToast}
-          toastState={showToast}
-        />
-        {/* Review Form Modal */}
-        <Modal show={showReviewForm} onHide={() => setShowReviewForm(false)}>
-          <ReviewForm
-            activity_title={title}
-            activity_id={id}
-          />
-        </Modal>
-      </Card>
+
+      <ReviewForm
+        activity_id={id}
+        showReviewForm={showReviewForm}
+        activity_title={title}
+        onClose={() => setShowReviewForm(false)} />
+
+      <CustomToast
+        position={"top-left"}
+        toastTitle={toastTitle}
+        toastMessage={toastMsg}
+        variant={submitStatus}
+        setToastState={setShowToast}
+        toastState={showToast}
+      />
     </>
   );
 }

@@ -8,7 +8,6 @@ import { ActivityType } from '~/constants';
 
 
 function EditActivity() {
-  //const [activity, setActivity] = useState<ActivityDto>();
   const { id } = useParams();
   const [activityTitle, setActivityTitle] = useState("");
   const [activityDetails, setActivityDetails] = useState("");
@@ -17,9 +16,6 @@ function EditActivity() {
   const [activityImageFile, setActivityImageFile] = useState<File>();
   const [imageUrl, setImageUrl] = useState<string>('');
   const [showImageFormFiled, setShowImageFormField] = useState(false)
-  //const EditActivity: React.FC<EditActivityPageProps> = () => {
-  //const { id } = useParams<{ id: string }>();
-  //const [activity, setActivity] = useState<any>(null); // Update with the actual type of your activity
 
   useEffect(() => {
     // Fetch activity details based on the ID from the URL

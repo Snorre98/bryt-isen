@@ -42,6 +42,7 @@ export const ROUTES_BACKEND = {
 
   report_review_list: '/reported-reviews/',
   report_review_detail: '/reported-reviews/:pk/',
+  reported_review_by_review:'/reported-reviews?review_id=/:pk/',
 
   /**
    *

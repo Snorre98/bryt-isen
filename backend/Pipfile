@@ -12,6 +12,7 @@ django-cors-headers = "*"
 django-guardian = "*"
 pillow = "*"
 ruff = "*"
+django-filter = "*"
 
 [dev-packages]
 

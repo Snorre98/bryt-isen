@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useContext, createContext, SetStateAction, Dispatch, ReactNode, useEffect, useState } from 'react';
 import { getCsrfToken } from '~/api';
-import { FILTER_OPTIONS } from '~/constants';
 
 export type SetState<T> = Dispatch<SetStateAction<T>>;
 

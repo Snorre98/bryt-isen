@@ -143,8 +143,6 @@ class ReportedReview(models.Model):
         blank=True,
     )
 
-
-
     class Meta:
         verbose_name = 'Reported Review'
         verbose_name_plural = 'Reported Reviews'

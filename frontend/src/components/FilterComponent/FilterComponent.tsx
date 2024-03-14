@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Form } from 'react-bootstrap';
 import { FILTER_OPTIONS } from '~/constants';
 import './FilterComponent.css';
 import { Icon } from '@iconify/react';
@@ -15,21 +14,7 @@ function FilterComponent({ showFilter }: FilterComponentProp) {
   const { activityFilter, setActivityFilter, setIsFilterOn } = useGlobalContext();
 
   useEffect(() => {
-    console.log(activityFilter);
   }, [activityFilter, filterControllValue]);
-
-  // const handleFilterControll = (value: string) => {
-  //   if (value === 'showAll') {
-  //     setFilterControllValue(value);
-  //     setActivityFilter(FILTER_OPTIONS);
-  //     setIsFilterOn(false);
-  //   } else if (value === 'showNone') {
-  //     setFilterControllValue(value);
-  //     setActivityFilter(new Set<string>());
-  //   }
-
-  //   // setIsFilterOn(true);
-  // };
 
   const handleFilterControll = () => {
     setActivityFilter(new Set<string>());
@@ -64,26 +49,6 @@ function FilterComponent({ showFilter }: FilterComponentProp) {
 
   const filterControl = (
     <div className="filterControll">
-      {/* <Form style={isFilterOn ? { visibility: 'visible' } : { visibility: 'hidden' }}>
-        <Form.Check
-          label="Vis alle"
-          reverse
-          type="radio"
-          name="filterControllGroup"
-          disabled={activityFilter.size === FILTER_OPTIONS.size}
-          checked={filterControllValue === 'showAll' || activityFilter.size === FILTER_OPTIONS.size}
-          onChangeCapture={() => handleFilterControll('showAll')}
-        />
-        <Form.Check
-          label="Vis ingen"
-          reverse
-          type="radio"
-          name="filterControllGroup"
-          checked={filterControllValue === 'showNone' || activityFilter.size <= 0}
-          disabled={activityFilter.size <= 0}
-          onChangeCapture={() => handleFilterControll('showNone')}
-        />
-      </Form> */}
       <Button onClick={handleFilterControll}>Reset filter</Button>
     </div>
   );
