@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly, \
     IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
@@ -13,9 +14,12 @@ from django.contrib.auth import login, logout
 from django.middleware.csrf import get_token
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
-from .models import User, Activity, ReportedActivity, Review, ReportedReview
+
+from .models import Activity, ReportedActivity, FavoritedActivity, User, Review, ReportedReview
 from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, \
     ReportedActivitySerializer, ReviewSerializer, ReportedReviewSerializer
+
+from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, ReportedActivitySerializer, FavoritedActivitySerializer, ReportedActivitySerializer, ReviewSerializer, ReportedReviewSerializer
 from .permission_classes import IsOwnerOrReadOnly
 
 """
@@ -64,6 +68,15 @@ class ReportedActivityViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
+class FavoritedActivityViewSet(viewsets.ModelViewSet):
+    """Viewset for managing reported activities."""
+
+    queryset = FavoritedActivity.objects.all()
+    serializer_class = FavoritedActivitySerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+
+
 @method_decorator(ensure_csrf_cookie, 'dispatch')
 class CsrfView(APIView):
     """
@@ -88,7 +101,6 @@ class LoginView(APIView):
     """
 
     permission_classes = [AllowAny]  # Defines permission level for this view
-
     # Defines what happens when a POST request commes at this view
 
     def post(self, request: Request) -> Response:

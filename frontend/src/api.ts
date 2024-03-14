@@ -6,7 +6,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from 'axios';
-import { ActivityDto, RegisterUserDto, ReportedActivityDto, ReportedReviewDto, ReviewDto, UserDto } from './dto';
+import { ActivityDto, FavoriteDto, RegisterUserDto, ReportedActivityDto, ReportedReviewDto, ReviewDto, UserDto } from './dto';
 import { BACKEND_DOMAIN } from './constants';
 import { ROUTES } from './routes';
 import { reverse } from './named-urls';
@@ -30,6 +30,8 @@ export async function getActivity(id: string | number): Promise<ActivityDto> {
   const response = await axios.get<ActivityDto>(url, { withCredentials: true }); // Defines response, using axios.
   return response.data;
 }
+
+
 
 /**
  * POST function for adding activity to DB.
@@ -63,6 +65,7 @@ export async function getActivities(): Promise<ActivityDto[]> {
   const response = await axios.get<ActivityDto[]>(url, { withCredentials: true });
   return response.data;
 }
+
 
 /**
  * DELETE-request for activity by
@@ -205,6 +208,28 @@ export async function getReportedReviewById(id: number): Promise<ReportedReviewD
 
 export async function deleteReview(id: number): Promise<AxiosResponse> {
   const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.review_detail, urlParams: { pk: id } });
+  const response = await axios.delete(url, { withCredentials: true });
+  return response;
+}
+
+export async function postFavoritedActivity(activity: number, user: number): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.favorited_activity;
+  const data = {
+    activity_id: activity,
+    favorited_by_user: user
+  };
+  const response = await axios.post(url, data, { withCredentials: true });
+  return response;
+}
+
+export async function getFavoritedActivities(): Promise<FavoriteDto[]> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.favorited_activity;
+  const response = await axios.get<FavoriteDto[]>(url, { withCredentials: true });
+  return response.data;
+}
+
+export async function deleteFavoritActivity(id:number): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.favorited_activity_detail, urlParams: { pk: id } });
   const response = await axios.delete(url, { withCredentials: true });
   return response;
 }

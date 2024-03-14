@@ -14,7 +14,7 @@ export type ActivityDto = {
   activity_image: File;
   owner?: number;
   owner_username?: string;
-  owner_profile_gradient: string;
+  owner_profile_gradient?: string;
 };
 
 export type ReportedActivityDto = {
@@ -70,4 +70,10 @@ export type ReportedReviewDto = {
   id?: number;
   review_id: number;
   reported_by_user: number;
+};
+
+export type FavoriteDto = {
+  id: number;
+  activity_id: number;
+  owner: number;
 };

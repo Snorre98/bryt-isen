@@ -100,6 +100,12 @@ function NavbarComp() {
               Opprett aktivitet
             </Nav.Link>
           )}
+
+          {user && (
+            <Nav.Link as={Link} to="/spinTheWheel">
+              Spin The Wheel
+            </Nav.Link>
+          )}
         </Nav>
         <Nav>
           {logIn}

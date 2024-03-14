@@ -14,6 +14,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 
 from .models import User, Activity, ReportedActivity, Review, ReportedReview
+from .models import User, Activity, ReportedActivity, FavoritedActivity
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +81,27 @@ class ReportedActivitySerializer(serializers.ModelSerializer):
         """Create and return a new ReportedActivity instance, given the validated data."""
         validated_data['reported_by_user'] = self.context['request'].user
         return ReportedActivity.objects.create(**validated_data)
+
+
+class FavoritedActivitySerializer(serializers.ModelSerializer) :
+    """Serializer for the FavoritedActivity model."""
+
+    class Meta:
+        model = FavoritedActivity
+        fields = '__all__'
+
+    #def create(self, validated_data):
+    #    """Create and return a new FavoritedActivity instance, given the validated data."""
+    #    validated_data['favorited_by_user'] = self.context['request'].user
+    #    return FavoritedActivity.objects.create(**validated_data)
+
+    def create(self, validated_data: dict)-> FavoritedActivity:
+        """Create and return a new ReportedActivity instance, given the validated data."""
+        #activity_id = validated_data.get('activity_id')
+        validated_data['owner'] = self.context['request'].user
+        favorite = FavoritedActivity.objects.create(**validated_data)
+        favorite.save()
+        return favorite
 
 
 ##

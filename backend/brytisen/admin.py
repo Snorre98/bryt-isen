@@ -18,6 +18,8 @@ class ReviewAdmin(admin.ModelAdmin):
 
 class ReportedActivityAdmin(admin.ModelAdmin):
     list_display = ('activity_id',)
+    
+
 
 
 class ReportedReviewAdmin(admin.ModelAdmin):

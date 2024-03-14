@@ -32,6 +32,7 @@ router.register(r'activities', views.ActivityView, 'activities')
 router.register(r'reported-activities', views.ReportedActivityViewSet, 'reported activities')
 router.register(r'reviews', views.ReviewView, 'reviews')
 router.register(r'reported-reviews', views.ReportedReviewsViewSet, 'reported reviews')
+router.register(r'favorited-activities', views.FavoritedActivityViewSet, 'favorited activities')
 
 urlpatterns = [
                   path('admin/', admin.site.urls),

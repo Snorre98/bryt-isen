@@ -10,6 +10,7 @@ import { ReviewDto } from '~/dto';
 import { Link } from 'react-router-dom';
 import { useReviewsContext } from '~/contextProviders/ReviewContextProvider';
 import { UserChip } from '~/components/UserChip';
+import FavoriteButton from './FavoriteButton';
 
 export type DetailsCardProps = {
   id: number;
@@ -247,11 +248,17 @@ export default function CardComp({
             <hr />
           </Card.Title>
           <Card.Text style={{ marginLeft: '0.5rem' }}>{description}</Card.Text>
+          <div style={{ width: '100%', display:'flex', flexDirection:'row', height:'50px', justifyContent:'space-between', alignItems:'center'}}>
           <Button variant="primary" onClick={handleShow}>
             Se mer
           </Button>
-          {}
           <UserChip profile_gradient={owner_profile_gradient} username={owner_username} />
+          {user && (
+                <>
+                  <FavoriteButton activity_id={id}></FavoriteButton>
+                </>
+              )}
+          </div>
         </Card.Body>
       </Card>
       <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh' }} size="lg">
