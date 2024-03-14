@@ -10,6 +10,7 @@ import profileImg from '../assets/download.jpeg';
 import React from 'react';
 
 import { Link } from 'react-router-dom';
+import FavoriteButton from './FavoriteButton';
 
 export type DetailsCardProps = {
   id: number;
@@ -228,9 +229,16 @@ export default function CardComp({ id, title, img, description, rules, activity_
             <hr />
           </Card.Title>
           <Card.Text style={{ marginLeft: '0.5rem' }}>{description}</Card.Text>
+          <div style={{ width: '100%', display:'flex', flexDirection:'row', height:'50px', justifyContent:'space-between', alignItems:'center'}}>
           <Button variant="primary" onClick={handleShow}>
             Se mer
           </Button>
+          {user && (
+                <>
+                  <FavoriteButton activity_id={id}></FavoriteButton>
+                </>
+              )}
+          </div>
         </Card.Body>
         <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh' }}>
           <Modal.Header closeButton>
