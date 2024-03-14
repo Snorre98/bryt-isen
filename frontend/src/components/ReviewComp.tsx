@@ -1,7 +1,7 @@
 import '../styles/Review.css';
 import { ReactNode, useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { getReportedReviewByReviewId, postReportReview } from '~/api';
+import { deleteReview, getReportedReviewByReviewId, postReportReview } from '~/api';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import { Icon } from '@iconify/react';
 import { ReportedReviewDto } from '~/dto';
@@ -19,13 +19,15 @@ export default function ReviewComp({ review_id, rating, review_description, owne
   const [showReportModal, setShowReportModal] = useState<boolean>();
   const [isReported, setIsReported] = useState(false);
   const [reportCount, setReportCount] = useState(0);
-  const [reportedReviews, setReportedReviws] = useState<ReportedReviewDto[]>();
+  //const [reportedReviews, setReportedReviws] = useState<ReportedReviewDto[]>();
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>();
+  const [isVisible, setIsVisible] = useState<boolean>(true);
+
   useEffect(() => {
     if (review_id) {
       getReportedReviewByReviewId(review_id)
         .then((response) => {
-          setReportedReviws(response);
-          console.log(reportedReviews);
+          //      setReportedReviws(response);
           setReportCount(response.length);
           setIsReported(response.length > 0);
         })
@@ -48,9 +50,24 @@ export default function ReviewComp({ review_id, rating, review_description, owne
         });
     }
   };
+
+  const handleDelete = () => {
+    deleteReview(review_id)
+      .then((resposne) => {
+        console.log(resposne);
+        closeDeleteModal();
+        setIsVisible(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const closeReportModal = () => setShowReportModal(false);
   const openReportModal = () => setShowReportModal(true);
-  return (
+
+  const openDeleteModal = () => setShowDeleteModal(true);
+  const closeDeleteModal = () => setShowDeleteModal(false);
+  return isVisible ? (
     <>
       <div className="container">
         <div className="ratingSubcontainer1">
@@ -78,10 +95,17 @@ export default function ReviewComp({ review_id, rating, review_description, owne
           </div>
           <div className="rapporterBtnContainer">
             <div>
-              {user && (
+              {user && user.username !== owner_name && (
                 <>
-                  <Button onClick={openReportModal} size="sm">
+                  <Button onClick={openReportModal} size="sm" variant="info">
                     Rapporter
+                  </Button>
+                </>
+              )}
+              {user && user.username === owner_name && (
+                <>
+                  <Button onClick={openDeleteModal} size="sm" variant="warning">
+                    Slett
                   </Button>
                 </>
               )}
@@ -101,6 +125,16 @@ export default function ReviewComp({ review_id, rating, review_description, owne
           </Button>
         </Modal.Body>
       </Modal>
+      <Modal onHide={closeDeleteModal} show={showDeleteModal} close>
+        <Modal.Header closeButton>
+          <Modal.Title style={{ padding: '2rem' }}>Er du sikker på at du vil slette?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ padding: '2rem' }}>
+          <Button variant={'danger'} onClick={handleDelete}>
+            Ja
+          </Button>
+        </Modal.Body>
+      </Modal>
     </>
-  );
+  ) : null;
 }

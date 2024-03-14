@@ -40,9 +40,19 @@ export const ROUTES_BACKEND = {
 
   reported_activity: '/reported-activities/',
 
+  /**
+   * Reviews
+   */
+
+  review_list: '/reviews/',
+  review_detail: '/reviews/:pk',
+
+  /**
+   * Report reviews
+   */
   report_review_list: '/reported-reviews/',
   report_review_detail: '/reported-reviews/:pk/',
-  reported_review_by_review:'/reported-reviews?review_id=/:pk/',
+  reported_review_by_review: '/reported-reviews?review_id=/:pk/',
 
   /**
    *
@@ -52,5 +62,4 @@ export const ROUTES_BACKEND = {
   login_brytisen_user: '/login/',
   logout_brytisen_user: '/logout/',
   brytisen_user: '/user/',
-  review_list: '/reviews/',
 };

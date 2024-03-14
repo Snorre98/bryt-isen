@@ -202,3 +202,9 @@ export async function getReportedReviewById(id: number): Promise<ReportedReviewD
   const response = await axios.get<ReportedReviewDto[]>(url, { withCredentials: true });
   return response.data;
 }
+
+export async function deleteReview(id: number): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.review_detail, urlParams: { pk: id } });
+  const response = await axios.delete(url, { withCredentials: true });
+  return response;
+}
