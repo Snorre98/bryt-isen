@@ -2,35 +2,30 @@ import React, { useEffect, useState } from 'react';
 import WheelOfPrizes from '../components/SpinTheWheelComp';
 import { getActivities } from '../api';
 import { ActivityDto } from '../dto';
-import { Card, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import CardComp from '~/components/CardComp';
+import '../styles/SpinTheWheel.css';
 
 function SpinTheWheel() {
 
   const [showActivity, setShowActivity] = useState(false);
   const [prize, setPrize] = useState<ActivityDto | null>(null);
-
-  const navigate = useNavigate();
+  const [activities, setActivities] = useState<ActivityDto[]>([]);
+  const [error, setError] = useState<string | null>(null); // Add state for error handling
 
   const handleWin = (prize: ActivityDto) => {
     setPrize(prize);
     setShowActivity(true);
   };
 
-  const handleGoToActivity = () => {
-    console.log('Go to activity');
-    navigate('/');
-  }
-
-  const [activities, setActivities] = useState<ActivityDto[]>([]);
-
   useEffect(() => {
     const fetchActivities = async () => {
+      setShowActivity(false); // Reset showActivity when fetching new activities
       try {
         const activitiesData = await getActivities();
         setActivities(activitiesData);
       } catch (error) {
         console.error('Error fetching activities:', error);
+        setError('Error fetching activities. Please try again later.'); // Set error message
       }
     };
 
@@ -38,34 +33,22 @@ function SpinTheWheel() {
   }, []);
 
   return (
-    <div className="App">
+    <div className="container">
+      {error && <p>{error}</p>} {/* Display error message */}
+      <div className="prizes-container">
         {showActivity && prize && (
-          <Card style={{ 
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            
-            position: 'absolute', // Change fixed to absolute
-            top: '30%', // Center vertically
-            left: '50%', // Center horizontally
-            transform: 'translate(-50%, -50%)', // Center the card precisely
-            boxShadow: '0px 0px 5px #c4c4c4',
-            maxHeight: '350px'
-          }}>
-            <Card.Body>
-              <Card.Title>
-                <h4>{prize.title}</h4>
-                <hr />
-              </Card.Title>
-              <Card.Img variant="top" src={prize.activity_image} style={{ width: '200px', height: '100px' }} />
-              <Card.Text style={{ marginLeft: '0.5rem' }}>Beskrivelse: {prize.details}</Card.Text>
-              <Card.Text style={{ marginLeft: '0.5rem' }}>{"Kategori: " + prize.activity_type}</Card.Text>
-              <Card.Text style={{ marginLeft: '0.5rem' }}>{"Regler: " + prize.activity_rules}</Card.Text>
-            </Card.Body>
-          </Card>
-        )}
-    
-        <WheelOfPrizes activities={activities} onWin={handleWin} />
+          <CardComp 
+          id={prize.id}
+          title={prize.title}
+          img={prize.activity_image}
+          description={prize.details}
+          rules={prize.rules}
+          activity_type={prize.activity_type}
+          owner={prize.owner}
+          />
+          )}
+          <WheelOfPrizes activities={activities} onWin={handleWin} />
+      </div>
     </div>
   );
 }
