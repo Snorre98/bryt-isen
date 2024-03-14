@@ -82,6 +82,7 @@ class User(AbstractUser):
             'unique': _('Username exists.'),
         },
     )
+    profile_gradient = models.CharField(null=False, blank=False, max_length=50, default="linear-gradient(262deg, #87d4f5, #3944df)")
 
     def has_perm(self, perm: str, obj: Model | None = None) -> bool:  # noqa: PLR0917, F821
         """

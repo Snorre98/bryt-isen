@@ -40,14 +40,17 @@ class ActivitySerializer(serializers.ModelSerializer):
     fields in the activity model.
     """
     owner_username = serializers.SerializerMethodField()
-
+    owner_profile_gradient = serializers.SerializerMethodField()
     class Meta:
         model = Activity
-        fields = ['id','title', 'details', 'activity_rules', 'activity_image', 'activity_type', 'owner', 'owner_username']
+        fields = ['id','title', 'details', 'activity_rules', 'activity_image', 'activity_type', 'owner', 'owner_username', 'owner_profile_gradient']
 
     def get_owner_username(self, obj):
         # This method is called for each Review instance during serialization
         return obj.owner.username if obj.owner else None
+
+    def get_owner_profile_gradient(self, obj):
+        return obj.owner.profile_gradient if obj.owner else None
 
     def create(self, validated_data: dict) -> Activity:
         validated_data['owner'] = self.context['request'].user
@@ -143,6 +146,7 @@ class RegisterSerializer(serializers.Serializer):
         trim_whitespace=False,
         write_only=True,
     )
+    profile_gradient = serializers.CharField(label="Profile Gradient", write_only=True)
 
     def validate(self, attrs: dict) -> dict:
         # gets the values in the Python dictionery on keys:
@@ -150,12 +154,13 @@ class RegisterSerializer(serializers.Serializer):
         first_name = attrs.get('first_name')
         last_name = attrs.get('last_name')
         password = attrs.get('password')
+        profile_gradient = attrs.get('profile_gradient')
 
-        if username and password:
+        if username and password and profile_gradient:
             # username and password is required and was provided.
             # creates user:
             user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username,
-                                            password=password)
+                                            password=password, profile_gradient=profile_gradient)
             # authenticates the user that was created (unique user?)
             user = authenticate(request=self.context.get('request'), username=username, password=password)
             # if the user is authenticated the serializer does not throw an error and the user creation is finalized
@@ -229,14 +234,18 @@ class ReviewSerializer(serializers.ModelSerializer):
     """
 
     owner_username = serializers.SerializerMethodField()
+    owner_profile_gradient = serializers.SerializerMethodField()
 
     class Meta:
         model = Review
-        fields = ['id', 'details', 'rating', 'activity', 'owner', 'owner_username']
+        fields = ['id', 'details', 'rating', 'activity', 'owner', 'owner_username', 'owner_profile_gradient']
 
     def get_owner_username(self, obj):
         # This method is called for each Review instance during serialization
         return obj.owner.username if obj.owner else None
+
+    def get_owner_profile_gradient(self, obj):
+        return obj.owner.profile_gradient if obj.owner else None
 
     def create(self, validated_data: dict) -> Review:
         validated_data['owner'] = self.context['request'].user

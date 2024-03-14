@@ -7,6 +7,7 @@ import navImage from '../assets/bryt-isen-logo-blue-notext.png';
 import '../styles/NavBar.css';
 import { UserDto } from '~/dto';
 import { useNavigate } from 'react-router-dom';
+import { UserChip } from '~/components/UserChip';
 
 function NavbarComp() {
   const { user, setUser } = useAuthContext();
@@ -104,7 +105,7 @@ function NavbarComp() {
           {logIn}
           {newUser}
         </Nav>
-        {user && userChip}
+        {user && <UserChip username={user.username} profile_gradient={user.profile_gradient} />}
         {user && logOut}
       </Navbar.Collapse>
     </Navbar>

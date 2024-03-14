@@ -52,6 +52,8 @@ export function Home() {
                       rules={activity.activity_rules}
                       activity_type={activity.activity_type}
                       owner={activity.owner}
+                      owner_username={activity.owner_username}
+                      owner_profile_gradient={activity.owner_profile_gradient}
                     />
                   ))
               : activities.map((activity) => (
@@ -64,6 +66,8 @@ export function Home() {
                     rules={activity.activity_rules}
                     activity_type={activity.activity_type}
                     owner={activity.owner}
+                    owner_username={activity.owner_username}
+                    owner_profile_gradient={activity.owner_profile_gradient}
                   />
                 )))}
         </div>

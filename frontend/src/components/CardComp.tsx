@@ -1,19 +1,15 @@
-import {useEffect, useRef, useState} from 'react';
-import {Button, Card, Form, InputGroup, Modal, ModalBody} from 'react-bootstrap';
-import {useAuthContext} from '~/contextProviders/AuthContextProvider';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Card, Form, InputGroup, Modal, ModalBody } from 'react-bootstrap';
+import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {CustomToast} from '~/components/CustomToast';
+import { CustomToast } from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
-import {
-  deleteActivity,
-  getReviews,
-  postReportedActivity,
-  postReportReview
-} from '~/api';
-import {ReviewDto} from '~/dto';
-import {Link} from 'react-router-dom';
-import {useReviewsContext} from "~/contextProviders/ReviewContextProvider";
+import { deleteActivity, getReviews, postReportedActivity, postReportReview } from '~/api';
+import { ReviewDto } from '~/dto';
+import { Link } from 'react-router-dom';
+import { useReviewsContext } from '~/contextProviders/ReviewContextProvider';
+import { UserChip } from '~/components/UserChip';
 
 export type DetailsCardProps = {
   id: number;
@@ -23,14 +19,26 @@ export type DetailsCardProps = {
   rules: string;
   activity_type: string;
   owner: number;
+  owner_username: string;
+  owner_profile_gradient: string;
 };
 
-export default function CardComp({ id, title, img, description, rules, activity_type, owner }: DetailsCardProps) {
+export default function CardComp({
+  id,
+  title,
+  img,
+  description,
+  rules,
+  activity_type,
+  owner,
+  owner_username,
+  owner_profile_gradient,
+}: DetailsCardProps) {
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
   const { user } = useAuthContext();
   //const [reviews, setReviews] = useState<ReviewDto[]>([]);
-  const {reviews} = useReviewsContext();
+  const { reviews } = useReviewsContext();
   const [visTimer, setVisTimer] = useState(false);
   const [visStart, setVisStart] = useState(true);
   const [visStop, setVisStop] = useState(false);
@@ -48,27 +56,22 @@ export default function CardComp({ id, title, img, description, rules, activity_
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-   /* getReviews().then((data : ReviewDto[]) => {
+    /* getReviews().then((data : ReviewDto[]) => {
       setReviews(data)
     }).catch((error)=>{console.log(error)});*/
     setShow(true);
-  }
-
-
-
-
+  };
 
   const [showToast, setShowToast] = useState(false);
-  const [toastTitle, setToastTitle] = useState("")
-  const [toastMsg, setToastMsg] = useState("")
+  const [toastTitle, setToastTitle] = useState('');
+  const [toastMsg, setToastMsg] = useState('');
   const [submitStatus, setSubmitStatus] = useState('');
-
 
   //const RAPPORT_ERROR_MSG = "Kunne ikke rapportere"
   //const RAPPORT_SUCCESS_MSG = "Aktivitet ble rapportert"
 
-  const DELETE_SUCCESS_MSG = "Aktivitet ble slettet!"
-  const DELETE_ERROR_MSG = "Aktivitet kunne ikke slettes, noe gikk feil!"
+  const DELETE_SUCCESS_MSG = 'Aktivitet ble slettet!';
+  const DELETE_ERROR_MSG = 'Aktivitet kunne ikke slettes, noe gikk feil!';
 
   //const REPORT_REVIEW_SUCCESS = "Vurdering ble rapportert!"
   //const REPORT_REVIEW_ERROR = "Vurdering ble ikke rapportert!"
@@ -81,9 +84,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
       .catch((error) => {
         console.log(error);
       });
-
   };
-
 
   const handleVisTimer = () => {
     setVisTimer(true);
@@ -195,7 +196,7 @@ export default function CardComp({ id, title, img, description, rules, activity_
       return ''; // or throw an error, or handle it in a way that makes sense for your application
     }
   };
-
+  /*
   const activityDetailPageURL = (activity_id: number) => {
     if (activity_id !== undefined && activity_id !== null) {
       const url = '/activities/' + activity_id.toString();
@@ -205,37 +206,37 @@ export default function CardComp({ id, title, img, description, rules, activity_
       console.error('Invalid id:', activity_id);
       return ''; // or throw an error, or handle it in a way that makes sense for your application
     }
-  }
-
-  const isOwner = ():boolean => {
-    if(user &&  user.id === owner) {
+  };
+*/
+  const isOwner = (): boolean => {
+    if (user && user.id === owner) {
       return true;
-    }else {
+    } else {
       return false;
     }
-  }
+  };
 
   const handleDeleteActivity = (activity_id: number) => {
-    setToastTitle("Slett aktivitet")
-    deleteActivity(activity_id).
-    then((response) => {
-      console.log(response);
-      setToastMsg(DELETE_SUCCESS_MSG)
-      setSubmitStatus("success")
-      setShowToast(true)
+    setToastTitle('Slett aktivitet');
+    deleteActivity(activity_id)
+      .then((response) => {
+        console.log(response);
+        setToastMsg(DELETE_SUCCESS_MSG);
+        setSubmitStatus('success');
+        setShowToast(true);
 
-      setTimeout(()=>{
-        handleClose()
-        location.reload()
-      }, 1000)
-    })
-      .catch((error)=>{
-        console.log(error)
-        setToastMsg(DELETE_ERROR_MSG)
-        setSubmitStatus("warning")
-        setShowToast(true)
+        setTimeout(() => {
+          handleClose();
+          location.reload();
+        }, 1000);
       })
-  }
+      .catch((error) => {
+        console.log(error);
+        setToastMsg(DELETE_ERROR_MSG);
+        setSubmitStatus('warning');
+        setShowToast(true);
+      });
+  };
   return (
     <>
       <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
@@ -249,18 +250,26 @@ export default function CardComp({ id, title, img, description, rules, activity_
           <Button variant="primary" onClick={handleShow}>
             Se mer
           </Button>
-          {/*<Link as={Link} to={activityDetailPageURL(id)} target="_blank">Open Detail page</Link>*/}
+          {}
+          <UserChip profile_gradient={owner_profile_gradient} username={owner_username} />
         </Card.Body>
       </Card>
-        <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh'}} size="lg">
-          <Modal.Header closeButton>
-            <Modal.Title>
-              <h2>{title}</h2>
-
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Header style={{display: "flex", flexDirection: "column", gap: "1rem"}}>
-            <div style={{display: "flex", flexDirection: "column", gap: "1rem", justifyContent: "flex-start", alignItems: "flex-start" }}>
+      <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh' }} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <h2>{title}</h2>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Header style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+            }}
+          >
             {!visTimer ? (
               <>
                 <br />
@@ -324,44 +333,50 @@ export default function CardComp({ id, title, img, description, rules, activity_
             ) : (
               <br />
             )}
-            </div>
-            <div style={{display: "flex", flexDirection: "row", gap: "1rem"}}>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
             {isOwner() && (
               <>
                 <Link as={Link} to={editActivityURL(id)}>
                   <Button>Endre aktivitet</Button> {/* Add the edit button */}
                 </Link>
-                <Button variant="danger" onClick={() => handleDeleteActivity(id)}>Slett aktivitet</Button>
+                <Button variant="danger" onClick={() => handleDeleteActivity(id)}>
+                  Slett aktivitet
+                </Button>
 
                 <br />
-
               </>
             )}
-              {user && (
-                <>
-                  <Button onClick={ () => setShowReviewForm(true)}>Legg til anmeldelse</Button>
-                </>
-              )}
-              {
-                user && (visReport ? (
-                    <button
-                      type="button"
-                      onClick={() => handleReportActivity(id)}
-                      className="btn btn-outline-secondary btn-sm"
-                    >
-                      Rapporter
-                    </button>
-                  ) : (<p><small>Rapportert</small></p>)
-                )}
-            </div>
-          </Modal.Header>
-          <Modal.Body style={{maxHeight: 'calc(95vh - 200px)', overflow: 'auto', paddingBottom: "5rem", borderRadius:"4rem"}}>
-            <div style={{padding: '1rem'}}>
-              <h5 style={{fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
-              <p style={{ margin: '1rem' }}>{description}</p>
+            {user && (
+              <>
+                <Button onClick={() => setShowReviewForm(true)}>Legg til anmeldelse</Button>
+              </>
+            )}
+            {user &&
+              (visReport ? (
+                <button
+                  type="button"
+                  onClick={() => handleReportActivity(id)}
+                  className="btn btn-outline-secondary btn-sm"
+                >
+                  Rapporter
+                </button>
+              ) : (
+                <p>
+                  <small>Rapportert</small>
+                </p>
+              ))}
+          </div>
+        </Modal.Header>
+        <Modal.Body
+          style={{ maxHeight: 'calc(95vh - 200px)', overflow: 'auto', paddingBottom: '5rem', borderRadius: '4rem' }}
+        >
+          <div style={{ padding: '1rem' }}>
+            <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
+            <p style={{ margin: '1rem' }}>{description}</p>
 
-              <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Regler</h5>
-              <p style={{ margin: '1rem' }}>{rules}</p>
+            <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Regler</h5>
+            <p style={{ margin: '1rem' }}>{rules}</p>
 
             <h6 style={{ fontWeight: '600', margin: '0.5rem' }}>Kategori</h6>
             <p style={{ margin: '1rem' }}>{activity_type}</p>
@@ -390,33 +405,35 @@ export default function CardComp({ id, title, img, description, rules, activity_
             </div>
           </div>
 
-            <div>
-              {
-                reviews &&  (reviews.length > 0 && reviews.filter((review) => review.activity === id).reverse()
-                  .map((review: ReviewDto) => (
-                    <ReviewComp
-                      key={review.id}
-                      owner_id={review.owner}
-                      rating={review.rating}
-                      review_description={review.details}
-                      owner_name={review.owner_username}
-                      review_id={review.id}
-                    />
-                  )))
-              }
-
-            </div>
-          </Modal.Body>
-        </Modal>
+          <div>
+            {reviews &&
+              reviews.length > 0 &&
+              reviews
+                .filter((review) => review.activity === id)
+                .reverse()
+                .map((review: ReviewDto) => (
+                  <ReviewComp
+                    key={review.id}
+                    owner_id={review.owner}
+                    rating={review.rating}
+                    review_description={review.details}
+                    owner_name={review.owner_username}
+                    review_id={review.id}
+                  />
+                ))}
+          </div>
+        </Modal.Body>
+      </Modal>
 
       <ReviewForm
         activity_id={id}
         showReviewForm={showReviewForm}
         activity_title={title}
-        onClose={() => setShowReviewForm(false)} />
+        onClose={() => setShowReviewForm(false)}
+      />
 
       <CustomToast
-        position={"top-left"}
+        position={'top-left'}
         toastTitle={toastTitle}
         toastMessage={toastMsg}
         variant={submitStatus}
