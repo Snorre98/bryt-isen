@@ -1,9 +1,17 @@
-.button-container {
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Fills the whole viewport height */
-  width: 100vw; /* Fills the whole viewport width */
-  position: relative; /* Add this if you need to use z-index */
-  z-index: 10; /* Ensure it's below the ActivityModal if overlapping */
+  height: 100vh; /* Adjust as necessary */
+}
+
+.prizes-container {
+  position: relative;
+}
+
+.CardComp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
