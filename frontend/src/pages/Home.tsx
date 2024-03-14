@@ -18,6 +18,7 @@ export function Home() {
   const [loading, setLoading] = useState(true);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [errorToastMessage, setErrorToastMessage] = useState('');
+  const [search, setSearch] = useState("");
   const [showFavorites, setShowFavorites] = useState(false); // New state for checkbox
   const { user, setUser } = useAuthContext();
 
@@ -53,12 +54,45 @@ export function Home() {
       });
   }, [showFavorites, activities]);
 
+  const handleSearch = (term: string) => {
+    console.log(term)
+    setSearch(term);
+  };
+
+  const filteredActivities = activities.filter((activity) => {
+    // Filtrering basert på filteret
+    const passesFilter = isFilterOn
+      ? activityFilter.has(activity.activity_type)
+      : true;
+
+    // Filtrering basert på søketerm
+    const passesSearch = activity.title.toLowerCase().includes(search.toLowerCase());
+
+    // Returner true bare hvis både filter og søk passer
+    return passesFilter && passesSearch;
+  });
+
+
   const handleShowFavoritesChange = (event: any) => {
     setShowFavorites(event.target.checked);
   };
 
   return (
     <PageWrapper>
+      <input
+      className="search"
+      type="text"
+      placeholder="Søk..."
+      value={search}
+      onChange={(e) => handleSearch(e.target.value)}
+    />
+            <Form.Check // prettier-ignore
+          type="switch"
+          id="custom-switch"
+          label="Vis kun favoritter"
+          onChange={handleShowFavoritesChange} // Add the onChange handler here
+          checked={showFavorites} // Control the checked state
+        />
       <FilterComponent showFilter={showFilter} />
       <div
         className="toggleFilterBtn"
@@ -95,7 +129,7 @@ export function Home() {
 
         </div>
         <div className="activityCardWrapper">
-          {activities &&
+          {
             activities.length > 0 &&
             (isFilterOn
               ? activities
@@ -128,10 +162,22 @@ export function Home() {
                     owner_profile_gradient={activity.owner_profile_gradient}
                   />
                 )))}
+  {activities.length > 0 &&
+    filteredActivities.map((activity) => (
+      <CardComp
+        key={activity.id}
+        id={activity.id}
+        title={activity.title}
+        img={activity.activity_image}
+        description={activity.details}
+        rules={activity.activity_rules}
+        activity_type={activity.activity_type}
+        owner={activity.owner}
+      />
+    ))}
         </div>
       </div>
     </PageWrapper>
   );
 }
-
 export default Home;
