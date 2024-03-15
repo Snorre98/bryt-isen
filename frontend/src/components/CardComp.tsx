@@ -15,7 +15,7 @@ import FavoriteButton from './FavoriteButton';
 export type DetailsCardProps = {
   id: number;
   title: string;
-  img: string;
+  img: string | File;
   description: string;
   rules: string;
   activity_type: string;
@@ -38,7 +38,6 @@ export default function CardComp({
   const [show, setShow] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false); // State to manage review form visibility
   const { user } = useAuthContext();
-  //const [reviews, setReviews] = useState<ReviewDto[]>([]);
   const { reviews } = useReviewsContext();
   const [visTimer, setVisTimer] = useState(false);
   const [visStart, setVisStart] = useState(true);
@@ -57,9 +56,6 @@ export default function CardComp({
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    /* getReviews().then((data : ReviewDto[]) => {
-      setReviews(data)
-    }).catch((error)=>{console.log(error)});*/
     setShow(true);
   };
 
@@ -240,7 +236,7 @@ export default function CardComp({
   };
   return (
     <>
-      <Card style={{ width: '18rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
+      <Card style={{ width: '25rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
         <Card.Img variant="top" src={img} style={{ objectFit: 'cover', height: '10rem' }} />
         <Card.Body>
           <Card.Title>
@@ -248,16 +244,25 @@ export default function CardComp({
             <hr />
           </Card.Title>
           <Card.Text style={{ marginLeft: '0.5rem' }}>{description}</Card.Text>
-          <div style={{ width: '100%', display:'flex', flexDirection:'row', height:'50px', justifyContent:'space-between', alignItems:'center'}}>
-          <Button variant="primary" onClick={handleShow}>
-            Se mer
-          </Button>
-          <UserChip profile_gradient={owner_profile_gradient} username={owner_username} />
-          {user && (
-                <>
-                  <FavoriteButton activity_id={id}></FavoriteButton>
-                </>
-              )}
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'row',
+              height: '50px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Button variant="primary" onClick={handleShow}>
+              Se mer
+            </Button>
+            <UserChip profile_gradient={owner_profile_gradient} username={owner_username} />
+            {user && (
+              <>
+                <FavoriteButton activity_id={id}></FavoriteButton>
+              </>
+            )}
           </div>
         </Card.Body>
       </Card>

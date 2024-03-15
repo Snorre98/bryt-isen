@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from django.contrib import admin
 
-from .models import User, Activity, Review, ReportedActivity
+from .models import User, Activity, Review, ReportedActivity, FavoritedActivity
 
 
 class ActivityAdmin(admin.ModelAdmin):
@@ -18,15 +18,16 @@ class ReviewAdmin(admin.ModelAdmin):
 
 class ReportedActivityAdmin(admin.ModelAdmin):
     list_display = ('activity_id',)
-    
-
-
 
 class ReportedReviewAdmin(admin.ModelAdmin):
     list_display = ('review_id',)
+
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ('activity_id', "owner")
 
 
 admin.site.register(Activity, ActivityAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(ReportedActivity, ReportedActivityAdmin)
+admin.site.register(FavoritedActivity, FavoriteAdmin)

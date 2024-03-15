@@ -3,18 +3,15 @@ from __future__ import annotations
 import logging
 import itertools
 
-from django.forms import ImageField
 
 from guardian.models import UserObjectPermission
 
 from rest_framework import serializers
 
-from django.forms import ImageField
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 
-from .models import User, Activity, ReportedActivity, Review, ReportedReview
-from .models import User, Activity, ReportedActivity, FavoritedActivity
+from .models import User, Activity, ReportedActivity, FavoritedActivity, Review, ReportedReview
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +37,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     ActivitySerializer serialises all
     fields in the activity model.
     """
+
     owner_username = serializers.SerializerMethodField()
     owner_profile_gradient = serializers.SerializerMethodField()
     class Meta:

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from django.db import models
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MaxValueValidator, MinValueValidator
 
 from .utils.unique_file_upload import unique_file_upload
 
@@ -47,7 +47,6 @@ class Activity(models.Model):
     )
 
 
-
 class ReportedActivity(models.Model):
     """Model to track activities reported by users."""
 
@@ -64,13 +63,9 @@ class ReportedActivity(models.Model):
         verbose_name = 'Reported Activity'
         verbose_name_plural = 'Reported Activities'
 
-    # def __str__(self):
-    #     return f'Reported {self.activity} by {self.reporter} at {self.reported_at}'
 
-#
-# Favorite modelreported_by_user
-#
 class FavoritedActivity(models.Model):
+
     activity_id = models.ForeignKey(Activity, on_delete=models.CASCADE)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -79,10 +74,11 @@ class FavoritedActivity(models.Model):
         null=True,
         blank=True,
     )
-    
+
     class Meta:
         verbose_name = 'Reported Activity'
         verbose_name_plural = 'Reported Activities'
+
 
 #
 # User model
@@ -98,7 +94,8 @@ class User(AbstractUser):
             'unique': _('Username exists.'),
         },
     )
-    profile_gradient = models.CharField(null=False, blank=False, max_length=50, default="linear-gradient(262deg, #87d4f5, #3944df)")
+    profile_gradient = models.CharField(null=False, blank=False, max_length=50,
+                                        default="linear-gradient(262deg, #87d4f5, #3944df)")
 
     def has_perm(self, perm: str, obj: Model | None = None) -> bool:  # noqa: PLR0917, F821
         """
@@ -145,7 +142,7 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         related_name='review_owner',
         null=True,
-        blank=True,)
+        blank=True, )
 
 
 class ReportedReview(models.Model):

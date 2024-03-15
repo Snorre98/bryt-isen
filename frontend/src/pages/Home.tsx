@@ -1,98 +1,78 @@
-import { useEffect, useState } from 'react';
-import { getActivities, getFavoritedActivities } from '~/api';
+import { useState } from 'react';
+import { getFavoritedActivities } from '~/api';
 import CardComp from '~/components/CardComp';
 import '../styles/Home.css';
 import { PageWrapper } from '~/components/PageWrapper';
 import { Icon } from '@iconify/react';
 import FilterComponent from '~/components/FilterComponent/FilterComponent';
 import { useGlobalContext } from '~/contextProviders/GlobalContextProvider';
-import { useActivitiesContext } from '~/contextProviders/ActivitiesContextProvider';
-import { CustomToast } from '~/components/CustomToast';
 import Form from 'react-bootstrap/Form';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
+import { useActivitiesContext } from '~/contextProviders/ActivitiesContextProvider';
+import { FavoriteDto } from '~/dto';
 
 export function Home() {
   const [showFilter, setShowFilter] = useState(false);
   const { activityFilter, isFilterOn } = useGlobalContext();
-  const { activities } = useActivitiesContext();
-  const [loading, setLoading] = useState(true);
-  const [showErrorToast, setShowErrorToast] = useState(false);
-  const [errorToastMessage, setErrorToastMessage] = useState('');
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [showFavorites, setShowFavorites] = useState(false); // New state for checkbox
-  const { user, setUser } = useAuthContext();
+  const { user } = useAuthContext();
+  const { activities } = useActivitiesContext();
+  const [favoritesIDs, setFavoritesIDs] = useState<Set<number>>(new Set());
 
-  useEffect(() => {
-    getActivities()
-      .then((data) => {
-        setLoading(false);
-        if(showFavorites) {
-          getFavoritedActivities().then(favoriteActivities => {
-            // Assuming favoriteActivities is an array of objects { activity_id, owner }
-            // and data is an array of activity objects with properties { id, owner }
-
-            // Filter activities based on matching `id` and `owner` with `activity_id` and `owner` from favoriteActivities
-            const filteredActivities = data.filter(activity =>
-              favoriteActivities.some(favActivity =>
-                favActivity.activity_id == activity.id && favActivity.owner === activity.owner && activity.owner == user?.id
-              )
-            );
-
-            setActivities(filteredActivities);
-          }).catch(error => {
-            console.error("Could not fetch favorite activities", error);
-            // Handle errors or set error state here
-          });
-        } else {
-          setActivities(data);
-        }
-      })
-      .catch((error) => {
-        setShowErrorToast(true);
-        setErrorToastMessage('Kunne ikke hente inn aktiviteter!');
-        console.log(error);
-      });
-  }, [showFavorites, activities]);
+  /*
+   * This creates a set with the IDs of the activities that the logged-in user has favorite.
+   * */
+  const filterFavorites = (favoriteActivities: FavoriteDto[]) => {
+    const favoriteIDsSet: Set<number> = new Set();
+    favoriteActivities.forEach((favoritActivity: FavoriteDto) => {
+      if (user && user.id === favoritActivity.owner) {
+        favoriteIDsSet.add(favoritActivity.activity_id);
+      }
+      setFavoritesIDs(favoriteIDsSet);
+    });
+  };
+  const handleShowFavorites = () => {
+    if (!showFavorites) {
+      getFavoritedActivities()
+        .then((response) => {
+          filterFavorites(response);
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    setShowFavorites(!showFavorites);
+  };
 
   const handleSearch = (term: string) => {
-    console.log(term)
     setSearch(term);
   };
 
-  const filteredActivities = activities.filter((activity) => {
-    // Filtrering basert på filteret
-    const passesFilter = isFilterOn
-      ? activityFilter.has(activity.activity_type)
-      : true;
-
-    // Filtrering basert på søketerm
+  const filteredActivities = (activities || []).filter((activity): boolean => {
+    const passesFilter = isFilterOn ? activityFilter.has(activity.activity_type) : true;
     const passesSearch = activity.title.toLowerCase().includes(search.toLowerCase());
-
-    // Returner true bare hvis både filter og søk passer
-    return passesFilter && passesSearch;
+    const isFavorited = showFavorites ? favoritesIDs.has(activity.id) : true;
+    return passesFilter && passesSearch && isFavorited;
   });
-
-
-  const handleShowFavoritesChange = (event: any) => {
-    setShowFavorites(event.target.checked);
-  };
 
   return (
     <PageWrapper>
       <input
-      className="search"
-      type="text"
-      placeholder="Søk..."
-      value={search}
-      onChange={(e) => handleSearch(e.target.value)}
-    />
-            <Form.Check // prettier-ignore
-          type="switch"
-          id="custom-switch"
-          label="Vis kun favoritter"
-          onChange={handleShowFavoritesChange} // Add the onChange handler here
-          checked={showFavorites} // Control the checked state
-        />
+        className="search"
+        type="text"
+        placeholder="Søk..."
+        value={search}
+        onChange={(e) => handleSearch(e.target.value)}
+      />
+      <Form.Check
+        type="switch"
+        id="custom-switch"
+        label="Vis kun favoritter"
+        onChange={handleShowFavorites}
+        checked={showFavorites}
+      />
       <FilterComponent showFilter={showFilter} />
       <div
         className="toggleFilterBtn"
@@ -115,66 +95,25 @@ export function Home() {
         }}
       >
         <div>
-
-        <Form.Check // prettier-ignore
-          type="switch"
-          id="custom-switch"
-          label="Vis kun favoritter"
-          onChange={handleShowFavoritesChange} // Add the onChange handler here
-          checked={showFavorites} // Control the checked state
-        />
-
-        <br />
-
-
+          <br />
         </div>
         <div className="activityCardWrapper">
-          {
+          {activities &&
             activities.length > 0 &&
-            (isFilterOn
-              ? activities
-                  .filter((activity) => activityFilter.has(activity.activity_type))
-                  .map((activity) => (
-                    <CardComp
-                      key={activity.id}
-                      id={activity.id}
-                      title={activity.title}
-                      img={activity.activity_image}
-                      description={activity.details}
-                      rules={activity.activity_rules}
-                      activity_type={activity.activity_type}
-                      owner={activity.owner}
-                      owner_username={activity.owner_username}
-                      owner_profile_gradient={activity.owner_profile_gradient}
-                    />
-                  ))
-              : activities.map((activity) => (
-                  <CardComp
-                    key={activity.id}
-                    id={activity.id}
-                    title={activity.title}
-                    img={activity.activity_image}
-                    description={activity.details}
-                    rules={activity.activity_rules}
-                    activity_type={activity.activity_type}
-                    owner={activity.owner}
-                    owner_username={activity.owner_username}
-                    owner_profile_gradient={activity.owner_profile_gradient}
-                  />
-                )))}
-  {activities.length > 0 &&
-    filteredActivities.map((activity) => (
-      <CardComp
-        key={activity.id}
-        id={activity.id}
-        title={activity.title}
-        img={activity.activity_image}
-        description={activity.details}
-        rules={activity.activity_rules}
-        activity_type={activity.activity_type}
-        owner={activity.owner}
-      />
-    ))}
+            filteredActivities.map((activity) => (
+              <CardComp
+                key={activity.id}
+                id={activity.id}
+                title={activity.title}
+                img={activity.activity_image}
+                description={activity.details}
+                rules={activity.activity_rules}
+                activity_type={activity.activity_type}
+                owner={activity.owner}
+                owner_username={activity.owner_username}
+                owner_profile_gradient={activity.owner_profile_gradient}
+              />
+            ))}
         </div>
       </div>
     </PageWrapper>
