@@ -35,7 +35,16 @@ function App() {
             <Route path="/testapi" element={<ApiTestPage />} />
             <Route path="/editActivity/:id" element={<EditActivity />} />
             <Route path="/activities/:id" element={<ActivityDetailPage />} />
-            <Route path="/spinTheWheel" element={<SpinTheWheel />} />
+            <Route
+              path="/spinTheWheel"
+              element={
+                <ActivitiesContextProvider>
+                  <ReviewsContextProvider>
+                    <SpinTheWheel />
+                  </ReviewsContextProvider>
+                </ActivitiesContextProvider>
+              }
+            />
           </Route>
         </Routes>
       </Router>

@@ -50,6 +50,8 @@ class ReportedActivityViewSet(viewsets.ModelViewSet):
     queryset = ReportedActivity.objects.all()
     serializer_class = ReportedActivitySerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['activity_id', 'id']
 
 
 class FavoritedActivityViewSet(viewsets.ModelViewSet):

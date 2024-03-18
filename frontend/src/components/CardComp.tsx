@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Card, Form, InputGroup, Modal, ModalBody } from 'react-bootstrap';
+import { Button, Card, Form, InputGroup, Modal } from 'react-bootstrap';
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { CustomToast } from '~/components/CustomToast';
 import ReviewComp from './ReviewComp';
 import ReviewForm from './ReviewForm';
-import { deleteActivity, getReviews, postReportedActivity, postReportReview } from '~/api';
-import { ReviewDto } from '~/dto';
-import { Link } from 'react-router-dom';
+import { deleteActivity, getReportedActivityByActId, postReportedActivity, postReportReview } from '~/api';
+import { ReportedActivityDto, ReviewDto } from '~/dto';
+import { useNavigate } from 'react-router-dom';
 import { useReviewsContext } from '~/contextProviders/ReviewContextProvider';
-import { UserChip } from '~/components/UserChip';
+import { UserChip } from '~/components/UserChipComponent/UserChip';
 import FavoriteButton from './FavoriteButton';
+import { Icon } from '@iconify/react';
 
 export type DetailsCardProps = {
   id: number;
@@ -44,8 +45,9 @@ export default function CardComp({
   const [visStop, setVisStop] = useState(false);
   const [visStartIgjen, setStartIgjen] = useState(false);
   const [visReset, setReset] = useState(false);
-  const [visReport, setVisReport] = useState(true);
 
+  const [isActReported, setIsActReported] = useState<boolean>();
+  const [actReportCount, setActReportCount] = useState<number>(0);
   const [timerHours, setTimerHours] = useState(0);
   const [timerMinutes, setTimerMinutes] = useState(0);
   const [timerSeconds, setTimerSeconds] = useState(0);
@@ -54,6 +56,7 @@ export default function CardComp({
 
   const intervalRef = useRef(null);
 
+  const navigate = useNavigate();
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
@@ -72,7 +75,7 @@ export default function CardComp({
 
   //const REPORT_REVIEW_SUCCESS = "Vurdering ble rapportert!"
   //const REPORT_REVIEW_ERROR = "Vurdering ble ikke rapportert!"
-
+  /*
   const handleReportActivity = (activity_id: number) => {
     postReportedActivity(activity_id)
       .then(() => {
@@ -81,6 +84,33 @@ export default function CardComp({
       .catch((error) => {
         console.log(error);
       });
+  };*/
+
+  useEffect(() => {
+    if (id) {
+      getReportedActivityByActId(id)
+        .then((reports: ReportedActivityDto[]) => {
+          setActReportCount(reports.length);
+          setIsActReported(reports.length > 0);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [id]);
+
+  const handleReportActivity = (activity_id: number) => {
+    if (id) {
+      postReportedActivity(activity_id)
+        .then(() => {
+          setIsActReported(true); // Update reported status
+          setActReportCount((prevCount) => prevCount + 1); // Increment report count
+          setActivityReportModal(false); // Close the modal
+        })
+        .catch((error) => {
+          console.error('Error reporting the review: ', id, error);
+        });
+    }
   };
 
   const handleVisTimer = () => {
@@ -193,18 +223,7 @@ export default function CardComp({
       return ''; // or throw an error, or handle it in a way that makes sense for your application
     }
   };
-  /*
-  const activityDetailPageURL = (activity_id: number) => {
-    if (activity_id !== undefined && activity_id !== null) {
-      const url = '/activities/' + activity_id.toString();
-      return url;
-    } else {
-      // Handle the case when id is undefined or null
-      console.error('Invalid id:', activity_id);
-      return ''; // or throw an error, or handle it in a way that makes sense for your application
-    }
-  };
-*/
+
   const isOwner = (): boolean => {
     if (user && user.id === owner) {
       return true;
@@ -213,6 +232,14 @@ export default function CardComp({
     }
   };
 
+  const [showActivityDeleteModal, setShowActivityDeleteModal] = useState<boolean>();
+  const openActivityDeleteModal = () => setShowActivityDeleteModal(true);
+  const closeActivityDeleteModal = () => setShowActivityDeleteModal(false);
+
+  const [showActivityReportModal, setActivityReportModal] = useState<boolean>();
+
+  const closeActivityReportModal = () => setActivityReportModal(false);
+  const openActivityReportModal = () => setActivityReportModal(true);
   const handleDeleteActivity = (activity_id: number) => {
     setToastTitle('Slett aktivitet');
     deleteActivity(activity_id)
@@ -221,11 +248,11 @@ export default function CardComp({
         setToastMsg(DELETE_SUCCESS_MSG);
         setSubmitStatus('success');
         setShowToast(true);
-
+        closeActivityDeleteModal();
         setTimeout(() => {
           handleClose();
           location.reload();
-        }, 1000);
+        }, 500);
       })
       .catch((error) => {
         console.log(error);
@@ -236,31 +263,62 @@ export default function CardComp({
   };
   return (
     <>
-      <Card style={{ width: '25rem', boxShadow: '0px 0px 5px #c4c4c4', maxHeight: '350px' }}>
-        <Card.Img variant="top" src={img} style={{ objectFit: 'cover', height: '10rem' }} />
-        <Card.Body>
+      <Card
+        style={{
+          width: '20rem',
+          height: 'fit-content',
+          maxHeight: '36rem',
+          boxShadow: '0px 0px 5px #c4c4c4',
+          overflow: 'hidden',
+        }}
+      >
+        <Card.Img
+          variant="top"
+          src={img}
+          style={{
+            objectFit: 'cover',
+            height: '10rem',
+            overflow: 'hidden',
+          }}
+        />
+        <Card.Body style={{ overflow: 'hidden' }}>
           <Card.Title>
-            <h4>{title}</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+              <h4 style={{ alignSelf: 'start' }}>{title}</h4>
+              <div style={{ alignSelf: 'end', display: 'block' }}>
+                {user && <UserChip profile_gradient={owner_profile_gradient} username={owner_username} scale={0.75} />}
+              </div>
+            </div>
+
             <hr />
           </Card.Title>
-          <Card.Text style={{ marginLeft: '0.5rem' }}>{description}</Card.Text>
+          <Card.Text style={{ width: '18rem', height: '6rem', overflow: 'hidden' }}>
+            <div
+              style={{
+                position: 'absolute',
+                height: '6rem',
+                width: '18rem',
+                background: 'linear-gradient(180deg, rgba(255,255,255, 0) 60%, rgba(255,255, 255, 1) 100%)',
+              }}
+            />
+            {description}
+          </Card.Text>
           <div
             style={{
               width: '100%',
-              display: 'flex',
-              flexDirection: 'row',
-              height: '50px',
-              justifyContent: 'space-between',
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
               alignItems: 'center',
             }}
           >
             <Button variant="primary" onClick={handleShow}>
               Se mer
             </Button>
-            <UserChip profile_gradient={owner_profile_gradient} username={owner_username} />
             {user && (
               <>
-                <FavoriteButton activity_id={id}></FavoriteButton>
+                <div style={{ justifySelf: 'end' }}>
+                  <FavoriteButton activity_id={id}></FavoriteButton>
+                </div>
               </>
             )}
           </div>
@@ -268,8 +326,53 @@ export default function CardComp({
       </Card>
       <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden', height: '95vh' }} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>
+          <Modal.Title
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '2fr auto auto auto auto',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              gap: '2rem',
+            }}
+          >
             <h2>{title}</h2>
+            {isOwner() && (
+              <>
+                <Button style={{ fontSize: '0.5rem' }} variant="success" onClick={() => navigate(editActivityURL(id))}>
+                  Endre
+                </Button>{' '}
+                {/* Add the edit button */}
+                <Button variant="danger" onClick={openActivityDeleteModal} size="sm">
+                  Slett
+                </Button>
+              </>
+            )}
+            {user && (
+              <>
+                <Button onClick={() => setShowReviewForm(true)} size="sm">
+                  Ny vurdering
+                </Button>
+              </>
+            )}
+            {user && !isOwner() && (
+              <Button onClick={openActivityReportModal} variant="warning" size="sm">
+                Rapporter
+              </Button>
+            )}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'end',
+                justifyContent: 'end',
+                border: '2px solid #ffc107',
+                borderRadius: '0.25rem',
+                padding: '0 0.15rem 0 0.10rem',
+              }}
+            >
+              {isActReported && <Icon icon="ic:baseline-flag" width="32" height="32" color={'red'} />}
+              {actReportCount > 0 ? <span>: {actReportCount}</span> : null}
+            </div>
           </Modal.Title>
         </Modal.Header>
         <Modal.Header style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -284,8 +387,13 @@ export default function CardComp({
           >
             {!visTimer ? (
               <>
-                <br />
-                <Button onClick={handleVisTimer}>Timer</Button>
+                <Button
+                  onClick={handleVisTimer}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  Timer
+                  <Icon icon="ph:timer-bold" width="1.5rem" height="1.5rem" />
+                </Button>
               </>
             ) : null}
             {visTimer ? (
@@ -342,56 +450,37 @@ export default function CardComp({
                 )}
                 <p>{formatSecondsAsText(seconds)}</p>
               </>
-            ) : (
-              <br />
-            )}
+            ) : null}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
-            {isOwner() && (
-              <>
-                <Link as={Link} to={editActivityURL(id)}>
-                  <Button>Endre aktivitet</Button> {/* Add the edit button */}
-                </Link>
-                <Button variant="danger" onClick={() => handleDeleteActivity(id)}>
-                  Slett aktivitet
-                </Button>
-
-                <br />
-              </>
-            )}
-            {user && (
-              <>
-                <Button onClick={() => setShowReviewForm(true)}>Legg til anmeldelse</Button>
-              </>
-            )}
-            {user &&
-              (visReport ? (
-                <button
-                  type="button"
-                  onClick={() => handleReportActivity(id)}
-                  className="btn btn-outline-secondary btn-sm"
-                >
-                  Rapporter
-                </button>
-              ) : (
-                <p>
-                  <small>Rapportert</small>
-                </p>
-              ))}
-          </div>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}></div>
         </Modal.Header>
         <Modal.Body
-          style={{ maxHeight: 'calc(95vh - 200px)', overflow: 'auto', paddingBottom: '5rem', borderRadius: '4rem' }}
+          style={{
+            maxHeight: 'calc(95vh - 400px)',
+            overflowX: 'hidden',
+            overflowY: 'scroll',
+            paddingBottom: '1rem',
+          }}
         >
           <div style={{ padding: '1rem' }}>
-            <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Beskrivelse</h5>
+            <h5 style={{ fontWeight: '600', margin: '0.5rem', textDecoration: 'underline' }}>Beskrivelse</h5>
             <p style={{ margin: '1rem' }}>{description}</p>
 
-            <h5 style={{ fontWeight: '600', margin: '0.5rem' }}>Regler</h5>
+            <h5 style={{ fontWeight: '600', margin: '0.5rem', textDecoration: 'underline' }}>Regler</h5>
             <p style={{ margin: '1rem' }}>{rules}</p>
 
-            <h6 style={{ fontWeight: '600', margin: '0.5rem' }}>Kategori</h6>
-            <p style={{ margin: '1rem' }}>{activity_type}</p>
+            <h6 style={{ fontWeight: '600', margin: '0.5rem', textDecoration: 'underline' }}>Kategori</h6>
+            <p
+              style={{
+                margin: '1rem',
+                border: '1px solid black',
+                borderRadius: '0.25rem',
+                width: 'fit-content',
+                padding: '0.25rem 0.5rem 0.25rem 0.5rem',
+              }}
+            >
+              {activity_type}
+            </p>
             <div
               style={{
                 height: '20%',
@@ -452,6 +541,27 @@ export default function CardComp({
         setToastState={setShowToast}
         toastState={showToast}
       />
+      <Modal onHide={closeActivityReportModal} show={showActivityReportModal} close>
+        <Modal.Header closeButton>
+          <Modal.Title style={{ padding: '2rem' }}>Er du sikker på at du vil rapportere?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ padding: '2rem' }}>
+          <Button variant={'warning'} onClick={() => handleReportActivity(id)}>
+            Ja
+          </Button>
+        </Modal.Body>
+      </Modal>
+
+      <Modal onHide={closeActivityDeleteModal} show={showActivityDeleteModal} close>
+        <Modal.Header closeButton>
+          <Modal.Title style={{ padding: '2rem' }}>Er du sikker på at du vil slette?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ padding: '2rem' }}>
+          <Button variant={'danger'} onClick={() => handleDeleteActivity(id)}>
+            Ja
+          </Button>
+        </Modal.Body>
+      </Modal>
     </>
   );
 }

@@ -7,7 +7,7 @@ import navImage from '../assets/bryt-isen-logo-blue-notext.png';
 import '../styles/NavBar.css';
 import { UserDto } from '~/dto';
 import { useNavigate } from 'react-router-dom';
-import { UserChip } from '~/components/UserChip';
+import { UserChip } from '~/components/UserChipComponent/UserChip';
 
 function NavbarComp() {
   const { user, setUser } = useAuthContext();

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { FILTER_OPTIONS } from '~/constants';
 import './FilterComponent.css';
 import { Icon } from '@iconify/react';
@@ -7,14 +7,14 @@ import { Button } from 'react-bootstrap';
 
 type FilterComponentProp = {
   showFilter: boolean;
+  children?: ReactNode;
 };
-function FilterComponent({ showFilter }: FilterComponentProp) {
+function FilterComponent({ showFilter, children }: FilterComponentProp) {
   const [filterControllValue, setFilterControllValue] = useState<string | null>('showAll');
   const filterItemContainerRef = useRef<HTMLDivElement>(null);
   const { activityFilter, setActivityFilter, setIsFilterOn } = useGlobalContext();
 
-  useEffect(() => {
-  }, [activityFilter, filterControllValue]);
+  useEffect(() => {}, [activityFilter, filterControllValue]);
 
   const handleFilterControll = () => {
     setActivityFilter(new Set<string>());
@@ -52,6 +52,7 @@ function FilterComponent({ showFilter }: FilterComponentProp) {
       <Button onClick={handleFilterControll}>Reset filter</Button>
     </div>
   );
+  const childrenComp = <div className="filterControll">{children}</div>;
 
   const filterItem = (
     <>
@@ -104,6 +105,7 @@ function FilterComponent({ showFilter }: FilterComponentProp) {
             onMouseDown={scrollRight}
           />
         </div>
+        {childrenComp}
       </div>
     </>
   );

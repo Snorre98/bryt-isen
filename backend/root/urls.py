@@ -45,6 +45,4 @@ urlpatterns = [
                   path('user/', views.UserView.as_view(), name='user'),
                   path('users/', views.AllUsersView.as_view(), name='users'),
                   path('', include(router.urls)),
-                  #path('activities/<int:pk>/reviews/', views.RegisterView.as_view(), name='activity-reviews'),
-                  # path('users/<str:activity_owner>/activities/', views.ActivityView.as_view({'get': 'list'}), name='user-activities'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

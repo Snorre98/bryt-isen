@@ -19,15 +19,13 @@ export default function ReviewComp({ review_id, rating, review_description, owne
   const [showReportModal, setShowReportModal] = useState<boolean>();
   const [isReported, setIsReported] = useState(false);
   const [reportCount, setReportCount] = useState(0);
-  //const [reportedReviews, setReportedReviws] = useState<ReportedReviewDto[]>();
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>();
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
   useEffect(() => {
     if (review_id) {
       getReportedReviewByReviewId(review_id)
-        .then((response) => {
-          //      setReportedReviws(response);
+        .then((response: ReportedReviewDto[]) => {
           setReportCount(response.length);
           setIsReported(response.length > 0);
         })
@@ -97,14 +95,14 @@ export default function ReviewComp({ review_id, rating, review_description, owne
             <div>
               {user && user.username !== owner_name && (
                 <>
-                  <Button onClick={openReportModal} size="sm" variant="info">
+                  <Button onClick={openReportModal} size="sm" variant="warning">
                     Rapporter
                   </Button>
                 </>
               )}
               {user && user.username === owner_name && (
                 <>
-                  <Button onClick={openDeleteModal} size="sm" variant="warning">
+                  <Button onClick={openDeleteModal} size="sm" variant="danger">
                     Slett
                   </Button>
                 </>

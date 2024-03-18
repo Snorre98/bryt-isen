@@ -7,6 +7,7 @@
   min-height: 5rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
 .header {
@@ -19,6 +20,7 @@
   display: flex;
   align-items: end;
   justify-content: end;
+  gap: 1rem;
 }
 
 .reviewText {
@@ -36,6 +38,7 @@
   display: grid;
   justify-content: end;
   align-items: baseline;
+  gap: 1rem;
 }
 
 .iconContainer{
@@ -43,9 +46,16 @@
   align-items: end;
   justify-content: end;
   grid-row: 2/3;
+  border: 2px solid #ffc107;
+  border-radius: 0.25rem;
+  padding: 0 0.15rem 0 0.10rem;
+  width: fit-content;
+  justify-self: end;
+  align-self: end;
 }
 
 .ratingSubcontainer2{
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
+  gap: 1rem;
 }

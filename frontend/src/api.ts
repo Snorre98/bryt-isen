@@ -6,7 +6,15 @@
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from 'axios';
-import { ActivityDto, FavoriteDto, RegisterUserDto, ReportedActivityDto, ReportedReviewDto, ReviewDto, UserDto } from './dto';
+import {
+  ActivityDto,
+  FavoriteDto,
+  RegisterUserDto,
+  ReportedActivityDto,
+  ReportedReviewDto,
+  ReviewDto,
+  UserDto,
+} from './dto';
 import { BACKEND_DOMAIN } from './constants';
 import { ROUTES } from './routes';
 import { reverse } from './named-urls';
@@ -30,8 +38,6 @@ export async function getActivity(id: string | number): Promise<ActivityDto> {
   const response = await axios.get<ActivityDto>(url, { withCredentials: true }); // Defines response, using axios.
   return response.data;
 }
-
-
 
 /**
  * POST function for adding activity to DB.
@@ -65,7 +71,6 @@ export async function getActivities(): Promise<ActivityDto[]> {
   const response = await axios.get<ActivityDto[]>(url, { withCredentials: true });
   return response.data;
 }
-
 
 /**
  * DELETE-request for activity by
@@ -153,7 +158,7 @@ export async function getReviews(): Promise<ReviewDto[]> {
 }
 
 export async function postReportedActivity(activity_id: number): Promise<AxiosResponse> {
-  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity;
+  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity_list;
   const data = { activity_id: activity_id };
   const response = await axios.post(url, data, { withCredentials: true });
   return response;
@@ -164,7 +169,7 @@ export async function postReportedActivity(activity_id: number): Promise<AxiosRe
  * @returns list containing JSON with activity data
  */
 export async function getReportedActivities(): Promise<ReportedActivityDto[]> {
-  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity;
+  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity_list;
   const response = await axios.get<ReportedActivityDto[]>(url, { withCredentials: true });
   return response.data;
 }
@@ -189,13 +194,22 @@ export async function getReportedReview(review_id: number): Promise<ReviewDto> {
 
 /**
  *
- * gets reported review by review ID
+ * gets list of reports by review_id
  * */
 export async function getReportedReviewByReviewId(review_id: number): Promise<ReportedReviewDto[]> {
-  //const url = BACKEND_DOMAIN+ reverse({pattern: ROUTES.backend.reported_review_by_review, urlParams: {pk: review_id}})
   const queryParams = `?review_id=${review_id}`;
   const url = BACKEND_DOMAIN + ROUTES.backend.report_review_list + queryParams;
   const response = await axios.get<ReportedReviewDto[]>(url, { withCredentials: true });
+  return response.data;
+}
+/**
+ *
+ * gets list of reports by activity_id
+ * */
+export async function getReportedActivityByActId(activity_id: number): Promise<ReportedActivityDto[]> {
+  const queryParams = `?activity_id=${activity_id}`;
+  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity_list + queryParams;
+  const response = await axios.get<ReportedActivityDto[]>(url, { withCredentials: true });
   return response.data;
 }
 
@@ -216,7 +230,7 @@ export async function postFavoritedActivity(activity: number, user: number): Pro
   const url = BACKEND_DOMAIN + ROUTES.backend.favorited_activity;
   const data = {
     activity_id: activity,
-    favorited_by_user: user
+    favorited_by_user: user,
   };
   const response = await axios.post(url, data, { withCredentials: true });
   return response;
@@ -228,7 +242,7 @@ export async function getFavoritedActivities(): Promise<FavoriteDto[]> {
   return response.data;
 }
 
-export async function deleteFavoritActivity(id:number): Promise<AxiosResponse> {
+export async function deleteFavoritActivity(id: number): Promise<AxiosResponse> {
   const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.favorited_activity_detail, urlParams: { pk: id } });
   const response = await axios.delete(url, { withCredentials: true });
   return response;
