@@ -1,8 +1,9 @@
-.container {
+.spwContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Adjust as necessary */
+  height: 100%;
+  width:100%;
 }
 
 .prizes-container {

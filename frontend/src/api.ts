@@ -6,10 +6,19 @@
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from 'axios';
-import { ActivityDto, FavoriteDto, RegisterUserDto, UserDto } from './dto';
+import {
+  ActivityDto,
+  FavoriteDto,
+  RegisterUserDto,
+  ReportedActivityDto,
+  ReportedReviewDto,
+  ReviewDto,
+  UserDto,
+} from './dto';
 import { BACKEND_DOMAIN } from './constants';
 import { ROUTES } from './routes';
 import { reverse } from './named-urls';
+import { ROUTES_BACKEND } from '~/routes/backendRoutes';
 
 /**
  * GET, PUT, POST http requests for activity object
@@ -29,8 +38,6 @@ export async function getActivity(id: string | number): Promise<ActivityDto> {
   const response = await axios.get<ActivityDto>(url, { withCredentials: true }); // Defines response, using axios.
   return response.data;
 }
-
-
 
 /**
  * POST function for adding activity to DB.
@@ -65,17 +72,14 @@ export async function getActivities(): Promise<ActivityDto[]> {
   return response.data;
 }
 
-
 /**
  * DELETE-request for activity by
  * */
-export async function deleteActivity(id:number): Promise<AxiosResponse> {
+export async function deleteActivity(id: number): Promise<AxiosResponse> {
   const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.activity_detail, urlParams: { pk: id } });
   const response = await axios.delete(url, { withCredentials: true });
   return response;
 }
-
-
 
 /**
  * GET-request for CSRF-token used to make sure all requests come from the frontend of the actual site
@@ -141,8 +145,20 @@ export async function getUser(): Promise<UserDto> {
   return response.data;
 }
 
+export async function postReview(data: ReviewDto): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.review_list;
+  const response = await axios.post(url, data, { withCredentials: true });
+  return response;
+}
+
+export async function getReviews(): Promise<ReviewDto[]> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.review_list;
+  const response = await axios.get(url, { withCredentials: true });
+  return response.data;
+}
+
 export async function postReportedActivity(activity_id: number): Promise<AxiosResponse> {
-  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity;
+  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity_list;
   const data = { activity_id: activity_id };
   const response = await axios.post(url, data, { withCredentials: true });
   return response;
@@ -152,27 +168,69 @@ export async function postReportedActivity(activity_id: number): Promise<AxiosRe
  * GET-request for all acitivies
  * @returns list containing JSON with activity data
  */
-export async function getReportedActivities(): Promise<ActivityDto> {
-  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity;
-  const response = await axios.get<ActivityDto>(url, { withCredentials: true });
+export async function getReportedActivities(): Promise<ReportedActivityDto[]> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity_list;
+  const response = await axios.get<ReportedActivityDto[]>(url, { withCredentials: true });
+  return response.data;
+}
+
+export async function postReportReview(review_id: number): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.report_review_list;
+  const data = { review_id: review_id };
+  const response = await axios.post(url, data, { withCredentials: true });
+  return response;
+}
+
+export async function getReportedReviews(): Promise<ReportedReviewDto[]> {
+  const url = BACKEND_DOMAIN + ROUTES.backend.report_review_list;
+  const response = await axios.get<ReportedReviewDto[]>(url, { withCredentials: true });
+  return response.data;
+}
+export async function getReportedReview(review_id: number): Promise<ReviewDto> {
+  const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.report_review_detail, urlParams: { pk: review_id } });
+  const response = await axios.get<ReviewDto>(url, { withCredentials: true });
   return response.data;
 }
 
 /**
- *TODO: fix the view for this api call:
- */
-// export async function getUserActivities(activity_owner: string): Promise<ActivityDto[]> {
-//   const url =
-//     BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.user_activities, urlParams: { user_id: activity_owner } });
-//   const response = await axios.get<ActivityDto[]>(url, { withCredentials: true });
-//   return response.data;
-// }
+ *
+ * gets list of reports by review_id
+ * */
+export async function getReportedReviewByReviewId(review_id: number): Promise<ReportedReviewDto[]> {
+  const queryParams = `?review_id=${review_id}`;
+  const url = BACKEND_DOMAIN + ROUTES.backend.report_review_list + queryParams;
+  const response = await axios.get<ReportedReviewDto[]>(url, { withCredentials: true });
+  return response.data;
+}
+/**
+ *
+ * gets list of reports by activity_id
+ * */
+export async function getReportedActivityByActId(activity_id: number): Promise<ReportedActivityDto[]> {
+  const queryParams = `?activity_id=${activity_id}`;
+  const url = BACKEND_DOMAIN + ROUTES.backend.reported_activity_list + queryParams;
+  const response = await axios.get<ReportedActivityDto[]>(url, { withCredentials: true });
+  return response.data;
+}
+
+export async function getReportedReviewById(id: number): Promise<ReportedReviewDto[]> {
+  const queryParams = `?id=${id}`;
+  const url = BACKEND_DOMAIN + ROUTES.backend.report_review_list + queryParams;
+  const response = await axios.get<ReportedReviewDto[]>(url, { withCredentials: true });
+  return response.data;
+}
+
+export async function deleteReview(id: number): Promise<AxiosResponse> {
+  const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.review_detail, urlParams: { pk: id } });
+  const response = await axios.delete(url, { withCredentials: true });
+  return response;
+}
 
 export async function postFavoritedActivity(activity: number, user: number): Promise<AxiosResponse> {
   const url = BACKEND_DOMAIN + ROUTES.backend.favorited_activity;
-  const data = { 
+  const data = {
     activity_id: activity,
-    favorited_by_user: user
+    favorited_by_user: user,
   };
   const response = await axios.post(url, data, { withCredentials: true });
   return response;
@@ -184,7 +242,7 @@ export async function getFavoritedActivities(): Promise<FavoriteDto[]> {
   return response.data;
 }
 
-export async function deleteFavoritActivity(id:number): Promise<AxiosResponse> {
+export async function deleteFavoritActivity(id: number): Promise<AxiosResponse> {
   const url = BACKEND_DOMAIN + reverse({ pattern: ROUTES.backend.favorited_activity_detail, urlParams: { pk: id } });
   const response = await axios.delete(url, { withCredentials: true });
   return response;

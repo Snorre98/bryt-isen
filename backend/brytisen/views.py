@@ -1,22 +1,22 @@
 from __future__ import annotations
 
-from rest_framework import status, generics, viewsets
-from rest_framework.views import APIView
-from rest_framework.request import Request
-from rest_framework.generics import ListAPIView
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly
-
-from django.shortcuts import get_object_or_404
 from django.contrib.auth import login, logout
 from django.middleware.csrf import get_token
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status, viewsets
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly, \
+    IsAuthenticatedOrReadOnly
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .models import User, Activity, ReportedActivity, FavoritedActivity
-from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, ReportedActivitySerializer, FavoritedActivitySerializer
+from .models import Activity, ReportedActivity, FavoritedActivity, User, Review, ReportedReview
 from .permission_classes import IsOwnerOrReadOnly
+from .serializers import UserSerializer, LoginSerializer, ActivitySerializer, RegisterSerializer, \
+    FavoritedActivitySerializer, ReportedActivitySerializer, ReviewSerializer, ReportedReviewSerializer
 
 """
     Views are what we interact with from frontend to get data from the database.
@@ -43,18 +43,6 @@ class ActivityView(viewsets.ModelViewSet):
     serializer_class = ActivitySerializer
     permission_classes = [IsOwnerOrReadOnly]
 
-    # TODO: add functionality to get activity by username, the soultion here introduced permission issues
-
-    # def get_queryset(self):
-    #     # Get the user from the URL parameters or use the current authenticated user
-    #     activity_owner = self.kwargs.get('owner', None)
-    #     # user = self.request.user if user_id is None else get_object_or_404(User, pk=user_id)
-    #     user = self.request.user if activity_owner is None else get_object_or_404(User, pk=activity_owner)
-
-    #     # Filter activities by the specified user
-    #     queryset = user.user_activities.all()
-    #     return queryset
-
 
 class ReportedActivityViewSet(viewsets.ModelViewSet):
     """Viewset for managing reported activities."""
@@ -62,15 +50,16 @@ class ReportedActivityViewSet(viewsets.ModelViewSet):
     queryset = ReportedActivity.objects.all()
     serializer_class = ReportedActivitySerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['activity_id', 'id']
 
-    
+
 class FavoritedActivityViewSet(viewsets.ModelViewSet):
     """Viewset for managing reported activities."""
 
     queryset = FavoritedActivity.objects.all()
     serializer_class = FavoritedActivitySerializer
     permission_classes = [IsOwnerOrReadOnly]
-    
 
 
 @method_decorator(ensure_csrf_cookie, 'dispatch')
@@ -181,8 +170,8 @@ class RegisterView(APIView):
 
 class UserView(APIView):
     """
-    This view provides access to user realted data.
-    Autenticated users can accsess this view.
+    This view provides access to user related data.
+    Authenticated users can accsess this view.
     """
 
     permission_classes = [IsAuthenticated]
@@ -205,3 +194,25 @@ class AllUsersView(ListAPIView):
     permission_classes = (DjangoModelPermissionsOrAnonReadOnly,)
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+
+class ReviewView(viewsets.ModelViewSet):
+    """
+    View to access review data.
+    Can be accessed by anyone from localhost:3000
+    """
+
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+
+class ReportedReviewsViewSet(viewsets.ModelViewSet):
+    """View to access reviews that have been reported"""
+
+    queryset = ReportedReview.objects.all()
+    serializer_class = ReportedReviewSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['review_id', 'id']
+

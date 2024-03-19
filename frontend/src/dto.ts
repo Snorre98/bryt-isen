@@ -13,6 +13,14 @@ export type ActivityDto = {
   activity_type: ActivityType | string;
   activity_image: File;
   owner?: number;
+  owner_username?: string;
+  owner_profile_gradient?: string;
+};
+
+export type ReportedActivityDto = {
+  id?: number;
+  activity_id: number;
+  reported_by_user: number;
 };
 
 /**
@@ -23,6 +31,7 @@ export type RegisterUserDto = {
   first_name: string;
   last_name: string;
   password: string;
+  profile_gradient: string;
 };
 
 export type UserDto = {
@@ -32,6 +41,7 @@ export type UserDto = {
   last_name: string;
   is_active: boolean;
   is_superuser: boolean;
+  profile_gradient: string;
   groups: GroupDto[];
   permissions?: string[];
   object_permissions?: ObjectPermissionDto[];
@@ -45,6 +55,21 @@ export type ObjectPermissionDto = {
 export type GroupDto = {
   id: number;
   name: string;
+};
+
+export type ReviewDto = {
+  id?: number;
+  activity: number;
+  rating: number;
+  details: string;
+  owner?: number;
+  owner_username?: string;
+};
+
+export type ReportedReviewDto = {
+  id?: number;
+  review_id: number;
+  reported_by_user: number;
 };
 
 export type FavoriteDto = {

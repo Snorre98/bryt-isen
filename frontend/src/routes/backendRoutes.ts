@@ -38,8 +38,9 @@ export const ROUTES_BACKEND = {
    *
    */
 
-  reported_activity: '/reported-activities/',
-  
+  reported_activity_list: '/reported-activities/',
+  reported_activity_detail: '/reported-activities/:pk/',
+
   /**
    * favorited activity
    *
@@ -47,6 +48,20 @@ export const ROUTES_BACKEND = {
    */
   favorited_activity: '/favorited-activities/',
   favorited_activity_detail: '/favorited-activities/:pk/',
+
+  /**
+   * Reviews
+   */
+
+  review_list: '/reviews/',
+  review_detail: '/reviews/:pk',
+
+  /**
+   * Report reviews
+   */
+  report_review_list: '/reported-reviews/',
+  report_review_detail: '/reported-reviews/:pk/',
+  reported_review_by_review: '/reported-reviews?review_id=/:pk/',
 
   /**
    *
