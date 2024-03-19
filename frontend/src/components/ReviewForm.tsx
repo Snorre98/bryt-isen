@@ -14,6 +14,7 @@ export default function ReviewForm({ activity_id, showReviewForm, activity_title
   const [activity_review_description, setReview] = useState('');
   const [review_rating, setRating] = useState(0);
   const [validated, setValidated] = useState(false);
+  //const [optimisticReview, setOptimisticReview] = useState<ReviewDto>();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -28,12 +29,15 @@ export default function ReviewForm({ activity_id, showReviewForm, activity_title
       rating: review_rating,
       activity: activity_id,
     };
+
     postReview(data)
       .then((response) => {
+        //setOptimisticReview(data);
         setReview('');
         setRating(0);
         setValidated(false); // Reset form validation state
         onClose();
+        console.log(response);
       })
       .catch((error) => {
         console.log(error);

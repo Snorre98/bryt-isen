@@ -64,6 +64,7 @@ export type ReviewDto = {
   details: string;
   owner?: number;
   owner_username?: string;
+  owner_gradient?: string;
 };
 
 export type ReportedReviewDto = {

@@ -59,27 +59,23 @@ export function Home() {
 
   return (
     <PageWrapper>
-      <FilterComponent
-        showFilter={showFilter}
-        children={
-          <>
-            <input
-              className="search"
-              type="text"
-              placeholder="Søk..."
-              value={search}
-              onChange={(e) => handleSearch(e.target.value)}
-            />
-            <Form.Check
-              type="switch"
-              id="custom-switch"
-              label="Vis kun favoritter"
-              onChange={handleShowFavorites}
-              checked={showFavorites}
-            />
-          </>
-        }
-      />
+      <FilterComponent showFilter={showFilter} />
+      <div className="searchFavorite">
+        <input
+          className="search"
+          type="text"
+          placeholder="Søk..."
+          value={search}
+          onChange={(e) => handleSearch(e.target.value)}
+        />
+        <Form.Check
+          type="switch"
+          id="custom-switch"
+          label="Vis kun favoritter"
+          onChange={handleShowFavorites}
+          checked={showFavorites}
+        />
+      </div>
       <div
         className="toggleFilterBtn"
         style={showFilter ? { backgroundColor: '#fcce62' } : { backgroundColor: '#0089a8', color: 'white' }}

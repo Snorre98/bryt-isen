@@ -339,7 +339,7 @@ export default function CardComp({
             <h2>{title}</h2>
             {isOwner() && (
               <>
-                <Button style={{ fontSize: '0.5rem' }} variant="success" onClick={() => navigate(editActivityURL(id))}>
+                <Button variant="success" onClick={() => navigate(editActivityURL(id))} size="sm">
                   Endre
                 </Button>{' '}
                 {/* Add the edit button */}
@@ -360,19 +360,21 @@ export default function CardComp({
                 Rapporter
               </Button>
             )}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'end',
-                justifyContent: 'end',
-                border: '2px solid #ffc107',
-                borderRadius: '0.25rem',
-                padding: '0 0.15rem 0 0.10rem',
-              }}
-            >
-              {isActReported && <Icon icon="ic:baseline-flag" width="32" height="32" color={'red'} />}
-              {actReportCount > 0 ? <span>: {actReportCount}</span> : null}
-            </div>
+            {isActReported && actReportCount > 0 ? (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'end',
+                  justifyContent: 'end',
+                  border: '2px solid #ffc107',
+                  borderRadius: '0.25rem',
+                  padding: '0 0.15rem 0 0.10rem',
+                }}
+              >
+                <Icon icon="ic:baseline-flag" width="32" height="32" color={'red'} />
+                <span>: {actReportCount}</span>
+              </div>
+            ) : null}
           </Modal.Title>
         </Modal.Header>
         <Modal.Header style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -505,7 +507,6 @@ export default function CardComp({
               />
             </div>
           </div>
-
           <div>
             {reviews &&
               reviews.length > 0 &&
@@ -520,6 +521,7 @@ export default function CardComp({
                     review_description={review.details}
                     owner_name={review.owner_username}
                     review_id={review.id}
+                    owner_gradient={review.owner_gradient}
                   />
                 ))}
           </div>

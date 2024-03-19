@@ -1,9 +1,24 @@
 .activityCardWrapper{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   height: 100%;
   width: 100%;
+  background: red;
+}
+
+.searchFavorite{
+  position: fixed;
+  bottom: 3.5rem;
+  right: 9rem;
+  z-index: 1000;
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 1rem;
+  background-color: rgba(252, 206, 98, 0.5);
+  backdrop-filter: blur(1.5rem);
+  padding: 1rem;
+  border-radius: 0.25rem;
 }
 
 .toggleFilterBtn{

@@ -5,6 +5,7 @@ import { deleteReview, getReportedReviewByReviewId, postReportReview } from '~/a
 import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 import { Icon } from '@iconify/react';
 import { ReportedReviewDto } from '~/dto';
+import { UserChip } from '~/components/UserChipComponent/UserChip';
 
 export type ReviewProps = {
   review_id?: number;
@@ -12,9 +13,17 @@ export type ReviewProps = {
   review_description: string;
   owner_name: string;
   children?: ReactNode;
+  //owner_gradient: string;
 };
 
-export default function ReviewComp({ review_id, rating, review_description, owner_name, children }: ReviewProps) {
+export default function ReviewComp({
+  review_id,
+  rating,
+  review_description,
+  owner_name,
+  children,
+  //owner_gradient,
+}: ReviewProps) {
   const { user } = useAuthContext();
   const [showReportModal, setShowReportModal] = useState<boolean>();
   const [isReported, setIsReported] = useState(false);
@@ -34,6 +43,8 @@ export default function ReviewComp({ review_id, rating, review_description, owne
         });
     }
   }, [review_id]);
+
+  useEffect(() => {}, []);
 
   const handleReport = () => {
     if (review_id) {
@@ -87,10 +98,13 @@ export default function ReviewComp({ review_id, rating, review_description, owne
             <p>Rating: {rating}</p>
           </div>
 
-          <div className="iconContainer">
-            {isReported && <Icon icon="ic:baseline-flag" width="16" height="16" color={'red'} />}
-            {reportCount > 0 ? <span>{reportCount}</span> : null}
-          </div>
+          {isReported && reportCount > 0 ? (
+            <div className="iconContainer">
+              <Icon icon="ic:baseline-flag" width="16" height="16" color={'red'} />
+              <span>{reportCount}</span>
+            </div>
+          ) : null}
+
           <div className="rapporterBtnContainer">
             <div>
               {user && user.username !== owner_name && (
