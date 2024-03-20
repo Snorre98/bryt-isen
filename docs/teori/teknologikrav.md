@@ -1,1 +1,0 @@
-# Python og Node.js

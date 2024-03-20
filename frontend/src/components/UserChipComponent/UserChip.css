@@ -2,8 +2,8 @@
   display: inline-block;
   height: 50px;
   max-height: 50px;
-  width: 12rem;
-  padding: 0 2rem 0 1rem;
+  width: 10rem;
+  padding: 0 1rem 0 1rem;
   font-size: 16px;
   line-height: 50px;
   border-radius: 25px;
@@ -19,7 +19,7 @@
 
 .userChipIcon{
   float: left;
-  margin: 0 0.5rem 0 -15px;
+  margin: 0 0.5rem 0 -25px;
   height: 50px;
   width: 50px;
   border-radius: 50%;
