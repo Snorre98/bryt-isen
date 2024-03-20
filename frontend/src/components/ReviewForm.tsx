@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Button, Form, Modal, ModalBody } from 'react-bootstrap';
 import { postReview } from '~/api';
 import { ReviewDto } from '~/dto';
+import { useReviewsContext } from '~/contextProviders/ReviewContextProvider';
+import { useAuthContext } from '~/contextProviders/AuthContextProvider';
 
 type ReviewFormProps = {
   activity_id: number;
@@ -14,7 +16,8 @@ export default function ReviewForm({ activity_id, showReviewForm, activity_title
   const [activity_review_description, setReview] = useState('');
   const [review_rating, setRating] = useState(0);
   const [validated, setValidated] = useState(false);
-  //const [optimisticReview, setOptimisticReview] = useState<ReviewDto>();
+  const { user } = useAuthContext();
+  const { addReview } = useReviewsContext();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -24,20 +27,23 @@ export default function ReviewForm({ activity_id, showReviewForm, activity_title
       event.stopPropagation();
     }
     setValidated(true);
+    const owner_username = user ? user.username : 'Anonymous';
     const data: ReviewDto = {
       details: activity_review_description,
       rating: review_rating,
       activity: activity_id,
+      owner_username,
     };
 
     postReview(data)
-      .then((response) => {
-        //setOptimisticReview(data);
+      .then(() => {
+        //addReview(data);
+        addReview({ ...data, owner_username });
         setReview('');
         setRating(0);
         setValidated(false); // Reset form validation state
+
         onClose();
-        console.log(response);
       })
       .catch((error) => {
         console.log(error);

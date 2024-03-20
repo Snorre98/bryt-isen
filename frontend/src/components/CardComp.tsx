@@ -534,7 +534,6 @@ export default function CardComp({
         activity_title={title}
         onClose={() => setShowReviewForm(false)}
       />
-
       <CustomToast
         position={'top-left'}
         toastTitle={toastTitle}
@@ -543,6 +542,7 @@ export default function CardComp({
         setToastState={setShowToast}
         toastState={showToast}
       />
+
       <Modal onHide={closeActivityReportModal} show={showActivityReportModal} close>
         <Modal.Header closeButton>
           <Modal.Title style={{ padding: '2rem' }}>Er du sikker på at du vil rapportere?</Modal.Title>
