@@ -79,7 +79,7 @@ function SpinTheWheel() {
         onClick={handleRandomFavorite}
         className="btn btn-primary btn-lg m-2"
         style={{ position: 'absolute', top: '7rem', left: '10rem', zIndex: '10' }}
-        disabled={!gotFavorites}
+        disabled={!gotFavorites || isSpinning}
       >
         Spin the wheel
       </Button>
