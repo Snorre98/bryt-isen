@@ -1,24 +1,31 @@
 import { Toast, ToastContainer } from 'react-bootstrap';
-import React from "react";
+import React from 'react';
 
 type CustomToastProps = {
   position: string;
   toastTitle: string;
   toastMessage: string;
   variant: string;
-  toastState: boolean ;
+  toastState: boolean;
   setToastState: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function CustomToast({ toastTitle, toastMessage, variant, toastState, setToastState, position="top-center" }: CustomToastProps) {
-
+export function CustomToast({
+  toastTitle,
+  toastMessage,
+  variant,
+  toastState,
+  setToastState,
+  position = 'top-center',
+}: CustomToastProps) {
   return (
     <>
       <ToastContainer
         // @ts-expect-error
         position={position}
         className="p-3"
-        style={{zIndex: 100000}}>
+        style={{ zIndex: 100000 }}
+      >
         <Toast onClose={() => setToastState(false)} show={toastState} delay={3000} autohide bg={variant}>
           <Toast.Header closeButton={true}>
             <strong className="me-auto">{toastTitle}</strong>

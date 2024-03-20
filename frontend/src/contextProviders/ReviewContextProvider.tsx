@@ -118,7 +118,7 @@ export function ReviewsContextProvider({ children, enabled = true }: ReviewsCont
   return (
     <>
       <CustomToast
-        position={'middle-center'}
+        position={'top-end'}
         toastTitle={showToastTitle}
         variant={toastVariant}
         toastState={showToastState}
