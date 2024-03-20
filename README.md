@@ -2,6 +2,16 @@
 
 ## Simple setup docs
 *Detaljer lengre ned!*
+
+Gruppen har brukt Docker🐋 for å kjøre utviklingsmiljøet og utviklings servere.
+
+Prosjekte kjører som smurt hvis man :
+1) Gå til docker sin hjemmeside, last ned docker dekstop.
+2) Åpne Docker Desktop (og dermed Docker daemon)
+3) Fra bryt-isen/ mappen, kjøre først `docker compose build`, når containeren er bygd, kjøre `docker compose up`
+4) Frontend åpnes på lh:3000, backend på lh:8000
+
+## Uten Docker:
 ### 1) 
 ```
 git clone <prosjekt-URL>
@@ -51,15 +61,6 @@ pipenv run python manage.py runserver
 npm run dev
 ```
 frontend åpnes på localhost:3000 og backend åpnes på localhost:8000
-#### Hvis siden ikke laster, eller andre problemer oppstår:
-Gruppen har brukt Docker🐋 for å kjøre utviklingsmiljøet og utviklingsserverene.
-
-*Vi anbefaler at man har utført steg fra og med 1) til og med 6) før man benytter Docker. Dette synes å være mest stabilt.*
-1) Gå til docker sin hjemmeside, last ned docker dekstop.
-2) Åpne Docker Desktop (og dermed Docker daemon)
-3) Fra bryt-isen/ mappen, kjøre først `docker compose build`, når containeren er bygd, kjøre `docker compose up`
-4) Frontend åpnes på lh:3000, backend på lh:8000
-5) 
 
 ### Ekstra
 For å lage superbruker i django kjører man: 
@@ -79,7 +80,7 @@ Dette kan komme frem i form av leker og aktiviteter. For eksempel sangleker, nav
 
 Bryt-Isen ønsker å leve opp til denne visjonen ved å la brukere finne ulike bli-kjent-leker gjennom en strukturert og brukervennlig opplevelse, samt annen funksjonalitet som at innloggede brukere kan vurdere bli-kjent-leker og favoritisere bli-kjent-leker. Brukere skal også kunne filtrere og søke på bli-kjent-leker. Det vil være mulig å rapportere upassende innhold, som administratorer kan slette.
 
-#### [Bryt-Isen funksjonalitet dokumentasjon](./docs/domain-docs/Om-bryt-isen.md)
+#### [Bryt-Isen domene dokumentasjon](./docs/domain-docs/Om-bryt-isen.md)
 
 ## Oversikt
 
