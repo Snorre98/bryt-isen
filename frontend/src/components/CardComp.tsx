@@ -243,8 +243,7 @@ export default function CardComp({
   const handleDeleteActivity = (activity_id: number) => {
     setToastTitle('Slett aktivitet');
     deleteActivity(activity_id)
-      .then((response) => {
-        console.log(response);
+      .then(() => {
         setToastMsg(DELETE_SUCCESS_MSG);
         setSubmitStatus('success');
         setShowToast(true);
