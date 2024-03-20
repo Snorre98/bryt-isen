@@ -1,4 +1,75 @@
 # 🧊⛏️Bryt-Isen
+
+## Simple setup docs
+*Detaljer lengre ned!*
+### 1) 
+```
+git clone <prosjekt-URL>
+```
+### 2)
+``` bash
+# 👀fra frontend mappa (i bryt-isen/)
+npm install
+```
+*Da det ikke har vært noe krav har vi ikke fokusert på at prosjeket skal "builde", så det er tvilsomt at det vil har noe for seg å prøve.*
+
+### 3) - *om du ikke har pipenv*
+``` bash
+# 👀fra backend mappa (i bryt-isen/)
+pip install pipenv
+```
+
+### 4) 
+``` bash
+# 👀fra backend/
+pipenv install
+```
+
+### 5)
+``` bash
+# 👀fra backend/
+pipenv run python manage.py makemigrations
+```
+
+### 6)
+``` bash
+# 👀fra backend/
+pipenv run python manage.py migrate
+```
+
+### 7)
+**Åpne en terminal i backend og en annen terminal i frontend**
+
+#### 7.1)
+``` bash
+# 👀fra backend/
+pipenv run python manage.py runserver
+```
+#### 7.2)
+``` bash
+# 👀fra frontend/
+npm run dev
+```
+frontend åpnes på localhost:3000 og backend åpnes på localhost:8000
+#### Hvis siden ikke laster, eller andre problemer oppstår:
+Gruppen har brukt Docker🐋 for å kjøre utviklingsmiljøet og utviklingsserverene.
+
+*Vi anbefaler at man har utført steg fra og med 1) til og med 6) før man benytter Docker. Dette synes å være mest stabilt.*
+1) Gå til docker sin hjemmeside, last ned docker dekstop.
+2) Åpne Docker Desktop (og dermed Docker daemon)
+3) Fra bryt-isen/ mappen, kjøre først `docker compose build`, når containeren er bygd, kjøre `docker compose up`
+4) Frontend åpnes på lh:3000, backend på lh:8000
+5) 
+
+### Ekstra
+For å lage superbruker i django kjører man: 
+``` bash
+# 👀fra backend/
+pipenv run python manage.py createsuperuser
+```
+Med superbruker kan man benytte seg av admin-panalet på localhost:8000/admin
+
+
 ## Om prosjektet
 
 *Det offisielle prosjektomfanget er definert i Forstudie og andre innleveringer.*
@@ -7,6 +78,8 @@ Bryt-Isen er et produkt som er ment å hjelpe unge mennesker i sosiale settinger
 Dette kan komme frem i form av leker og aktiviteter. For eksempel sangleker, navneleker og drikkeleker. Typiske situasjoner hvor disse kan være relevante er blant annet under fadderuke, på festivaler og i studentforeninger.
 
 Bryt-Isen ønsker å leve opp til denne visjonen ved å la brukere finne ulike bli-kjent-leker gjennom en strukturert og brukervennlig opplevelse, samt annen funksjonalitet som at innloggede brukere kan vurdere bli-kjent-leker og favoritisere bli-kjent-leker. Brukere skal også kunne filtrere og søke på bli-kjent-leker. Det vil være mulig å rapportere upassende innhold, som administratorer kan slette.
+
+#### [Bryt-Isen funksjonalitet dokumentasjon](./docs/domain-docs/Om-bryt-isen.md)
 
 ## Oversikt
 
