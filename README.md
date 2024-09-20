@@ -20,6 +20,7 @@ For information about the tech-stack see the [Tech-stack docs](./docs/teori/tekn
 2) Run `docker compse build` from your terminal
 3) Run `docker compse up` to start the containers
 4) Go to localhost:3000 for the frontend, or localhost:8000 for the Django admin panel.
+📢 as of september 2024 there is no seed script, so content has to be added manually.
 
 
 # 🧊⛏️Bryt-Isen
