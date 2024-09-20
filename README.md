@@ -1,3 +1,28 @@
+# Context for the project: (added september 2024)
+Bryt-Isen was a project completed in the spring of 2024 by Anders Vestrum, Eirik Engen Kvam, Hannah Lervik, Jens Høie, Julie Amundsen Wolff, Mats Gaupset and Snorre Sæther.
+
+
+The projects was part of the course [TDT4140 - Software Engineering](https://www.ntnu.edu/studies/courses/TDT4140#tab=omEmnet) at NTNU. The course has a focus on developing software as a team, where we learned Agile development methodes like Scrum and Kanban. In TDT4140 the teams are not determined by the students, and most of the groups consist of students from different study programs. All groups recive a project and a product-owner which have requirements for the product. The team consideres these requirements during the project in processes like Spirint planning.
+
+### What Bryt-Isen aims to do (added september 2024)
+The product owner presented a problem focusing on helping young people in social settings, especially in new and unfamiliar environments. There is a desire for the team to create a service where users can more easily build new acquaintances. This can come in the form of games and activities. For example, singing games, name games, and drinking games. Typical situations where these might be relevant include during orientation week, at festivals, and in student associations.
+
+Based on this problem, we wanted to create a website where users can - through a structured and user-friendly experience - find various ice-breaker games. The games is distributed in predefined categories, but the site will also present a selection of games immediately upon opening the page. The website has a login function, which not only allows users to share their opinions about the games but also to contribute their own activities by providing names, rules, and a description of the activity. There is also the possibility of having an admin user who can manage all games and activities on the website.
+
+For more information see the ["About Bryt-Isen" docs](./docs/domain-docs/Om-bryt-isen.md) *only in Norwegian*
+
+For information about the tech-stack see the [Tech-stack docs](./docs/teori/teknologistakken.md)
+
+
+### How to run the project (added september 2024)
+*requires that you have docker installed*
+1) Navigate to the root of this project (`/bryt-isen`) in your terminal
+2) Run `docker compse build` from your terminal
+3) Run `docker compse up` to start the containers
+4) Go to localhost:3000 for the frontend, or localhost:8000 for the Django admin panel.
+📢 as of september 2024 there is no seed script, so content has to be added manually.
+
+
 # 🧊⛏️Bryt-Isen
 
 ## Simple setup docs
@@ -84,24 +109,40 @@ Bryt-Isen ønsker å leve opp til denne visjonen ved å la brukere finne ulike b
 
 ## Oversikt
 
+- [Context for the project: (added september 2024)](#context-for-the-project-added-september-2024)
+    - [What Bryt-Isen aims to do (added september 2024)](#what-bryt-isen-aims-to-do-added-september-2024)
+    - [How to run the project (added september 2024)](#how-to-run-the-project-added-september-2024)
 - [🧊⛏️Bryt-Isen](#️bryt-isen)
+  - [Simple setup docs](#simple-setup-docs)
+  - [Uten Docker:](#uten-docker)
+    - [1)](#1)
+    - [2)](#2)
+    - [3) - *om du ikke har pipenv*](#3---om-du-ikke-har-pipenv)
+    - [4)](#4)
+    - [5)](#5)
+    - [6)](#6)
+    - [7)](#7)
+      - [7.1)](#71)
+      - [7.2)](#72)
+    - [Ekstra](#ekstra)
   - [Om prosjektet](#om-prosjektet)
+      - [Bryt-Isen domene dokumentasjon](#bryt-isen-domene-dokumentasjon)
   - [Oversikt](#oversikt)
   - [Utviklingsmiljø \& teknologistakk](#utviklingsmiljø--teknologistakk)
     - [Backend 🐍](#backend-)
     - [Frontend ⌨️](#frontend-️)
     - [Virtuelt samkjørt miljø 🔮](#virtuelt-samkjørt-miljø-)
   - [Sett opp utviklingsmiljø](#sett-opp-utviklingsmiljø)
-    - [Steg 1: klon🐑](#steg-1-klon)
-    - [Steg 2: naviger til frontend 📁](#steg-2-naviger-til-frontend-)
-    - [Steg 3: installer frontend avhengigheter 📦 ➡️ ⌨️⚛️](#steg-3-installer-frontend-avhengigheter--️-️️)
-      - [Kjør frontend server🚀](#kjør-frontend-server)
-    - [Steg 4: naviger til backend 📁](#steg-4-naviger-til-backend-)
-    - [Steg 5: installer pipenv 🐍📦](#steg-5-installer-pipenv-)
-    - [Steg 6: åpne pipenv shell 🐢](#steg-6-åpne-pipenv-shell-)
-    - [Steg 7: installer backend avhengigheter 📦 ➡️ 🦮🖽🎸](#steg-7-installer-backend-avhengigheter--️-)
-      - [Kjør backend server 🎸](#kjør-backend-server-)
-  - [Kjør utviklingsmiljøet i Docker 🫷 anbefales 🫸](#kjør-utviklingsmiljøet-i-docker)
+        - [Steg 1: klon🐑](#steg-1-klon)
+        - [Steg 2: naviger til frontend 📁](#steg-2-naviger-til-frontend-)
+        - [Steg 3: installer frontend avhengigheter📦](#steg-3-installer-frontend-avhengigheter)
+          - [Kjør frontend server🚀](#kjør-frontend-server)
+        - [Steg 4: naviger til backend 📁](#steg-4-naviger-til-backend-)
+        - [Steg 5: installer pipenv📦](#steg-5-installer-pipenv)
+        - [Steg 6: åpne pipenv shell 🐢](#steg-6-åpne-pipenv-shell-)
+        - [Steg 7: installer backend avhengigheter📦](#steg-7-installer-backend-avhengigheter)
+          - [Kjør backend server 🎸](#kjør-backend-server-)
+  - [Kjør utviklingsmiljøet i Docker](#kjør-utviklingsmiljøet-i-docker)
 
 
 **[Sjekk ut detaljert dokumentasjon.](./docs/content.md)**
